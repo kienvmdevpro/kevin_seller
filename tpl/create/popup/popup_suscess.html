@@ -1,0 +1,37 @@
+<div class="modal-header">
+<div class="row">
+    <div class="col-md-12">
+    <div class="col-md-11 pull-left no-padder" >
+        <h5 ng-if="!auto_accept">{{'ORDERC_TaoDonHangThanhCong' | translate}}</h5>
+        <h5 ng-if="auto_accept">{{'ORDERC_DuyetDonHangThanhCong' | translate}}</h5>
+        </div>
+    <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+    </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="row">
+            <div class="col-md-12" ng-if="!auto_accept">
+                <p class="modal-title">{{'ORDERC_Donhang' | translate }} <strong>{{tracking_code}}</strong> {{'ORDERC_TaoDonDaTaoThanhCong_popup' | translate}} </p>
+                <p>{{'ORDERC_ChucQuyKhachTotLanh_popup' | translate }}</p>
+             </div>
+             <div class="col-md-12" ng-if="auto_accept">
+                <p class="modal-title">{{'ORDERC_Donhang' | translate }} <strong>{{tracking_code}}</strong> {{'ORDERC_TaoDonDaDuyetThanhCong' | translate}}<strong>{{timePickup}}</strong>.{{'ORDERC_QuyKhachThuongXuyenTheoDoi_popup' | translate}}</p>
+                
+                <p>{{'ORDERC_ChucQuyKhachTotLanh_popup' | translate }}</p>
+             </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="row">
+        <div class="col-md-12">
+               
+            <button type="button" class="pull-right btn btn-info" ng-click="function_addtab()" translate>ORDERC_TaoDonKhac</button>
+            <a	style="padding: 7px;margin-right: 10px;" class="btn bg-orange btn-sm  pull-right"
+                ui-sref="print_new({code:tracking_code})" target="_blank">
+                <i class="fa fa-print"></i> {{'ORDERC_Invandon_popup' | translate}}  
+            </a>
+        </div>
+    </div>
+</div>
+		

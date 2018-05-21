@@ -1,0 +1,497 @@
+<div class="clearfix" xmlns="http://www.w3.org/1999/html">&nbsp;</div>
+<style>
+    .nav.nav-tabs .thembtn a {
+        cursor: pointer!important;
+        color: #428bca!important;
+    }
+      .add-shopify{
+        position: absolute;
+        right: 10px;
+        top: 1px;
+    }
+    .add-lazada{
+        position: absolute;
+        right: 178px;
+        top: 1px;
+    }
+    .order-service .divider {
+         margin: 0;
+     }
+      .order-service .dropdown-header,.order-service .dropdown-menu>li>a {
+          padding: 2px 15px;
+      }
+      .order-select-country .ui-select-bootstrap .ui-select-toggle>.caret {
+        right: 3px !important;
+      }
+      .order-select-country .ui-select-choices{
+          width: 216px;
+      }
+      .order-select-country {
+          max-width: 40px;
+      }
+      .order-autocomplete-phone  .dropdown-menu{
+        left: 0px !important;
+      }
+      .sdt {
+          padding-left: 40px;
+      }
+      .opencontry {
+            position: absolute;
+            z-index: 999;
+            top: 4px;
+      }
+      .opencontry .select-opencontry {
+              max-height: 300px;
+              overflow-y: scroll;
+      }
+      div.hvc-select .ui-select-bootstrap .ui-select-choices-row .hvc_description > span {
+        white-space: normal;
+    }
+
+    div.hvc-select .ui-select-bootstrap .ui-select-match > span.btn {
+    white-space: normal;
+    /* height: auto; */
+    }
+    .hvc_show{
+        display: inline !important;
+    }
+</style>
+<div class="col-lg-12" ng-controller="OrderCreateParentCtrl">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="font-thin pull-left m-t-none m-r-md">
+            {{'OBG_TaoDonChuyenPhatQT' | translate}}
+            <!-- Tạo đơn chuyển phát quốc tế --></h3>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="row">
+         
+        <div class="col-lg-12 col-md-12" ng-if="notice.content.length > 0">
+           
+            <div ng-if="keyLang=='en'" class="alert alert-warning" role="alert" ng-bind-html="notice.content_en"></div>
+            <div ng-if="keyLang!='en'" class="alert alert-warning" role="alert" ng-bind-html="notice.content"></div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom:70px">
+        <div class="col-lg-12 col-md-12">
+            <tabset justified="false">
+
+                <tab heading="{{'OBG_TaoDon' | translate}} {{To.Buyer.Name.length > 0 ? ': ' + To.Buyer.Name : item}}" ng-repeat="item in tabs track by $index"
+                    ng-controller="OrderCreateV2GlobalCtrl" active="$last">
+                    <form class="form-validation form-horizontal" role="form" name="frmOrderCreate_{{$index}}">
+                        <div class="row bg-white">
+                             <!--- Add shopify order -->
+                                <div class="add-shopify">
+                                    <div class="btn-group m-b-sm pull-right">
+                                        <div class="btn-group dropdown" dropdown>
+                                            <button data-toggle="dropdown" style="color: #fff" dropdown-toggle class="btn bg-success dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                                                Import from store 
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li ng-if="userInfo.store_connect.shopify"><a ng-click="add_store_connect_order(1)"><img style="width: 20px;" src="img/logo-doitac/shopify.png"> Shopify shop</a></li>
+                                                <li ng-if="userInfo.store_connect.magento"><a ng-click="add_store_connect_order(2)"><img  style="width: 20px;" src="img/logo-doitac/magento.png"> Magento shop</a></li>
+                                                <li ng-if="userInfo.store_connect.lazada"><a ng-click="add_store_connect_order(3)"><img  style="width: 20px;" src="img/logo-doitac/lazada.png"> Lazada shop</a></li>
+                                                <li ng-if="userInfo.store_connect.woocommerce"><a ng-click="add_store_connect_order(4)"><img  style="width: 20px;" src="img/logo-doitac/woocommerce.png"> Woocommerce</a></li>
+                                                <li ng-if="userInfo.store_connect.etsy"><a ng-click="add_store_connect_order(5)"><img  style="width: 20px;" src="img/logo-doitac/etsy.png"> Etsy</a></li>
+                                                <li ng-if="userInfo.store_connect.ebay"><a ng-click="add_store_connect_order(6)"><img  style="width: 20px;" src="img/logo-doitac/ebay1.png"> Ebay</a></li>
+                                                <li ng-if="userInfo.store_connect.haravan"><a ng-click="add_store_connect_order(7)"><img  style="width: 20px;" src="img/logo-doitac/haravan.png"> Haravan</a></li>
+                                                <li ng-if="userInfo.store_connect.robins"><a ng-click="add_store_connect_order(8)"><img  style="width: 20px;" src="img/logo-doitac/robins.png"> Robins</a></li>
+                                            </ul>
+                                        </div> 
+                                    </div>
+                                    <script type="text/ng-template" id="add_store_connect_template.html">
+                                        <div data-ng-include=" 'tpl/create/popup/add_store_connect_template.html' "></div>
+                                    </script>  
+                                </div>
+                            <!--- end Add shopify order -->
+                           
+                            <div class="col-md-8 col-lg-8">
+                                <div ng-include="'tpl/create/partials/form_bm.html?v=1.4'" ng-cloak class="row" ng-if="list_inventory && From.Inventory.warehouse_code.length > 0"></div>
+                                <div ng-include="'tpl/create/partials/form_sc.html?v=1.4'" ng-cloak class="row" ng-if="list_inventory && (!From.Inventory.warehouse_code || From.Inventory.warehouse_code.length == 0)"></div>
+                                
+                            </div>
+
+
+                            <style>
+                                .waiting {
+                                    background: rgb(248, 248, 248)
+                                }
+                                
+                                .waiting .loading {
+                                    position: absolute;
+                                    left: 43%;
+                                    top: 43%;
+                                    z-index: 10000;
+                                }
+                                
+                                .waiting .backdrop {
+                                    position: absolute;
+                                    left: 0;
+                                    top: 0;
+                                    left: 0;
+                                    bottom: 0;
+                                    z-index: 100;
+                                }
+                                
+                                #inventory_info .ui-select-choices-content {
+                                    width: 490px;
+                                }
+                                
+                                tags-input .tags {
+                                    box-shadow: none;
+                                    border: 1px solid #cfdadd;
+                                    -moz-appearance: initial;
+                                    -webkit-appearance: initial;
+                                }
+                                
+                                #buyer-info .ui-select-choices-row {
+                                    padding: 4px!important;
+                                }
+                                
+                                #service_box .ui-select-choices-row {
+                                    padding: 4px!important;
+                                }
+                                
+                                .product-info .popover {
+                                    max-width: 400px!important;
+                                }
+                                
+                                .product-info .popover-content {
+                                    width: 400px!important;
+                                }
+                                 .data_service_popup_close .popover{
+                                    display: none !important;
+                                }
+                            </style>
+                            <div class="col-md-4 col-lg-4 service_box" ng-class="{'waiting': waiting}">
+                                <div class="backdrop" ng-if="waiting"></div>
+                                <div class="loading" ng-if="waiting"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                                <p class="m-t-md m-b-md" > <a ><strong>5. {{'OBG_DichVu' | translate}}</strong></a></p>
+                                <div id="service">
+                                    <div class="form-group" ng-if="!disabled_payment_type">
+                                        <div class="col-lg-12 col-md-12">
+                                            <select id="u376_input" class="form-control" ng-model="Config.Type" ng-disabled="[6,12].indexOf(Config.Service) >=0" >
+                                                  <option value="2">{{'OBG_ThuHoTienHang_PVC_COD' | translate}}<!-- Thu hộ tiền hàng &amp; phí vận chuyển, phí thu hộ --></option>
+                                                  <option value="1">{{'OBG_ThuHoTheoSoTienKHNhap' | translate}}<!-- Thu hộ theo số tiền quý khách nhập --></option>
+                                                  <option value="3">{{'OBG_ChiThuHoTienHang' | translate}} <!-- Chỉ thu hộ tiền hàng --></option>
+                                                  <option value="4">{{'OBG_ChiThuPVC_Cod' | translate}}<!-- Chỉ thu hộ phí vận chuyển &amp; phí thu hộ --></option>
+                                                  <option value="5">{{'OBG_KhongThuHo' | translate}}<!-- Không thu hộ --></option>
+                                                </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-12 col-md-12 {{data_service_popup.css}}" >
+                                            <ui-select class="order-service"  ng-model="Config.Service" popover-placement="bottom" popover-enable="data_service_popup.isOpen" popover-template="'popover_service_teamplate.html'"  required id="service_select" ng-if="!disabled_service && keyLang !='en'">
+                                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}"><i class="fa {{$select.selected.icons}} " aria-hidden="true"></i>                                                    
+                                                {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}} <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span></ui-select-match>
+                                                <ui-select-choices group-by="'group'" repeat="value.id as value in list_services | filter: $select.search">
+                                                    <span><i class="fa {{value.icons}} " aria-hidden="true"></i> {{keyLang=='vi' ? value.name : value.name_en}}
+                                                    <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span></span>
+                                                    <br>
+                                                    <span style="font-size: 10px;"><i class="fa  icon-info "></i>&nbsp;<i>{{keyLang=='vi' ? value.note : value.note_en}}</i></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <ui-select class="order-service"  ng-model="Config.Service" popover-placement="bottom" popover-enable="data_service_popup.isOpen" popover-template="'popover_service_teamplate.html'"  required id="service_select" ng-if="!disabled_service && keyLang =='en'">
+                                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}"><i class="fa {{$select.selected.icons}} " aria-hidden="true"></i>                                                    
+                                                {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}} <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span></ui-select-match>
+                                                <ui-select-choices group-by="'group_en'" repeat="value.id as value in list_services | filter: $select.search">
+                                                    <span><i class="fa {{value.icons}} " aria-hidden="true"></i> {{keyLang=='vi' ? value.name : value.name_en}}
+                                                    <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span></span>
+                                                    <br>
+                                                    <span style="font-size: 10px;"><i class="fa  icon-info "></i>&nbsp;<i>{{keyLang=='vi' ? value.note : value.note_en}}</i></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                            <ui-select ng-model="Config.Service" required id="service_select" ng-if="disabled_service">
+                                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}"><i class="fa fa-globe" aria-hidden="true"></i>&nbsp;{{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}}<!--  {{$select.selected.name}} -->
+                                                    <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span></ui-select-match>
+                                                <ui-select-choices repeat="value.id as value in list_services_global | filter: $select.search">
+                                                    <span><i class="fa fa-globe " aria-hidden="true"></i>   {{keyLang=='vi' ? value.name : value.name_en}}
+                                                    <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span></span>
+                                                    <br>
+                                                    <span style="font-size: 10px;"><i class="fa  icon-info "></i>&nbsp;<i>{{keyLang=='vi' ? value.note : value.note_en}}</i></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" >
+                                        <div class="col-lg-12 col-md-12 hvc-select">
+                                                <ui-select ng-model="calculateInfo.selected_courier" ng-disabled="disabled">
+                                                    <ui-select-match placeholder="{{'OBG_HangVanChuyen' | translate}}"><img ng-src="/img/logo-hvc/{{$select.selected.courier_id}}.png" alt="" width="50px"> &nbsp;  {{$select.selected.courier_name}}<span ng-if="$select.selected.fee.pvc" style="position: absolute; right: 25px;top: 9px;">
+                                                    <convert-currency style="color:#993333" home-currency="$select.selected.fee.pvc +  $select.selected.money_pickup"></convert-currency>
+                                                    <!-- ({{$select.selected.fee.pvc +  $select.selected.money_pickup}}{{viewCurrency}}) --></span>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="value in list_courier_detail  | filter: $select.search track by $index" >
+                                                        <div ng-mouseenter="value.hide='hide';value.css='hvc_show'" ng-mouseleave="value.hide='';value.css=''">
+                                                            <div class="row" style="font-size: 17px;margin-top: 6px;" >
+                                                                <div class="pull-left m-r-sm">
+                                                                    <img ng-src="http://seller.shipchung.vn/img/logo-hvc/{{value.courier_id}}.png" ng-if="value.courier_id" alt="" width="50px">
+                                                                </div>
+                                                                <div class="pull-left">
+                                                                    <span style="color: black;">{{value.courier_name}} </span>   
+                                                                </div>
+                                                                <!-- HVC quoc te -->
+                                                                <div class="pull-right" ng-if="value.fee.pvc"> 
+                                                                    <span ng-if="value.fee.pvc" style="color:#993333" >
+                                                                        <convert-currency home-currency="value.fee.pvc +  value.money_pickup"></convert-currency>
+                                                                    </span>    
+                                                                </div>
+                                                                <!-- HVC quoc te -->
+                                                                <div class="pull-right" ng-if="value.leatime_total && value.leatime_string"> 
+                                                                    <span style="color:#993333; font-size: 14px;" >
+                                                                        <span >{{value.leatime_string}}
+                                                                            <span ng-if="value.leatime_delivery >24">{{ 'OBG_Ngay'  | translate}} </span>
+                                                                            <span ng-if="value.leatime_delivery <=24">{{  'OBG_Gio'| translate}} </span>
+                                                                        </span>
+                                                                    </span>    
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row hvc_description" >
+                                                                <span class="{{value.hide}}" style="font-size: 10px;">
+                                                                    <i class="fa  icon-info "></i>&nbsp;<i>{{keyLang=='en' ? value.courier_description_en : value.courier_description | shipchungcut:true:60:'....'}}</i>
+                                                                </span>
+                                                                <span class="{{value.css}} hide" style="font-size: 10px;">
+                                                                    <i class="fa  icon-info "></i>&nbsp;   {{keyLang=='en' ? value.courier_description_en : value.courier_description}}
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                    </div>
+
+                                    <div class="form-group" ng-if="show_inputCouponCode == false">
+                                         <div class="col-md-7"> &nbsp;{{'OBG_DoYouHaveCouponCode' | translate}}</div>
+                                         <div class="col-md-5 text-right">
+	                                       	<a  ng-click="show_CouponCode(true)">
+	                                       		<span class="text-info">{{'OBG_ApplyCouponCode' |translate}}</span>
+	                                       	</a>
+                                         </div>
+                                         <div class="cleafix"></div>
+                                     </div>
+                                     
+                                    <div class="form-group" ng-if="show_inputCouponCode == true">
+                                            <div class="col-lg-9 col-md-8" >
+                                                <input type="text" ng-model="Config.Coupon_code" class="form-control"
+                                                    placeholder="{{'OBG_TypePromotionCouponCode' | translate}}" ng-delay="1800"  ng-change="add_coupon_code()" >
+                                            </div>
+                                            <div class="col-lg-3 col-md-4" >
+                                                <a style="height: 34px !important;padding-top: 7px;color: white;" ng-click="show_CouponCode(false)" class="btn bg-orange btn-sm  pull-right ng-binding" >
+                                                    {{'OBG_ApplyCouponCode_' | translate}}
+                                                </a>
+                                            </div>
+                                    </div>
+                                    
+                                    <div class="form-group" ng-if="Config.Service!=3 && calculateInfo.selected_courier && !From.Inventory.warehouse_code && [1,8,11].indexOf(calculateInfo.selected_courier.courier_id) >=0">
+                                        <div class="col-lg-12 col-md-12">
+                                            <label class="i-switch m-t-xs m-r">
+                                                  <input type="checkbox"  ng-delay="1200" ng-change="add_coupon_code()"  ng-model="Config.ToPostOffice" ng-true-value="1"  ng-false-value="2">
+                                                  <i></i>
+                                                </label> {{'ORDERC_ToiSeMangHangRaBuuCuc' | translate}}
+                                             <a href="javascript:;"><i class="icon-question" aria-hidden="true" tooltip="{{'ORDERC_ToiSeMangHangRaBuuCuc_ChuThich' | translate }}"  tooltip-trigger="mouseenter"></i></a>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-lg-12 col-md-12">
+                                            <label class="i-switch m-t-xs m-r">
+                                                  <input type="checkbox"  ng-model="Config.Protected" ng-true-value="1"  ng-false-value="2">
+                                                  <i></i>
+                                                </label> {{'OBG_MuaDichVuKHaiGia' | translate }}<!-- Mua dịch vụ khai giá -->
+                                             <a href="javascript:;"><i class="icon-question" aria-hidden="true" tooltip="{{'OBG_NeuQuyKhachMuaDVBaoHiem' | translate }}"  tooltip-trigger="mouseenter"></i></a>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="col-lg-12 col-md-12">
+                                            <label class="i-switch m-t-xs m-r">
+                                                  <input type="checkbox"  ng-model="Config.Fragile"  ng-true-value="1"  ng-false-value="2">
+                                                  <i></i>
+                                                  
+                                                </label> {{'OBG_HangDeVo' | translate}}<!-- Hàng dễ vỡ/chất lỏng -->
+                                            <a href="javascript:;"><i class="icon-question" aria-hidden="true" tooltip="{{'OBG_VoiHangDeVoVuiLongDongGoi' | translate}}"  tooltip-trigger="mouseenter"></i></a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" ng-if="!disabled_service">
+                                        <div class="col-lg-12 col-md-12">
+                                            <label class="i-switch m-t-xs m-r">
+                                                  <input type="checkbox"  ng-model="Config.Checking"  ng-true-value="1"  ng-false-value="2">
+                                                  <i></i>
+                                                  
+                                                </label> {{'OBG_ChoKhachXemHangKhiNhan' | translate}}<!-- Cho khách xem hàng khi nhận  -->
+                                                <a href="javascript:;"><i class="icon-question" aria-hidden="true" tooltip="{{'OBG_NeuBanSuDungDichVu' | translate}}"  tooltip-trigger="mouseenter"></i></a>
+                                        </div>
+                                    </div>
+
+
+
+                                    <p class="m-t-md m-b-md"><strong>6. {{'OBG_TinhPhiVaThuHo' | translate}}<!-- 5. Tính phí & tiền thu hộ --></strong></p>
+
+                                    <div id="fee_detail">
+                                        <div class="form-group" ng-if="(1*fee_detail.pvc + 1 * calculateInfo.selected_courier.money_pickup >=0) || (calculateInfo.selected_courier && Config.Service == 6)">
+                                            <div class="col-md-6"><i class="fa fa-truck" aria-hidden="true"></i> {{'OBG_PhiVanChuyen' | translate}}<!-- Phí vận chuyển --></div>
+                                            <div class="col-md-6 text-right">
+                                                <span ng-if="viewCurrency == ViewHomeCurrency" style="color:#993333">
+                                                {{(1*fee_detail.pvc + 1 * (Config.ToPostOffice == 2 ? calculateInfo.selected_courier.money_pickup : 0) ) || '0' |vnNumber}}{{viewCurrency}}
+                                            </span>
+                                            <span ng-if="viewCurrency != ViewHomeCurrency" style="color:#993333">
+                                               {{convert_currency(1*fee_detail.pvc + 1 * (Config.ToPostOffice == 2 ? calculateInfo.selected_courier.money_pickup : 0)) || '' | usdNumber  | number:2 }}{{viewCurrency}}
+                                            </span>
+                                            </div>
+                                            <div class="cleafix"></div>
+                                        </div>
+
+
+                                        <div class="form-group" ng-if="fee_detail.vas.cod > 0">
+                                            <div class="col-md-6"><i class="fa fa-usd" aria-hidden="true"></i> &nbsp;{{'OBG_PhiThuHo' | translate}}<!-- Phí thu hộ --></div>
+                                            <div class="col-md-6 text-right">
+	                                            <span ng-if="viewCurrency == ViewHomeCurrency" style="color:#993333">{{fee_detail.vas.cod || '0' | vnNumber}}{{viewCurrency}}</span>
+	                                            <span ng-if="viewCurrency != ViewHomeCurrency" style="color:#993333">
+							                           {{convert_currency(fee_detail.vas.cod) || '' | usdNumber  | number:2 }}{{viewCurrency}}
+						                        </span>
+                                            </div>
+                                            <div class="cleafix"></div>
+                                        </div>
+
+                                        <div class="form-group" ng-if="fee_detail.vas.protected > 0">
+                                            <div class="col-md-6"><i class="fa fa-get-pocket" aria-hidden="true"></i> {{'OBG_PhiBaoHiem' | translate}}<!-- Phí Bảo Hiểm --></div>
+                                            <div class="col-md-6 text-right">
+                                            	<convert-currency style="color:#993333" home-currency="fee_detail.vas.protected"></convert-currency>
+                                           	 	<!-- <span ng-if="viewCurrency != ViewHomeCurrency"  style="color:#993333">{{fee_detail.vas.protected || '0' |vnNumber}}{{viewCurrency}}</span>
+                                            	<span ng-if="viewCurrency == ViewHomeCurrency" style="color:#993333">
+							                           {{convert_currency(fee_detail.vas.protected) || '' | usdNumber  | number:2 }}{{viewCurrency}}
+						                        </span> -->
+                                            </div>
+                                            <div class="cleafix"></div>
+                                        </div>
+                                        <div class="form-group" ng-if="fee_detail.vas.pdk > 0">
+                                            <div class="col-md-8"><i class="fa fa-get-pocket" aria-hidden="true"></i> Phí đồng kiểm (đã được cộng vào phí vận chuyển)</div>
+                                            <div class="col-md-4 text-right">
+                                            	<convert-currency style="color:#993333" home-currency="fee_detail.vas.pdk"></convert-currency>
+                                            </div>
+                                            <div class="cleafix"></div>
+                                        </div> 
+
+                                        <div class="form-group" ng-if="fee_detail.discount.pvc > 0 || fee_detail.discount.cod > 0">
+                                            <div class="col-md-6"><i class="fa fa-gift" aria-hidden="true"></i> {{'OBG_KhuyenMai' | translate}}<!-- Khuyến mãi --> </div>
+                                            <div class="col-md-6 text-right">
+                                            	<span ng-if="viewCurrency == ViewHomeCurrency" style="color:#993333">
+                                                    -{{(1*fee_detail.discount.pvc + 1*fee_detail.discount.pcod)  || '0' |vnNumber}}{{viewCurrency}}
+                                                </span>
+                                            	<span ng-if="viewCurrency != ViewHomeCurrency" style="color:#993333">
+                                                    -{{convert_currency(1*fee_detail.discount.pvc + 1*fee_detail.discount.pcod) || '' | usdNumber  | number:2 }}{{viewCurrency}}
+						                        </span>
+                                            </div>
+                                            <div class="cleafix"></div>
+                                        </div>
+
+                                        <div class="form-group" ng-if="calculateInfo.selected_courier.leatime_str">
+                                            <div class="col-md-8"><i class="glyphicon glyphicon-time" aria-hidden="true"></i> 
+                                                {{'OBG_Thoigiangiaohang' | translate}}:
+                                            </div>
+                                            <div class="col-md-4 text-right">
+                                                <span style="color:#993333">
+                                                        {{calculateInfo.selected_courier.leatime_str}}
+                                                </span>
+                                            <div class="cleafix"></div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <div class="form-group" ng-if="!NewOrder.TrackingCode">
+                                            <div class="col-md-12">
+                                            <!-- ng-disabled="createWaiting || waiting || !From.Inventory.id  || frmOrderCreate_{{$index}}.$invalid" -->
+                                                <button ng-disabled="createWaiting"  class="btn btn-success btn-block btn-lg"
+                                                    type="button" ng-click="CreateOrder(true)">{{'OBG_DuyetDonHangNgay' | translate}}
+                                                    <span>({{'OBG_ThuHo' | translate}}<!-- Thu hộ  -->: 
+                                                        <span ng-if="viewCurrency != ViewHomeCurrency">
+                                                            {{convert_currency(get_number(fee_detail.collect)) || '' | usdNumber  | number:2 }}{{viewCurrency}})
+                                                        </span>
+                                                        <span ng-if="viewCurrency == ViewHomeCurrency">
+                                                            {{get_number(fee_detail.collect) || '0' | vnNumber}}{{ViewHomeCurrency || 'đ'}})
+                                                        </span>
+                                                    </span> 
+                                                </button>
+                                                
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <br/><!-- ng-hide="createWaiting || waiting || frmOrderCreate_{{$index}}.$invalid" -->
+                                                <p class="text-center"><a ng-hide="createWaiting"
+                                                        ng-click="CreateOrder(false)"><span class="text-info">{{'OBG_LuuLaiVaDuyetSau' | translate}}<!-- Lưu lại dơn hàng và duyệt sau --></span></a></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-if="NewOrder.TrackingCode">
+                                            <div class="col-md-12">
+                                                <button ng-disabled="true" class="btn btn-success btn-block btn-lg"> {{NewOrder.status == 20 ? 'OBG_DonHangDaTao' : 'OBG_DonHangDaDuyet' | translate}}</button>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="form-group" ng-if="To.Buyer.Country.id != 237">
+                                            <div class="col-md-12">
+                                                <div class="alert alert-warning">
+                                                    <p><strong>Lưu ý</strong>: </p>
+                                                    <ol>
+                                                        <li>Người nhận sẽ thanh toán thuế và chi phí phát sinh thêm trong quá trình vận chuyển, nhập khẩu.</li>
+                                                        <li>Đơn hàng thay đổi trọng lượng sẽ được giữ lại chờ người bán thanh toán thêm.</li>
+                                                    </ol>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/ng-template" id="create_suscess.html">
+                        <div data-ng-include=" 'tpl/create/popup/popup_suscess.html' "></div>
+                </script>    
+                    </form>
+                </tab>
+                <tab heading="+ {{'OBG_Them' | translate}}" ng-click="addTabs()" disabled="true" class='thembtn'></tab>
+
+                <p style="
+                        vertical-align: middle;
+                        float: right;
+                        font-size: 20px;
+                    " class="hide"><a ui-sref="order.create"><span class="text-info">&lt; {{'OBG_TroVeTrangCu' | translate}}<!-- Trở về trang tạo đơn cũ --></span></a></p>
+                 <div >
+                    <script type="text/ng-template" id="show_dropoff.html">
+                        <div data-ng-include=" 'tpl/create/popup/popup_dropoff.html' "></div>
+                 </script> 
+                  <script type="text/ng-template" id="popover_service_teamplate.html">
+                        <div data-ng-include=" 'tpl/create/popup/popover_service.html' "></div>
+                </script>
+                </div>     
+            </tabset>
+        </div>
+    </div>
+
+
+</div>
+
+<style>
+    .intl-tel-input .selected-flag{
+        top:15px
+    }
+</style>

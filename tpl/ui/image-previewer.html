@@ -1,0 +1,15 @@
+<div
+    ng-init="over=false;"
+    ng-repeat="image in images track by $index"
+    class="inline m-r-xs m-b-xs prd-img-thumb-re thumb fade-in text-center"
+    ng-mouseover="over=true;"
+    ng-mouseleave="over=false"
+>
+    <a ng-click="remove(image)" class="btn-remove">
+        <br/>
+        <i ng-if="over" class="fa fa-times fa-3x"></i>
+    </a>
+    <img ng-src="{{image.url || image}}"  />
+</div>
+
+<div class="clearfix"></div>

@@ -1,0 +1,111 @@
+<div class="bg-light lter b-b wrapper-md hidden-print">
+    <a href class="btn btn-sm bg-orange pull-right" onClick="window.print();"><i class="fa fa-print"></i> In hóa đơn</a>
+    <h1 class="m-n font-thin h3">Hóa đơn</h1>
+</div>
+<div class="wrapper-md" ng-controller="PrintCtrl">
+    <div>
+        <div class="row">
+            <div class="col-xs-6">
+                <h4>{{userInfo.fullname}}.</h4>
+                <p>Email : {{userInfo.email}}</p>
+                <p>
+                    Phone:  {{userInfo.phone}}
+                </p>
+            </div>
+            <div class="col-xs-6 text-right">
+                <p class="h4">#{{$stateParams.id}}</p>
+                <h5>{{date | date:'dd-MM-yyyy'}}</h5>
+            </div>
+        </div>
+        <div class="well m-t bg-light lt">
+            <div class="row">
+                <div class="col-xs-6">
+                    <strong>Kỳ này:</strong>
+                    <p>
+                        Giao thành công: {{data.total_success}} đơn hàng<br>
+                        Chuyển hoàn: {{data.total_return}} đơn hàng<br>
+                        Tồn: {{data.total_backlog}} đơn hàng<br>
+                    </p>
+                </div>
+                <div class="col-xs-6">
+                    <strong>Tồn kỳ trước:</strong>
+                    <p>
+                        Giao thành công: {{data.total_lsuccess}} đơn hàng<br>
+                        Chuyển hoàn: {{data.total_lreturn}} đơn hàng<br>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <p class="m-t m-b">Thời gian : tháng {{data.month}} năm {{data.year}}<br>
+            Mã hóa đơn : <strong>#{{$stateParams.id}}</strong>
+        </p>
+        <div class="line"></div>
+        <table class="table table-striped bg-white b-a">
+            <thead>
+            <tr>
+                <th style="width: 60px">#</th>
+                <th></th>
+                <th style="width: 140px"></th>
+                <th style="width: 90px">Tổng</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td></td>
+                <td>Tổng thu hộ</td>
+                <td></td>
+                <td>{{data.total_money_collect + data.total_lmoney_collect | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td colspan="4">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Tổng phí vận chuyển</td>
+                <td></td>
+                <td>{{data.total_sc_pvc + data.total_lsc_pvc | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Tổng phí CoD</td>
+                <td></td>
+                <td>{{data.total_sc_cod + data.total_lsc_cod | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Tổng phí bảo hiểm</td>
+                <td></td>
+                <td>{{data.total_sc_pbh + data.total_lsc_pbh | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Tổng phí vượt cân</td>
+                <td></td>
+                <td>{{data.total_sc_pvk + data.total_lsc_pvk | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Tổng phí chuyển hoàn</td>
+                <td></td>
+                <td>{{data.total_sc_pch + data.total_lsc_pch | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Tổng(Đã bao gồm Vat)</strong></td>
+                <td>{{sum_fee(data) + data.total_sc_discount_pvc + data.total_lsc_discount_pvc + data.total_sc_discount_cod + data.total_lsc_discount_cod | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right no-border"><strong>Giảm phí vận chuyển</strong></td>
+                <td>{{data.total_sc_discount_pvc + data.total_lsc_discount_pvc | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right no-border"><strong>Giảm phí thu hộ</strong></td>
+                <td>{{data.total_sc_discount_cod + data.total_lsc_discount_cod | vnNumber}}đ</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right no-border"><strong>Tổng chi phí phát sinh</strong></td>
+                <td><strong>{{sum_fee(data) | vnNumber}}đ</strong></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

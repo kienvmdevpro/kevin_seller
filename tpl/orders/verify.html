@@ -1,0 +1,591 @@
+<style>
+	.content_verify{
+		text-align: center;
+	}
+	.content_verify >h5{
+		text-align: center;
+	}
+	.content_verify_white{
+		background-color: #fff;
+	}
+</style>
+<div ng-controller="VerifyCtrl">
+	
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2" ><i class="fa fa-check-square text-info"></i> {{'Ver_tienthuho' | translate}}<!-- Tiền thu hộ --></span>
+    </div>
+    <div style="margin:7px" class="alert alert-info m-b-none text-base"> 
+          <strong style="margin-bottom: 10px;/*display: block;*/">
+            <i class="fa fa-star-half-o fa-2x"></i>  {{'ORDERC_thongbao' | translate}} </strong>
+           {{'BS_ShipchungHuongDan' | translate}} 
+          <a class="text-info" target="_blank" href="https://www.shipchung.vn/ho-tro/cach-theo-doi-dong-tien-thu-ho-cod">{{'SHIPC_tab1_p_helpLink' | translate}} <i class="fa fa-external-link"></i>.</a>
+      </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+    		
+        <div class="col wrapper-sm">
+        <div class="row">
+        <div class="col-md-12" >
+	        <div class ="content_verify_white">
+	        		<div class="col-md-12">
+	        		<h4>
+	                    {{'Ver_Cac_donlayhangthanhcongFromTo' | translate : {from :time_start_Verify,to :time_end_Verify} }}
+	                </h4>
+	                </div>
+	                <div class="row" >
+		        	<div class="col-md-4">
+		        	<div class="panel panel-default">
+		                <div class="panel-heading font-bold">
+		                {{'Ver_DonDaThanhToan' | translate}}
+		                </div>
+		                	<span class="list-group-item content_verify" >
+		                       <h3><!-- <convert-currency home-currency="dataOrderVerifyCollect.DonDaThanhToanChuyenTien.collect"></convert-currency> -->
+		                       <span>
+		                            {{dataOrderVerifyCollect.DonDaThanhToanChuyenTien.collect || '0' | vnNumber}}{{ViewHomeCurrency}}
+		                        	</span>
+		                        	<span ng-if="convert-currency(data.total_amount)">({{convert_currency(dataOrderVerifyCollect.DonDaThanhToanChuyenTien.collect) || '' | number:4 }}{{viewCurrency}})</span>
+				                     
+		                       </h3>
+		                        <p>{{dataOrderVerifyCollect.DonDaThanhToanChuyenTien.count || '0' | vnNumber}} {{'Ver_donhang' | translate}}</p>
+		                    </span>
+							<span class="list-group-item">
+								<a class="text-info ng-binding" ui-sref="order.management({verify: 1,status:''})" target="_blank" tooltip="{{'Ver_XemChiTiet' | translate}}" >
+								<i class="fa fa-file-text"></i> {{'Ver_XemChiTiet' | translate}}</a>
+							</span>
+		            </div>
+			    	</div>
+			    	<div class="col-md-4">
+			        	<div class="panel panel-default">
+				    		<div class="panel-heading font-bold">{{'Ver_DonDangGiaoHang' | translate}}</div>
+				    		<div class="">
+								<span class="list-group-item content_verify" >
+			                       <h3><!-- <convert-currency home-currency="dataOrderVerifyCollect.DonDangGiaoHang.collect"></convert-currency> -->
+			                       <span>
+		                            {{dataOrderVerifyCollect.DonDangGiaoHang.collect || '0' | vnNumber}}{{ViewHomeCurrency}}
+		                        	</span>
+		                        	<span ng-if="convert-currency(data.total_amount)">({{convert_currency(dataOrderVerifyCollect.DonDangGiaoHang.collect) || '' | number:4 }}{{viewCurrency}})</span>
+				                     </h3>
+			                        <p> {{dataOrderVerifyCollect.DonDangGiaoHang.count || '0' | vnNumber}} {{'Ver_donhang' | translate}}</p>
+			                    </span>
+								<span class="list-group-item">
+									<a class="text-info ng-binding" ui-sref="order.management({verify: 0,status:'delivering'})" target="_blank" tooltip="{{'Ver_XemChiTiet' | translate}}" >
+									<i class="fa fa-file-text"></i> {{'Ver_XemChiTiet' | translate}}</a>
+								</span>
+							</div>
+				    	</div>
+			    	</div>
+			    	<div class="col-md-4">
+			        	<div class="panel panel-default">
+				    		<div class="panel-heading font-bold">{{'Ver_DonDaGiao' | translate}}</div>
+				    		<div class="">
+				    			<span class="list-group-item content_verify" >
+			                       <h3>
+			                       <!-- <convert-currency home-currency="dataOrderVerifyCollect.DonDaGiaoChoChuyenTien.collect"></convert-currency>
+			                        --><span>
+		                            {{dataOrderVerifyCollect.DonDaGiaoChoChuyenTien.collect || '0' | vnNumber}}{{ViewHomeCurrency}}
+		                        	</span>
+		                        	<span ng-if="convert-currency(data.total_amount)">({{convert_currency(dataOrderVerifyCollect.DonDaGiaoChoChuyenTien.collect) || '' | number:4 }}{{viewCurrency}})</span>
+				                     
+			                       </h3>
+			                        <p>{{dataOrderVerifyCollect.DonDaGiaoChoChuyenTien.count || '0' | vnNumber}} {{'Ver_donhang' | translate}}</p>
+			                    </span>
+								<span class="list-group-item">
+									<a class="text-info ng-binding" ui-sref="order.management({verify: 2,status:19})" target="_blank" tooltip="{{'Ver_XemChiTiet' | translate}}" >
+									<i class="fa fa-file-text"></i> {{'Ver_XemChiTiet' | translate}}</a>
+								</span>
+				    		</div>
+				    		
+				    	</div>
+			    	</div>
+	        	</div>
+	                
+	                
+	        	</div>
+        </div>
+        	
+        </div>
+        	
+            <div class="panel panel-default">
+                
+				  <div class="panel-heading font-bold">
+					  <h4>{{'Ver_PhienChuyenTien' | translate}}</h4>
+					  <form class="form-validation" role="form" name="frmSearch">
+	                        <div class="row m-b-sm">
+	
+	                            <div class="col-lg-3">
+	                                    <input type="number" class="form-control" placeholder="{{'Ver_mabanke' | translate}}"
+	                                           ng-model="search"
+	                                    />
+	                            </div>
+	
+	                            <div class="col-lg-3">
+	                                  <input type="text" class="form-control" placeholder="{{'Ver_tungay' | translate}}"
+	                                    ng-model="time_start"
+	                                    datepicker-popup="dd-MM-yyyy"
+	                                    is-open="time_start_open"
+	                                    datepicker-options="dateOptions"
+	                                    ng-required="true"
+	                                    close-text="Close"
+	                                    ng-click="time_start_open = true"
+	                                   />
+	                            </div>
+	
+	                            <div class="col-lg-3">
+	                                  <input type="text" class="form-control" placeholder="{{'Ver_denngay' | translate}}"
+	                                    datepicker-popup="dd-MM-yyyy"
+	                                    is-open="time_end_open"
+	                                    datepicker-options="dateOptions"
+	                                    date-disabled="disabled(date, mode)"
+	                                    close-text="Close"
+	                                    ng-model="time_end"
+	                                    ng-click="time_end_open = true"
+	                                  />
+	                            </div>
+	                        </div>
+	
+	                        <div class="row">
+	                            <div class="col-lg-3">
+	                                <button class="btn btn-info" ng-disabled="frmSearch.$invalid" ng-click="setPage()" type="button"><i class="glyphicon glyphicon-search"></i>{{'Btt_search' | translate}} <!-- Tìm kiếm --></button>
+	                            </div>
+	                            <div class="col-lg-3 col-lg-offset-6">
+	                                <a ng-href="{{exportExcel()}}" ng-disabled="frmSearch.$invalid" class="btn m-b-xs btn-success pull-right"><i class="fa fa-file-excel-o"></i> {{'Btt_excel' | translate}}</a>
+	                            </div>
+	                        </div>
+	                    </form>
+				  </div>
+                <div class="panel-body">
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+                        <div class="table-responsive">
+                        <table class="table-condensed table-hover col-md-12">
+                            <thead>
+                                <th>#</th>
+                                <th>
+                                   {{'Ver_mabanke' | translate}} <!-- Mã bảng kê -->
+                                </th>
+                                <th>
+                                    {{'Ver_thoigianthanhcong' | translate}}<!-- Thời gian thành công -->
+                                </th>
+                                <th class="text-left">
+                                   {{'Ver_MGDchuyentien' | translate}}<!--  MGD chuyển tiền -->
+                                </th>
+                                <th class="text-right">{{'Ver_sodudauky' | translate}}<!-- Số dư đầu kỳ --> <i class="fa fa-question-circle" tooltip="{{'Ver_sodudauky' | translate}}"></i></th>
+                                <th class="text-right">{{'Ver_tienthuho' | translate}}<!-- Tiền thu hộ --> <i class="fa fa-question-circle" tooltip="{{'Ver_TongTienTHCacDonHangDS' | translate}}"></i></th>
+                                <th class="text-right">{{'Ver_tongphi' | translate}}<!-- Tổng phí --> <i class="fa fa-question-circle" tooltip="{{'Ver_TongChiPhiVCCacDonHangDS' | translate}}"></i></th>
+                                <th class="text-right">{{'Ver_tamgiu' | translate}}<!-- Tạm giữ --> <i class="fa fa-question-circle" tooltip="{{'Ver_SoTienTamGiu' | translate:{isShipchung : isShipchung} }}"></i></th>
+                                <th class="text-right">{{'Ver_thucnhan' | translate}}<!-- Thực nhận --> <i class="fa fa-question-circle" tooltip="{{'Ver_SoTienThuchuyen' | translate}}"></i></th>
+                                <th class="text-center">{{'Ver_trangthai' | translate}}<!-- Trạng thái --></th>
+                            </thead>
+                            <tbody ng-repeat="item in list_data">
+                                <tr ng-class="{'success': item.show}" tooltip="{{item.note}}">
+                                    <td>
+                                        <strong>{{item_stt + $index + 1}}</strong><br />
+                                    </td>
+                                    <td>
+                                        <a href="javascript:;" class="text-info"
+                                           ng-click="show_detail(item)"
+                                           tooltip="Xem chi tiết"
+                                                >
+                                            <i class="fa fa-file-text"></i>
+                                            {{item.id}}
+
+                                        </a>
+                                        <br />
+                                        {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                    </td>
+                                    <td>
+                                        <p ng-if="item.time_start"> {{'Ver_tungay' | translate}} {{ item.time_start*1000|date:"dd-MM-yyyy  HH:mm"}}</p>
+                                        <p ng-if="item.time_end"> {{'Ver_denngay' | translate}} {{item.time_end*1000|date:"dd-MM-yyyy  HH:mm"}}</p>
+                                    </td>
+
+                                    <td class="text-left">
+                                        <p ng-if="item.transaction_id">
+                                            {{item.transaction_id}}
+                                        </p>
+                                        <p ng-if="item.type_payment ==  2">{{list_bank[item.account]}}</p>
+                                        <p ng-if="item.type_payment ==  1">{{item.account}}</p>
+                                        <p>{{item.acc_number}}</p>
+                                    </td>
+                                    <td class="text-right">
+                                        <!-- {{item.balance|vnNumber}}{{ViewHomeCurrency}} -->
+                                        <convert-currency home-currency="item.balance"></convert-currency>
+                                        <!-- <span ng-if="convert_currency(item.balance)">
+				                           ({{convert_currency(item.balance) || '' | number:4 }} {{viewCurrency}})
+				                        </span> -->
+                                    </td>
+                                    <td class="text-right">
+                                       <!-- {{item.total_money_collect|vnNumber}}{{ViewHomeCurrency}} -->
+                                       <convert-currency home-currency="item.total_money_collect"></convert-currency>
+                                        <!-- <span ng-if="convert_currency(item.total_money_collect)">
+				                           ({{convert_currency(item.total_money_collect) || '' | number:4 }} {{viewCurrency}})
+				                        </span> -->
+                                    </td>
+
+                                    <td class="text-right">
+                                         - <!-- {{item.total_fee|vnNumber}}{{ViewHomeCurrency}} -->
+                                         <convert-currency home-currency="item.total_fee"></convert-currency>
+                                        
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span ng-click="show_freeze(item)" class="pointer">
+                                            <i class="fa fa-external-link text-info"></i> 
+                                           <!--  {{((item.balance_available - item.config_balance) < 0 && item.type != 2) ? (item.balance_available - item.config_balance) : 0 | vnNumber}}{{ViewHomeCurrency}} -->
+	                                         <convert-currency home-currency="((item.balance_available - item.config_balance) < 0 && item.type != 2) ? (item.balance_available - item.config_balance) : 0"></convert-currency>
+	                                        
+                                        </span>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span ng-if="item.type == 2">
+                                            <!-- {{(item.total_money_collect - item.total_fee) |vnNumber}}{{ViewHomeCurrency}} -->
+                                            <convert-currency home-currency="item.total_money_collect - item.total_fee"></convert-currency>
+                                            
+                                        </span>
+                                        <span ng-if="item.type != 2">
+                                            <!-- {{item.total_money_collect + item.balance - item.total_fee + ((item.balance_available - item.config_balance) < 0 ? (item.balance_available - item.config_balance) : 0) |vnNumber}}{{ViewHomeCurrency}} -->
+                                        	<convert-currency home-currency="item.total_money_collect + item.balance - item.total_fee + ((item.balance_available - item.config_balance) < 0 ? (item.balance_available - item.config_balance) : 0)"></convert-currency>
+                                        	
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <a class="text-success"
+                                           ng-href="{{exportExcel(item)}}"
+                                           tooltip="Xuất excel"
+                                        >
+                                            <i class="fa fa-file-excel-o"></i>
+                                            Excel
+                                        </a><br />
+                                        <span ng-if="item.type != 2">
+                                            <span  class="label" ng-class="list_status[item.status].bg">
+                                                {{list_status[item.status].name}}
+                                            </span> <br />
+                                            <span class="label bg-info" ng-show="item.type_payment == 2"> {{'Ver_vivimo' | translate}}<!-- Ví Vimo --> </span>
+                                            <span class="label bg-warning" ng-show="item.type_payment == 1"> {{'Ver_nganluong' | translate}}<!-- Ngân lượng --> </span>
+                                        </span>
+
+                                        <span ng-if="item.type == 2" class="label bg-success">{{'Ver_daghinhansodu' | translate}}<!-- Đã ghi nhận số dư --></span><br />
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="20" ng-if="(((item.balance_available - item.config_balance) < 0 && item.type != 2) ? (item.balance_available - item.config_balance) : 0) < 0" >
+                                        {{'Ver_Sotientamgiuphivanchuyen' | translate}} <!-- Số tiền tạm giữ phí vận chuyển --> (<strong>{{(((item.balance_available - item.config_balance) < 0 && item.type != 2) ? (item.balance_available - item.config_balance) : 0) |vnNumber }}đ</strong>
+                                        <strong ng-if="convert_currency(item.balance_available - item.config_balance) && ((item.balance_available - item.config_balance) < 0 && item.type != 2)">({{convert_currency(item.balance_available - item.config_balance)}} {{viewCurrency}})</strong>
+                                        <strong ng-if="((item.balance_available - item.config_balance) >= 0 || item.type == 2)">(0{{viewCurrency}})</strong>)
+                                       {{'Ver_cuacacdonhangdanggiao' | translate}}  <!-- của các đơn hàng đang giao hàng sẽ được thanh toán trong kỳ đối soát tiếp theo. Xem danh sách đơn bị tạm giữ tiền --> <a ng-click="show_freeze(item)" class="pointer"><span class="text-info">tại đây</span></a> .
+                                    </td>
+                                </tr>
+                                <tr ng-show="item.show">
+                                    <td colspan="10" class="no-padder-l no-padder-r">
+                                        <table class="table table-striped table-hover table-condensed b">
+                                            <thead>
+                                                <tr class="success">
+                                                    <th class="text-center">
+                                                        {{'Ver_MaVanDon' | translate}}<!-- Mã vận đơn -->
+                                                    </th>
+                                                    <th class="text-center">
+                                                         {{'Ver_trangthai' | translate}}<!-- Trạng thái -->
+                                                    </th>
+                                                    <th class="text-right">
+                                                         {{'Ver_tienthuho' | translate}}<!-- Tiền thu hộ -->
+                                                    </th>
+                                                    <th colspan="8" class="text-center">
+                                                        Phí Shipchung
+                                                    </th>
+                                                    <th colspan="3" class="text-center">
+                                                        Phí Fulfillment (Boxme)
+                                                    </th>
+                                                   
+                                                    <th class="text-right">
+                                                        {{'Ver_Tongphi' | translate}}<!--  Tổng phí -->
+                                                    </th>
+                                                </tr>
+                                                <tr class="success">
+                                                    <th colspan="3">
+                                                    </th>
+                                                    <th class="text-right">
+                                                         {{'Ver_PhiVC' | translate}}<!-- Phí VC -->
+                                                    </th>
+                                                    <th class="text-right">
+                                                         {{'Ver_PhiCOD' | translate}}<!-- Phí CoD -->
+                                                    </th>
+                                                    <th class="text-right">
+                                                        {{'Ver_PhiBH' | translate}}<!--  Phí BH -->
+                                                    </th>
+                                                    <th class="text-right">
+                                                        {{'Ver_PhiVK' | translate}}<!--  Phí VK -->
+                                                    </th>
+                                                    <th class="text-right">
+                                                         {{'Ver_phiCH' | translate}}<!-- Phí CH -->
+                                                    </th>
+                                                    <th class="text-right">
+                                                         Phụ phí vùng xa
+                                                    </th>
+                                                    <th class="text-right">
+                                                         Thuế phí hải quan 
+                                                    </th>
+                                                    <th class="text-right">
+                                                         {{'Ver_khuyenmai' | translate}}<!-- Khuyến mại -->
+                                                    </th>
+
+                                                    <th class="text-right">
+                                                        Phí lưu kho
+                                                    </th>
+                                                    <th class="text-right">
+                                                        Phí đóng gói
+                                                    </th>
+                                                    <th class="text-right">
+                                                        Phí xử lý
+                                                    </th>
+
+                                                    <th class="text-right">
+                                                    </th>
+                                                </tr>
+                                                
+                                            </thead>
+                                            <tbody ng-if="item.show">
+                                                <tr ng-repeat="itm in item.detail" ng-class="{'active': $odd}">
+                                                    <td class="text-center">
+                                                        <a ui-sref="detail({code:itm.tracking_code})" class="text-info" href="javascript:;" target="_blank">{{itm.tracking_code}}</a>
+                                                    </td>
+
+                                                    <td>
+                                                        {{status_order[itm.status]}}
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="!isReturn(itm.status)">
+                                                        	<!-- {{itm.order_detail.money_collect|vnNumber}}{{ViewHomeCurrency}} -->
+                                                        	<convert-currency home-currency="itm.order_detail.money_collect"></convert-currency>
+                                                        	<!-- <span ng-if="convert_currency(itm.order_detail.money_collect)">
+									                           ({{convert_currency(itm.order_detail.money_collect) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+                                                        </span>
+                                                        
+                                                        <span ng-if="isReturn(itm.status)">0</span>
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <!-- {{itm.order_detail.sc_pvc || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                        <convert-currency home-currency="itm.order_detail.sc_pvc"></convert-currency>
+                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_pvc)">
+								                           ({{convert_currency(itm.order_detail.sc_pvc) || '' | number:4 }} {{viewCurrency}})
+								                        </span> -->
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="!isReturn(itm.status)"><!-- {{itm.order_detail.sc_cod || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+	                                                        <convert-currency home-currency="itm.order_detail.sc_cod"></convert-currency>
+	                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_cod)">
+									                           ({{convert_currency(itm.order_detail.sc_cod) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+                                                        </span>
+                                                        <span ng-if="isReturn(itm.status)">0</span>
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="!isReturn(itm.status)"><!-- {{itm.order_detail.sc_pbh || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                        	<convert-currency home-currency="itm.order_detail.sc_pbh"></convert-currency>
+	                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_pbh)">
+									                           ({{convert_currency(itm.order_detail.sc_pbh) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+									                     </span>
+                                                        <span ng-if="isReturn(itm.status)">0</span>
+
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <!-- {{itm.order_detail.sc_pvk || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                        <convert-currency home-currency="itm.order_detail.sc_pvk"></convert-currency>
+                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_pvk)">
+								                           ({{convert_currency(itm.order_detail.sc_pvk) || '' | number:4 }} {{viewCurrency}})
+								                        </span> -->
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="isReturn(itm.status)"><!-- {{itm.order_detail.sc_pch || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+	                                                        <convert-currency home-currency="itm.order_detail.sc_pch"></convert-currency>
+	                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_pch)">
+									                           ({{convert_currency(itm.order_detail.sc_pch) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+								                      	</span>
+                                                        <span ng-if="!isReturn(itm.status)">0</span>
+                                                    </td>
+
+
+                                                    <td class="text-right">
+                                                        <span ng-if="itm.order_detail.sc_remote">
+	                                                        <convert-currency home-currency="itm.order_detail.sc_remote"></convert-currency>
+                                                        </span>
+                                                        <span ng-if="!itm.order_detail.sc_remote">0</span>
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="itm.order_detail.sc_clearance">
+	                                                        <convert-currency home-currency="itm.order_detail.sc_clearance"></convert-currency>
+                                                        </span>
+                                                        <span ng-if="!itm.order_detail.sc_clearance">0</span>
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="!isReturn(itm.status)"><!-- {{(itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc) || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                        	<convert-currency home-currency="itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc"></convert-currency>
+                                                        	<!-- <span ng-if="convert_currency(itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc)">
+									                           ({{convert_currency(itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+                                                        </span>
+                                                        <span ng-if="isReturn(itm.status)"><!-- {{(itm.order_detail.sc_discount_pvc) || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                        	<convert-currency home-currency="itm.order_detail.sc_discount_pvc"></convert-currency>
+	                                                       <!--  <span ng-if="convert_currency(itm.order_detail.sc_discount_pvc)">
+									                           ({{convert_currency(itm.order_detail.sc_discount_pvc) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+									                   </span>
+                                                    </td>
+
+                                                   
+
+
+
+                                                    <td class="text-right">
+                                                        <span ng-if="itm.order_fulfillment">
+	                                                        <convert-currency home-currency="itm.order_fulfillment.sc_plk - itm.order_fulfillment.sc_discount_plk  || 0"></convert-currency>
+								                      	</span>
+                                                        <span ng-if="!itm.order_fulfillment">-</span>
+                                                          
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        
+                                                        <span ng-if="itm.order_fulfillment">
+	                                                        <convert-currency home-currency="itm.order_fulfillment.sc_pdg - itm.order_fulfillment.sc_discount_pdg || 0"></convert-currency>
+								                      	</span>
+                                                        <span ng-if="!itm.order_fulfillment">-</span>
+
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <span ng-if="itm.order_fulfillment">
+	                                                        <convert-currency home-currency="itm.order_fulfillment.sc_pxl - itm.order_fulfillment.sc_discount_pxl || 0"></convert-currency>
+								                      	</span>
+                                                        <span ng-if="!itm.order_fulfillment">-</span>
+                                                    </td>
+
+
+                                                     <td class="text-right">
+                                                        <span ng-if="!isReturn(itm.status)"><!-- {{(itm.order_detail.sc_pvc + itm.order_detail.sc_cod
+                                                        + itm.order_detail.sc_pvk + itm.order_detail.sc_pbh - (itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc)) |vnNumber}}{{ViewHomeCurrency}} -->
+	                                                        <convert-currency home-currency="itm.order_detail.sc_pvc + itm.order_detail.sc_cod + itm.order_detail.sc_pvk + itm.order_detail.sc_pbh - (itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc) + (itm.order_fulfillment.sc_plk - itm.order_fulfillment.sc_discount_plk) + (itm.order_fulfillment.sc_pdg - itm.order_fulfillment.sc_discount_pdg) + (itm.order_fulfillment.sc_pxl - itm.order_fulfillment.sc_discount_pxl)"></convert-currency>
+	                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_pvc + itm.order_detail.sc_cod + itm.order_detail.sc_pvk + itm.order_detail.sc_pbh - (itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc))">
+									                           ({{convert_currency(itm.order_detail.sc_pvc + itm.order_detail.sc_cod + itm.order_detail.sc_pvk + itm.order_detail.sc_pbh - (itm.order_detail.sc_discount_cod + itm.order_detail.sc_discount_pvc)) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+                                                        </span>
+                                                        <span ng-if="isReturn(itm.status)"><!-- {{(itm.order_detail.sc_pvc + itm.order_detail.sc_pvk + itm.order_detail.sc_pch - itm.order_detail.sc_discount_pvc) |vnNumber}}{{ViewHomeCurrency}} -->
+	                                                       <convert-currency home-currency="itm.order_detail.sc_pvc + itm.order_detail.sc_pvk + itm.order_detail.sc_pch - itm.order_detail.sc_discount_pvc + (itm.order_fulfillment.sc_plk - itm.order_fulfillment.sc_discount_plk) + (itm.order_fulfillment.sc_pdg - itm.order_fulfillment.sc_discount_pdg) + (itm.order_fulfillment.sc_pxl - itm.order_fulfillment.sc_discount_pxl)"></convert-currency>
+	                                                        <!-- <span ng-if="convert_currency(itm.order_detail.sc_pvc + itm.order_detail.sc_pvk + itm.order_detail.sc_pch - itm.order_detail.sc_discount_pvc)">
+									                           ({{convert_currency(itm.order_detail.sc_pvc + itm.order_detail.sc_pvk + itm.order_detail.sc_pch - itm.order_detail.sc_discount_pvc) || '' | number:4 }} {{viewCurrency}})
+									                        </span> -->
+                                                        </span>
+                                                    </td>
+
+                                                </tr>
+                                                <tr ng-show="!item.detail.length && !waiting_detail">
+                                                    <td colspan="10" class="text-center"> {{'Ver_KhongCoDuLieu' | translate}}<!-- Không có dữ liệu --></td>
+                                                </tr>
+                                                <tr ng-show="waiting_detail && !item.detail.length">
+                                                    <td colspan="10" class="text-center">
+                                                        <i class="text-3x fa fa-spinner fa-spin"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <tr ng-show="item.show_freeze">
+                                    <td colspan="10" class="no-padder-l no-padder-r">
+                                        <table class="table table-striped table-hover table-condensed b">
+                                            <thead>
+                                            <tr class="success">
+                                                <th class="text-center">
+                                                    Mã vận đơn tạm giữ
+                                                </th>
+                                                <th class="text-center">
+                                                    Trạng thái
+                                                </th>
+                                                <th class="text-right">
+                                                    Tổng phí
+                                                </th>
+                                                <th class="text-right">
+                                                    Tổng thu hộ
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="itm in item.freeze" ng-class="{'active': $odd}">
+                                                    <td class="text-center">
+                                                        <a ui-sref="detail({code:itm.tracking_code})" class="text-info" href="javascript:;" target="_blank">{{itm.tracking_code}}</a>
+                                                    </td>
+
+                                                    <td>
+                                                        {{status_order[itm.status]}}
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <!-- {{itm.total_fee || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                        <convert-currency home-currency="itm.total_fee"></convert-currency>
+                                                        <!-- <span ng-if="convert_currency(itm.total_fee)">
+								                           ({{convert_currency(itm.total_fee) || '' | number:4 }} {{viewCurrency}})
+								                        </span> -->
+                                                    </td>
+
+                                                    <td class="text-right">
+                                                        <!-- {{itm.total_collect  || '0' |vnNumber}}{{ViewHomeCurrency}} -->
+                                                         <convert-currency home-currency="itm.total_collect"></convert-currency>
+                                                        <!-- <span ng-if="convert_currency(itm.total_collect)">
+								                           ({{convert_currency(itm.total_collect) || '' | number:4 }} {{viewCurrency}})
+								                        </span> -->
+                                                    </td>
+                                                </tr>
+                                                <tr ng-show="!item.freeze.length && !waiting_freeze">
+                                                    <td colspan="10" class="text-center"> Không có dữ liệu</td>
+                                                </tr>
+                                                <tr ng-show="waiting_freeze && !item.freeze.length">
+                                                    <td colspan="10" class="text-center">
+                                                        <i class="text-3x fa fa-spinner fa-spin"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="!list_data.length && !waiting">
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        Không có dữ liệu
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="waiting">
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <i class="text-3x fa fa-spinner fa-spin"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

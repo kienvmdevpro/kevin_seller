@@ -1,0 +1,36 @@
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img ng-src="img/sc_logo.jpg" />
+              <h4>Cổng vận chuyển giao nhận và thu tiền toàn quốc</h4>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-body wrapper-md">
+      <div class="row">
+        <div class="col-md-12" style="font-size:14px">
+                    
+                    Bạn đã tạo vận đơn thành công. Hãy <strong>duyệt vận đơn </strong> để bưu tá đến lấy hàng sớm nhất !<br />
+                    <span class="text-danger text-sm" ng-if="(Order.Config.Service == 2) && (Order.Courier == 1) && (Order.Order.Weight <= 2000) && ([373,376,379,375,377,374].indexOf(1*Order.To.Province) != -1) && ([373,376,379,375,377,374].indexOf(Order.From.Province) != -1)">
+                        (Bạn đang tham gia chương trình "Đồng giá 10k vận chuyển". Tạo và Duyệt đơn để nhận mức phí 10.000đ/đơn) <br />
+                    </span>
+                    <ul class="list-unstyled">
+                        <li><h3>Mã vận đơn: {{Lading.TrackingCode}}</h3></li>
+                        <li><h3>Tổng tiền thu hộ: {{Lading.MoneyCollect || '0' |vnNumber}}đ</h3></li>
+                    </ul>
+
+
+                        Chú ý: Quý khách cần ghi mã vận đơn <a class="text-orange"  ui-sref="detail({code:Lading.TrackingCode})" target="_blank">{{Lading.TrackingCode}}</a> và tên hãng vận chuyển lên gói hàng.
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success btn-lg btn-block" ng-click="accept_Lading(Lading.TrackingCode)" ng-disabled="waiting_status">Duyệt vận đơn</button>
+                    </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-info r-2x" ng-click="run()">Đóng</button>
+    </div>

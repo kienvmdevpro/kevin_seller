@@ -1,0 +1,22 @@
+<div ng-controller="PrintBsinController" class="wrapper-xs bg-white ng-scope" ng-init="app.settings.headerFixed = false;app.settings.color = true">
+    <div class="text-center" ng-show="loading">
+        <span>Slow but sure</span><br/><i class="fa-2x fa fa-spinner fa-spin"></i>
+    </div>
+    <div ng-if="!loading" class="hbox hbox-auto-xs hbox-auto-sm print_hvc col-md-4 col-xs-4" style="height: 600px; margin-top: 35px" ng-repeat="item in list" >
+        <div ng-repeat="product in item" class="col-md-12 col-xs-12" style="margin-bottom: 30px">
+            <div class="col-md-4 col-xs-4">
+                <img class="img-responsive" ng-src="{{product.ProductBarcode}}" alt="" style="width: 100%">
+                <div class="font-barcode" style="margin-left: 8%">
+                    <p class="font-print text-center" ng-if="type_print == 0">{{product.UID}}</p>
+                    <p class="font-print text-left" ng-if="type_print == 0">BSIN: {{product.SKU}}</p>
+                    <p class="font-print text-left" ng-if="type_print == 0">{{product.ProductName | limitTo : 24}}<span ng-if="product.ProductName.length>24">...</span>-{{product.StatusName | limitTo:1}}</p>
+                    <p class="font-print text-center" ng-if="type_print == 1">BSIN: {{product.SKU}}</p>
+                   <p class="font-print text-left" ng-if="type_print == 1">{{product.ProductName | limitTo : 24}}<span ng-if="product.ProductName.length>24">...</span>-{{product.StatusName | limitTo:1}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="settings panel-default" style="right: -165px">
+        <button class="btn bg-orange btn_print no-shadow pos-abt hidden-print" onclick="window.print();"><i class="fa fa-print"></i> In vận đơn</button>
+    </div>
+</div>

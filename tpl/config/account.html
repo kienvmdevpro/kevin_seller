@@ -1,0 +1,315 @@
+<div ng-controller="ConfigAccountCtrl"> <!---->
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n">{{'ACC_CauHinhTaiKhoanCaNhan' | translate}}<!-- Cấu hình tài khoản cá nhân --></h3>
+    </div>
+    <!-- / header -->
+
+    
+    <!--Content-->
+    <div class="wrapper b-b bg-white" tour-step order="0" title="{{'ACC_CauHinhThongTinCaNhan' | translate}}" content="{{'ACC_HayNhapDayDuThongTin' | translate}}" placement="top">
+            <div class="panel panel-default" ng-if="[0,1].indexOf(userRole) >=0">
+                <div class="panel-heading font-bold">{{'ACC_ThongTinChuTaiKhoan' | translate}}<!-- Thông tin chủ tài khoản --></div>
+                <div class="panel-body">
+                    <form name="frmUser" ng-submit="change_info({fullname: user.fullname, country_id:user.country_id , city_id: user.city_id, district_id: user.district_id, address: user.address,phone: user.phone,currency:user.currency})" role="form" class="form-horizontal form-validation">
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_HoTenChuTaiKhoan' | translate}}<!-- Họ tên chủ tài khoản --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <input type="text" class="form-control" ng-model="user.fullname" ng-change="changeField()" />
+                                <small><i>{{'ACC_ChuYThongTinNayLaCoSoXacMinh' | translate}}<!-- Chú ý: Thông tin này là cơ sở để xác minh chủ tài khoản nhận tiền thu hộ trên Ngân Hàng --></i></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_MatHangkinhDoanh' | translate}}<!-- Mặt hàng kinh doanh --></label>
+                          <div class="col-sm-6 col-md-6 col-lg-5">
+
+                              <div ng-repeat="item in product_trading_type" class="col-md-6">
+
+                                  <label for="product-{{item.id}}" >
+                                      <input type="checkbox" id="product-{{item.id}}"  ng-model="product_trading[item.id]" ng-change="change_product_trading(item.id, product_trading[item.id])" > {{item.name}}
+                                  </label>
+                              </div>
+                              <div class="cleafix"></div>
+                         </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_EmaiTaiKhoan' | translate}}<!-- Email tài khoản --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <input ng-model="user.email" type="email" class="form-control" readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="userInfo.layers_security == 1">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_SDT' | translate}}<!-- Số điện thoại --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <input ng-model="user.phone" type="phone" class="form-control" ng-change="changeField()"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="userInfo.layers_security == 0 || userInfo.phone == ''">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_SDT' | translate}}<!-- Số điện thoại --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <input ng-model="user.phone" type="phone" class="form-control" ng-change="changeField()"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="userInfo.profile_id > 0">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_SDT' | translate}}<!-- Số điện thoại --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <input ng-model="user.phone" type="phone" class="form-control" ng-change="changeField()"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label"><!-- Loại tiền tệ hiển thị -->{{'VER_LoaiTienTeHienThi' | translate}}<!-- Số điện thoại --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <select
+                                        ng-change="changeField()"
+                                        ng-options="currency.id as currency.country for currency in list_currency"
+                                        ng-model="user.currency"
+                                        class="form-control">
+                                </select>
+                            </div>
+                        </div> 
+
+                        <div class="form-group">
+                            <label for="country" class="col-lg-2 col-md-2 control-label">{{'OBG_QuocGia' | translate}}<!-- Quốc gia --> <span class="text-danger">*</span></label>
+                            <div class="col-lg-5 col-md-4">
+                                <ui-select ng-model="user.country_id"  ng-change="changeField()"  name="country" ng-disabled="disabled" required>
+                                    <ui-select-match placeholder="Quốc gia">{{$select.selected.country_name }}</ui-select-match>
+                                    <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                                    <ui-select-choices refresh-delay="300" repeat="value.id as value in list_country | filter: $select.search">
+
+                                        {{value.country_name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city" class="col-lg-2 col-md-2 control-label">{{'OBG_TinhThanh' | translate}}<!-- Tỉnh thành --> <span class="text-danger">*</span></label>
+                            <div class="col-lg-5 col-md-4">
+                                <!-- global-->
+                                <ui-select ng-model="user.city_id" ng-change="changeField()"  ng-if="user.country_id !=237"  name="city" ng-disabled="disabled" required>
+                                    <ui-select-match placeholder="Tỉnh thành">{{$select.selected.city_name}}</ui-select-match>
+                                    <ui-select-choices refresh-delay="300" refresh="loadCityGlobal(user.country_id, $select.search)" repeat="value.id as value in list_city_global | filter: $select.search |limitTo: 64 track by $index">
+                                        {{value.city_name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                                <!-- vn-->
+                                 <ui-select ng-model="user.city_id" ng-change="changeField()"  ng-if="user.country_id ==237" name="city" ng-disabled="disabled" required>
+                                    <ui-select-match placeholder="Tỉnh thành">{{$select.selected.city_name}}</ui-select-match>
+                                    <ui-select-choices refresh-delay="300"  repeat="value.id as value in list_city_vn | filter: $select.search |limitTo: 64 track by $index">
+                                        {{value.city_name}}
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="user.country_id == 237">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_QuanHuyen' | translate}}<!-- Quận/Huyện --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <select
+                                        boxme-district-by-province
+                                        province-id="user.city_id"
+                                        district-id="user.district_id"
+                                        ng-change="changeField()"
+                                        default-label="{{'ACC_ChonQuanHuyen' | translate}}"
+                                        ng-model="user.district_id"
+                                        class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_DiaChi' | translate}}<!-- Địa Chỉ --></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <textarea type="text" ng-model="user.address" class="form-control" ng-change="changeField()" required></textarea>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="userInfo.phone != ''">
+                            <div class="col-md-3 col-lg-offset-2 col-md-offset-3">
+                                <button 
+                                        ng-disabled="fsubmit || changedInfo ==false"
+                                        type="submit"
+                                        ng-click="changeField()"
+                                        class="btn btn-success"
+                                        tour-step order="4" 
+                                        placement="top"
+                                        on-next="onTourEnd()"
+                                >{{'Btt_update' | translate}}<!-- Cập nhật -->
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="userInfo.phone == ''">
+                            <div class="col-md-3 col-lg-offset-2 col-md-offset-3">
+                                <button ng-disabled="frmUser.$invalid || fsubmit || changedInfo ==false"
+                                        type="button"
+                                        class="btn btn-success"
+                                        ng-click="saveData(user.fullname,user.phone,user.city_id,user.district_id,user.address,user.currency,user.country_id);"
+                                >{{'Btt_update' | translate}}<!-- Cập nhật -->
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div> <!--/ panel-->
+
+            <div class="panel panel-default" ng-if="[0,1].indexOf(userRole) >=0">
+                <div class="panel-heading font-bold">{{'ACC_NhanThongBao' | translate}}<!-- Nhận thông báo --></div>
+                <div class="panel-body">
+                    <form name="frmNotice" ng-submit="change_info({email_notice : user.email_notice,notice_type : {email : user.notice_type['email'],facebook : user.notice_type['facebook']} })" role="form">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label class="i-checks">
+                                    <input type="checkbox" name="a" value="email" ng-model="user.notice_type['email']"><i></i> {{'ACC_ThongBaoQuaEmail' | translate}}<!-- Thông báo qua Email -->
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <label class="col-md-12">{{'ACC_NhapEmailNhanThongBao' | translate}}<!-- Nhập email nhận thông báo --></label>
+                                <div class="col-md-6">
+                                    <input ng-model="user.email_notice" type="email" class="form-control " placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <!-- <div class="checkbox">
+                            <label class="i-checks">
+                                <input type="checkbox" name="a" value="facebook" ng-model="user.notice_type['facebook']" ng-disabled="!user.profile_id" ng-checked="user.profile_id > 0"><i></i> {{'ACC_ThongBaoQuaFB' | translate}}Thông báo qua Facebook
+                            </label>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label ng-if="user.profile_id" class="m-b-xs col-md-12">{{'ACC_TaiKhoanDaLienKetVoiFB' | translate}}Tài khoản của bạn đã liên kết với tài khoản Facebook <a ng-href="{{user.integration.link}}" target="_blank"><strong>{{user.integration.name}}</strong></a> <a ng-if="!user.is_fb" href="" ng-click="destroyIntegration()" ><i class="text-info">({{'Btt_cancel' | translate}}Hủy liên kết)</i></a></label>
+                                <label ng-if="!user.profile_id" class="m-b-xs col-md-12">{{'ACC_TaiKhoanChuaLienKetVoiFB' | translate}}Hiện tại tài khoản của bạn chưa được liên kết với tài khoản Facebook</label>
+
+                                <div class="col-md-12">
+                                    <a ng-if="!user.profile_id" class="btn btn-rounded btn-sm btn-info padder"
+                                       ng-click="fbIntergation()" ng-disabled="integrationLoading">
+                                        <i class="fa fa-fw fa-facebook"></i>
+                                       {{'ACC_LienKetVoiFB' | translate}} Liên kết Facebook
+                                    </a>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="clearfix">&nbsp;</div>
+
+                        <div class="col-md-12 m-l">
+                                <button ng-disabled="frmNotice.$invalid || fsubmit" type="submit"
+                                        class="btn btn-success padder">
+                                    {{'Btt_update' | translate}}<!-- Cập Nhật -->
+                                </button>
+                        </div>
+                    </form>
+                </div>
+            </div> <!--/ panel-->
+
+        <div class="panel panel-default" ng-if="[0,1].indexOf(userRole) >=0">
+            <div class="panel-heading font-bold">{{'ACC_BaoMat2Lop' | translate}}<!-- Bảo mật 2 lớp --></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3 control-label text-md">{{'ACC_XacMinh2Buoc' | translate}}<!-- Xác minh 2 bước: --> </label>
+                        <div class="col-sm-6 col-md-6 col-lg-5">
+                            <label class="i-switch bg-success">
+                                <input type="checkbox" ng-model="user.layers_security" ng-true-value="1"  ng-false-value="0"  ng-change="change(user,user.layers_security, 'layers_security')" >
+                                <i></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-6 col-md-6 col-lg-5">
+                            <input type="tel"
+                                   ng-model="user.phone"
+                                   ng-pattern="/^[0-1][1-9][\d]{6,13}$/"
+                                   class="form-control"
+                                   tour-step order="1"
+                                   title="Điện thoại"
+                                   readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix">&nbsp;</div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <small>
+                            {{'ACC_BaoVeTaiKhoanCuaBanVoi2Buoc' | translate}}<!-- Bảo vệ tài khoản của bạn với hai bước xác thực: --><br />
+                            {{'ACC_KhiBatXacMinh2Buoc' | translate}}
+                            <!-- Khi bật Xác minh 2 bước (còn được gọi là xác thực hai yếu tố), bạn thêm một lớp bảo mật bổ sung cho tài khoản của mình. --><br />
+                            {{'ACC_CacThietLapQuanTrong' | translate}}
+                            <!-- Các thiết lập quan trọng(Thay đổi số điện thoại, cấu hình thanh toán, mật khẩu) sẽ có thêm một bước gửi mã xác thực qua số điện thoại chính trong tài khoản của bạn. -->
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div> <!--/ Panel-->
+
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold">{{'ACC_DoiMatKhau' | translate}}<!-- Đổi mật khẩu --></div>
+            <div class="panel-body">
+                <form name="frmPwd" ng-submit="save({password_current : user.password_current, password_new : user.password_new, password_verify : user.password_verify})" role="form" class="form-horizontal form-validation">
+                    <div class="form-group" tour-step order="3" title="Mật khẩu" content="Nếu bạn muốn đổi mật khẩu !." placement="top" >
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_MatKhauHienTai' | translate}}<!-- Mật khẩu hiện tại --></label>
+                        <div class="col-sm-6 col-md-6 col-lg-5">
+                            <input ng-model="user.password_current" type="password" class="form-control" placeholder="{{'ACC_MatKhauDangSuDung' | translate}}" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACC_MatKhauMoi' | translate}}<!-- Mật khẩu mới (tối thiểu 8 ký tự) --></label>
+                        <div class="col-sm-6 col-md-6 col-lg-5">
+                            <input ng-model="user.password_new"
+                                   name="password_new"
+                                   min-length="8"
+                                   type="password" class="form-control" placeholder="{{'ACC_NhapMatKhauMoi' | translate}} "
+                                   required
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label" style="padding-left: 4px;">{{'ACC_NhapMatKhauMoi' | translate}}<!-- Nhập lại mật khẩu mới --></label>
+                        <div class="col-sm-6 col-md-6 col-lg-5">
+                            <input ng-model="user.password_verify" min-length="8"
+                                   ui-validate="'$value==user.password_new'"
+                                   ui-validate-watch="'user.password_new'"
+                                   required
+                                name="password_verify"  type="password" class="form-control" placeholder="{{'ACC_NhapMatKhauMoi' | translate}}" />
+                            <div ng-show="frmUser.password_verify.$error.match">{{'ACC_NhapMatKhauMoi' | translate}}<!-- Mật khẩu không khớp ! --></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-2">
+                            <button ng-disabled="frmPwd.$invalid || fsubmit" type="submit" class="btn btn-success">
+                               {{'Btt_update' | translate}} <!-- Cập nhật -->
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div> <!--/ Panel-->
+
+
+    </div>
+    <div tour-step order="5" placement="right" content="{{'Cấu hình thông tin doanh nghiệp' | translate}}"></div>
+    <!--/ Content-->
+    <script id="ModalBonus.html" type="text/ng-template">
+        <div ng-include="'tpl/config/modal.form.bonus.html'"></div>
+    </script>
+    <script id="ModalSecurity.html" type="text/ng-template">
+        <div ng-include="'tpl/config/modal.form.security.html'"></div>
+    </script>
+</div>

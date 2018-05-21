@@ -1,0 +1,75 @@
+<div class="wrapper"> </div>
+<div class="wrapper bg-light lter b-b" tour-step order="18" content="Phân quyền và quản lý tài khoản con" placement="top">
+    <div class="row">
+        <div class="col-lg-5 padder-lg">
+            <h2 class="font-thin m-n">{{'Api_Ketnoi' | translate}} Zalo</h2>
+        </div>
+        <div class="col-lg-7">
+            <button class="btn btn-lg btn-success pull-right" ng-click="open_popup_zalo_add_store('lg')">
+                <i class="fa fa-plus"> </i> {{'Add_Store_SPF' | translate}}</button>&nbsp;&nbsp;
+        </div>
+    </div>
+</div>
+<div class="wrapper b-b bg-white text-center">
+    <h4 class="pull-left" style="color:#23b7e5" ng-if="list_store['zalo'].length && !waiting">{{list_store['zalo'].length}} {{'Api_Luutrudaketnoi' | translate}}</h4>
+    <div class="table-responsive">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="ng-binding">
+                        Shop Name
+                        <!--  Loại hình lưu kho -->
+                    </th>
+                    <th class="ng-binding">
+                        Sync Product
+                    </th>
+                    <th class="ng-binding">
+                        Miễn phí vận chuyển với đơn hàng từ
+                    </th>
+                    <th class="ng-binding">
+                        Thời gian hết hạn
+                    </th>
+                   
+                    <th class="ng-binding text-center">
+                        {{'Api_hanhdong' | translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="ng-scope">
+                <tr ng-show="!list_store['zalo'].length && waiting_store">
+                    <td colspan="10" class="text-center ng-binding">
+                        <i class="fa-2x fa fa-spinner fa-spin"></i>
+                    </td>
+                </tr>
+                <tr ng-if="!list_store['zalo'].length && !waiting_store">
+                    <td colspan="10" class="text-center ng-binding">
+                        {{'lazada_KhongTimThayDuLieu' | translate}}
+                    </td>
+                </tr>
+                <tr ngif="list_store['zalo'].length && !waiting_store" ng-repeat="item in list_store['zalo']">
+                    <td class="text-left">
+                        <p>{{item.user_name}}</p>
+                    </td>
+                    <td class="text-left">
+                        <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                            <input type="checkbox" ng-model="item.sync_product" ng-checked="item.sync_product == 1" ng-true-value="1" ng-false-value="0"
+                                ng-change="change_store(item,6)" />
+                            <i></i>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <a editable-number="item.free_fee_vc_from" e-step="any" onbeforesave="change_store(item,7,$data)"><span ng-if="item.free_fee_vc_from">{{item.free_fee_vc_from | number}} VNĐ </span><i class="fa fa-edit"></i></a> 
+                    </td>
+                    <td class="text-left">
+                        <p>{{item.expires_in}}</p>
+                    </td>
+                    <td class="text-center">
+                        <a ng-click="delete_store(item.id, $index, 9)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,170 @@
+<ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+       <!--  <a href class="dropdown-toggle-notify" count-notify = "notify" list-notify = "list_notify" waiting_notify = 'waiting_notify'>
+            <i class="icon-bell fa-fw"></i>
+            <span class="visible-xs-inline">Thông báo</span>
+            <span ng-if="notify > 0" class="badge badge-sm up bg-danger pull-right-xs">{{notify || '0'}}</span>
+        </a> -->
+        <li class="dropdown-submenu" style="margin-right:10px">
+               <a><img class="max-height-none" ng-src="{{keyLang == 'vi' ? 'img/lang_vi.png':'img/lang_en.png'}}" style="width: 30px; height: 20px">
+              <!--  <img ng-show ="keyLang == 'vi'" class="max-height-none" src="img/lang_vi.png" style="width: 30px; height: 20px">
+               <img ng-show ="keyLang != 'vi'" class="max-height-none" src="img/lang_en.png" style="width: 30px; height: 20px"> -->
+               </a>
+               <ul role="menu" class="dropdown-menu left-none">
+               		<li><a ng-click="changeLanguage('vi')"><img class="max-height-none"  style="width: 30px; height: 20px" ng-src="img/lang_vi.png" alt="." src="img/lang_vi.png">  Việt Nam</a></li>
+               		<li><a ng-click="changeLanguage('en')" ><img class="max-height-none" style="width: 30px; height: 20px"  ng-src="img/lang_en.png" alt="." src="img/lang_en.png">  English</a></li>
+                </ul>
+                <!-- <i class="icon-bell fa-fw"></i> -->
+           </li>
+		
+        <!-- <div class="dropdown-menu w-xl animated fadeInUp">
+            <div class="panel bg-white">
+                <div class="panel-heading b-light bg-light">
+                    <strong ng-if="notify > 0">Bạn có <span>{{notify || '0'}}</span> thông báo mới !</strong>
+                    <strong ng-if="notify == 0">Thông báo</strong>
+                </div>
+                <div class="list-group scroll-y max-height-300">
+                    <a class="media list-group-item wrapper-sm" ng-repeat="item in list_notify" ui-sref="{{item.href}}" target="_blank">
+                                <span class="pull-left thumb-sm">
+                                    <img ng-src="http://www.gravatar.com/avatar/{{item.email}}?s=80&d=mm&r=g" alt="..." class="img-circle">
+                                </span>
+                                <span class="media-body block m-b-none text-xs">
+                                    <span ng-bind-html="item.html"></span><br />
+                                    <small class="text-muted text-xs">{{item.time_str}} trước</small>
+                                </span>
+                    </a>
+                    <a href="javascript:;" class="media list-group-item" ng-if="!list_notify.length && !waiting_notify">
+                        <p class="media-body block m-b-none text-center">
+                            Bạn chưa có thông báo nào !
+                        </p>
+                    </a>
+                    <a href="javascript:;" class="media list-group-item" ng-if="userInfo.avatar">
+                        <p class="media-body block m-b-none text-center">
+                            <i class="text-2x fa fa-spinner fa-spin"></i>
+                        </p>
+                    </a>
+                </div>
+                <div class="panel-footer text-sm text-center">
+                    <a href="#" data-toggle="class:show animated fadeInRight">Xem tất cả</a>
+                </div>
+            </div>
+        </div> -->
+    </li>
+    <li class="dropdown {{op == true ? 'open' : ''}}" ng-init="op = false" ng-if="userInfo.loy_level != null">
+        <a href class="dropdown-toggle" aria-haspopup="true" aria-expanded="false" id="dropdownMenu2"  ng-click="op = !op">
+          <i class="fa fa-comments-o"></i>
+        </a>
+        <!-- dropdown -->
+        <div class="dropdown-menu w-xl animated fadeInUp" aria-labelledby="dropdownMenu2">
+            <div class="panel bg-white">
+                <div class="panel-heading b-light bg-light">
+                  <strong>Hỗ trợ khách hàng thân thiết</strong>
+                </div>
+                <div class="list-group">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="clear">
+                                <!--div><b>CSKH VIP</b></div-->
+                                <small class="text-muted">Email : <a href="mailto:anhttl1@peacesoft.net" class="text-info">anhttl1@peacesoft.net</a></small><br>
+                                <small class="text-muted">Mobile : <a href="tel:+841643012708">(04)73 086 068</a></small><br>
+                                <small class="text-muted">Skype : <a href="skype:khtt.shipchung">khtt.shipchung</a></small><br>
+                                <small class="text-muted">Zalo : (+84)164 301 270 8</small>
+                            </div>
+                        </li>
+                        <li class="list-group-item"><small class="text-muted">Bộ phận khách hàng thân thiết hỗ trợ giải đáp các vấn đề về tài khoản, tối ưu chi phí vận chuyển, quản lý đơn hàng và xử lý khiếu nại tất cả các ngày trong tuần.</small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </li>
+    <li class="dropdown {{open == true ? 'open' : ''}}" ng-init="open = false">
+        <a href class="dropdown-toggle padder-xs clear"  id="dropdownMenu1"  ng-click="open = !open">
+                  <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                    <img ng-if ="userInfo.avatar" ng-src="{{userInfo.avatar}}" alt="{{userInfo.fullname}}'s Avatar" style="margin-top:10px;"/>
+                    <i class   ="on md b-white bottom"></i>
+                  </span>
+                  <span class="hidden-sm hidden-md">
+                      {{userInfo.fullname | limitTo : 22 : '...' }} {{userInfo.fullname.length > 25 ? '...' : ''}}<b class="caret"></b>
+                      <span class="text-xs text-danger" style="display:block;"><!-- {{userInfo.balance || '0' | vnNumber}} đ -->
+                      	<!-- <span ng-if="ViewHomeCurrency == viewCurrency"> {{userInfo.balance || '0' | vnNumber}}đ</span> -->
+                      	<convert-currency home-currency="userInfo.balance"></convert-currency>
+                      </span> 
+                      
+                  </span>
+        </a>
+        <!-- dropdown -->
+        <ul class="dropdown-menu animated text-sm user-nav w-lg" aria-labelledby="dropdownMenu1">
+            <li class="wrapper b-b m-b-sm bg-light m-t-n-xs" ng-if="userInfo.loy_level != null">
+                <p>
+                    <!-- {{userInfo.loy_current_point || '0'}} điểm tích lũy -->
+					{{'ORDERC_DiemTichLuy' | translate :{param: userInfo.loy_current_point } }}
+                    <a class="label bg-info pull-right" ui-sref="order.loyalty" ng-click="open = !open">{{'ORDERC_Xem' | translate }}<!-- Xem --></a>
+                </p>
+                <progressbar value="(userInfo.loy_current_point/userInfo.loy_target_point)*100 || '0'" class="progress-xs m-b-none bg-white"></progressbar>
+            </li>
+            <li>
+                <a>
+                    {{'HEAD_balance' | translate}}<!-- Số dư hiện tại(1)  -->
+                    <span class="text-danger"> <!-- {{userInfo.balance || '0' | vnNumber}}đ -->
+                    	<!-- <span ng-if="ViewHomeCurrency == viewCurrency"> {{userInfo.balance || '0' | vnNumber}}đ</span> -->
+                    	<convert-currency home-currency="userInfo.balance"></convert-currency>
+                    </span><br/>
+                    <!--span class="text-info">(Xem lịch sử giao dịch)</span-->
+                </a>
+            </li>
+            <li>
+                <a>
+                    {{'HEAD_money_Phivanchuyentamtinh' | translate}}<!-- Phí vận chuyển tạm tính(2) : -->
+                    <span class="text-danger"> <!-- {{userInfo.freeze || '0' | vnNumber}}đ -->
+                    	<!-- <span ng-if="ViewHomeCurrency == viewCurrency"> {{userInfo.freeze || '0' | vnNumber}}đ</span> -->
+                    	<convert-currency home-currency="userInfo.freeze"></convert-currency>
+                    </span><br/>
+                    <!--span class="text-info">(Xem chi tiết)</span-->
+                </a>
+            </li>
+
+            <li>
+                <a>
+                    {{'HEAD_inventory' | translate}}<!-- Phí lưu kho tạm tính(3) : -->
+                    <span class="text-danger"> <!-- {{userInfo.provisional || '0' | vnNumber}}đ -->
+                       <!--  <span ng-if="ViewHomeCurrency == viewCurrency"> {{userInfo.warehouse_freeze || '0' | vnNumber}}đ</span> -->
+                        <convert-currency  home-currency="userInfo.warehouse_freeze"></convert-currency>
+                    </span><br/>
+                    <!--span class="text-info">(Xem chi tiết)</span-->
+                </a>
+            </li>
+
+            <li>
+                <a>
+                    <!-- Tiền thu hộ tạm tính(4) : -->
+                    {{'HEAD_money_Cod' | translate}}
+                    <span class="text-danger"> <!-- {{userInfo.provisional || '0' | vnNumber}}đ -->
+                    	<!-- <span ng-if="ViewHomeCurrency == viewCurrency"> {{userInfo.provisional || '0' | vnNumber}}đ</span> -->
+                    	<convert-currency  home-currency="userInfo.provisional"></convert-currency>
+                    </span><br/>
+                    <!--span class="text-info">(Xem chi tiết)</span-->
+                </a>
+            </li>
+            <li>
+                <a>
+                    {{'HEAD_money' | translate }}<!-- Số dư khả dụng(1+4-2-3) : -->
+                    <span class="text-danger"> <!-- {{(+userInfo.balance + userInfo.provisional - userInfo.freeze) || '0' | vnNumber}}đ -->
+                    	<!-- <span ng-if="ViewHomeCurrency == viewCurrency"> {{(+userInfo.balance + userInfo.provisional - userInfo.freeze - userInfo.warehouse_freeze) || '0' | vnNumber}}đ</span> -->
+                    	<convert-currency  home-currency="(+userInfo.balance + userInfo.provisional - userInfo.freeze - userInfo.warehouse_freeze)"></convert-currency>
+                    </span><br/>
+                    <!--span class="text-info">(Xem chi tiết)</span-->
+                </a>
+            </li>
+            <li>
+                <a ui-sref="cashin.payment_type">
+                    <i class="fa fa-money"></i> {{'HEAD_money_add' | translate}}<!-- Nạp tiền phí vận chuyển -->
+                </a>
+            </li>
+            <li class="divider"></li>
+            <li>
+                <a ng-click="logout()"><i class="fa fa-sign-out"></i> {{'HEAD_logout' | translate}}<!-- Đăng xuất tài khoản --></a>
+            </li>
+        </ul>
+        <!-- / dropdown -->
+    </li>
+</ul>

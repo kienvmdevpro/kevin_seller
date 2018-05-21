@@ -1,0 +1,140 @@
+<div ng-controller="ExchangeCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm"  ng-controller="ReturnOrderCtrl">
+        <div class="col wrapper-sm">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="tab-container">
+                        <div class="table-responsive">
+                            <div class="row text-center text-primary" ng-show="exchange.receiver_order_code && exchange.receiver_order_code != ''">
+                                <strong>Bạn đã tạo thành công đơn hàng hoàn về .</strong><br /> <br />
+                                <a class="label bg-light text-base text-info" ui-sref="detail({code:exchange.receiver_order_code})" target="_blank">
+                                    {{exchange.receiver_order_code}} <i class="fa fa-external-link text-info" ></i>
+                                </a>
+                            </div>
+                            <div class="row" ng-show="!exchange.receiver_order_code || exchange.receiver_order_code == ''">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading font-bold">
+                                            <i class="fa fa-edit"></i> Đơn hàng từ người mua
+                                        </div>
+                                        <div class="panel-body">
+                                            <form class="form-validation" role="form" ng-submit="Create()" name="frmReceiver">
+                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Dịch vụ vận chuyển <span class="text-danger">*</span></label>
+                                                            <div class="clearfix"></div>
+                                                            <div class="col-sm-12 checkbox-inline no-padder-l">
+                                                                <div class="radio m-t-xs m-b-xs">
+
+                                                                    <label class="i-checks checkbox-inline">
+                                                                        <input type="radio" value="2" ng-model="receiver.service_id" name="service" />
+                                                                        <i></i>
+                                                                        Chuyển phát nhanh
+                                                                    </label>
+                                                                    <label class="i-checks checkbox-inline">
+                                                                        <input type="radio" value="1" ng-model="receiver.service_id" name="service" />
+                                                                        <i></i>
+                                                                        Chuyển phát tiết kiệm
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix">&nbsp;</div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Dịch vụ cộng thêm</label>
+                                                            <div class="clearfix"></div>
+                                                            <label class="checkbox-inline i-checks">
+                                                                <input type="checkbox" ng-false-value="2" ng-true-value="1" ng-checked="receiver.protected == 1" ng-model="receiver.protected" class="ng-pristine ng-valid" checked="checked"><i></i> Mua bảo hiểm hàng hóa
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group m-t-xs">
+                                                            <label class="control-label">Mô tả</label>
+                                                            <textarea class="form-control" rows="3" ng-model="receiver.description"></textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    
+
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div style="position:absolute;left:50%;top:40%" ng-show="waiting">
+                                        <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                    </div>
+                                    <div class="panel panel-default" ng-class="{'opactity-7' : waiting}">
+                                        <div class="panel-heading font-bold">
+                                            <i class="fa fa-money"></i> Cước vận chuyển
+                                        </div>
+                                        <div class="panel-body">
+                                            <table class="table-condensed table-hover w-full form-validation">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">Phí vận chuyển</td>
+                                                    <td class="text-right">{{(1*calculate.fee_detail.pvc + 1*calculate.courier.money_pickup) || '0' |vnNumber}}đ</td>
+                                                </tr>
+                                                <tr ng-show="calculate.fee_detail.vas.protected > 0">
+                                                    <td class="text-left">Phí bảo hiểm</td>
+                                                    <td class="text-right">{{1*calculate.fee_detail.vas.protected || '0' |vnNumber}}đ</td>
+                                                </tr>
+                                                <tr ng-if="!calculate.courier">
+                                                    <td class="text-left">Hãng vận chuyển</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                                <tr ng-if="!calculate.courier">
+                                                    <td class="text-left">Thời gian vận chuyển trung bình</td>
+                                                    <td class="text-right">0 (h)</td>
+                                                </tr>
+                                                <tr ng-if="calculate.courier">
+                                                    <td class="text-left">Hãng vận chuyển</td>
+                                                    <td class="text-right">
+                                                        <select class="form-control" ng-model="calculate.courier" ng-options="item as item.courier_name for item in calculate.list_courier" ng-change="calculate.leatime_total = calculate.courier.leatime_total" />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="calculate.courier">
+                                                    <td class="text-left">Thời gian vận chuyển trung bình</td>
+                                                    <td class="text-right">
+                                                        {{1*calculate.leatime_total > 24 ? (calculate.leatime_total/24) : calculate.leatime_total || '0' | number:0}}
+                                                        <span ng-if="calculate.leatime_total > 24"> (ngày)</span>
+                                                        <span ng-if="calculate.leatime_total < 24"> (h)</span>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group pull-right" ng-if="tracking_code == ''">
+                                                <button type="submit" class="btn m-b-xs btn-lg btn-success" ng-disabled="!calculate.fee_detail.pvc || calculate.fee_detail.pvc == 0 || waiting || waiting_create">Tạo và duyệt đơn <i class="fa fa-hand-o-left"></i></button>
+                                            </div>
+
+                                            <div class="alert alert-success m-b-none text-base" ng-if="tracking_code != ''">
+                                                <strong>Bạn đã tạo vận đơn <a class="text-orange"  ui-sref="detail({code:tracking_code})" target="_blank">{{tracking_code}}</a> thành công.</strong><br />
+                                                Chú ý: Quý khách cần ghi mã vận đơn <a class="text-orange"  ui-sref="detail({code:tracking_code})" target="_blank">{{tracking_code}}</a> và tên hãng vận chuyển lên gói hàng
+                                                <br />
+                                                <a class="text-orange" ui-sref="print_hvc({code:tracking_code})" target="_blank"><i class="fa fa-print"></i> In vận đơn </a>&nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

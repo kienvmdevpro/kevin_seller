@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-7 pull-left no-padder">
+                <h4 class="modal-title">Cập nhật thông tin kho hàng</h4>
+            </div>
+            <button type="button" class="pull-right close" ng-click="run()"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body wrapper-md">
+    <div class="row">
+        <div class="col-md-12">
+            <p>Shipchung thông báo, quý khách có {{data.length || 0}} kho hàng chưa được cấu hình thông tin phường xã, quý khách vui lòng cập nhật phường xã cho các kho dưới đây. Xin lỗi về sự bất tiện này !</p>
+        </div>
+        <div class="col-sm-12">
+            <table class="table table-striped  ng-animate"  style="">
+                <tbody>
+                <tr data-ng-repeat="item in data">
+                    <td>
+                        <div class="col-md-6">
+                            Tên kho: <strong>{{item.name}}</strong><br>
+                            Địa chỉ : {{item.address}}<br>
+                            Người liên hệ : {{item.username}}<br>
+                            SĐT liên hệ : {{item.phone}}<br>
+                            Địa chỉ : {{item.address}}<br>
+                            Tình trạng : {{item.active == '1' ? 'Đang xử dụng' : 'Không xử dụng'}}<br>
+                        </div>
+                        <div class="col-md-6">
+                            Tỉnh thành: {{item.city.city_name}}<br>
+                            Quận huyện : {{item.district.district_name}}<br>
+                            Phường xã : <select name="ward" id="" ng-model="selectedWard[item.id]" class="form-control"  ng-change="update(item.id, selectedWard[item.id])">
+                                            <option>Phường/xã</option>
+                                            <option ng-value="it.id" data-ng-repeat="it in wards[item.id]">{{it.ward_name}} </option>
+                                        </select>
+                            <br>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-info r-2x" ng-click="run()">Đóng</button>
+</div>

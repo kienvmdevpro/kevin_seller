@@ -1,0 +1,39 @@
+<style>
+    .phone-disable #order_phone{
+            cursor: not-allowed;
+            background-color: #eee;
+            opacity: 1;
+    }
+</style>
+<div class="input-group">
+    <ul class="nav navbar-nav opencontry" ng-init="openphone = false;">
+        <li class="dropdown {{openphone == true ? 'open' : ''}}" ng-class="classphone" >
+            <a  style="margin-left: 7px;padding:0px;height: 25px;" href class="dropdown-toggle padder-xs clear"  id="dropdownMenu2"  ng-click="open_sdt()">
+                <div style="max-width: 45px;float: left;"  class="iti-flag {{To.Buyer.Country.country_code_img}}"></div>
+                <span class="caret" style="margin-bottom: 5px;"></span>
+                </span> 
+            
+            </a>
+        <ul ng-hide="hideopenphone" class="dropdown-menu left-none select-opencontry" role="menu" >
+            <li ng-repeat="value in list_country">
+                <a ng-click="setcontry(value);openphone =false">
+                    <div style="max-width: 45px;float: left;"  class="iti-flag {{value.country_code_img ? value.country_code_img : 'vn'}}"></div>&nbsp; {{value.country_name}}&nbsp;(+{{value.phone_code}})
+                </a>
+            </li>
+            
+            
+        </ul>
+            </li>
+    </ul>  
+    <buyer-autocomplete class="order-autocomplete-phone" ng-class="{'phone-disable' : Config.Service == 6}" fullname="To.Buyer.Name" code="To.Buyer.Id" address="To.Buyer.Address" ng-model="To.Buyer.Phone" phonetwo="To.Buyer.Phone2"
+        area="To.Buyer.Area" country="To.Buyer.Country" phone-false="phoneFalse" >
+    </buyer-autocomplete>
+
+
+    <span class="input-group-btn" >
+        <button class="btn btn-default" ng-disabled="Config.Service == 6" type="button" ng-click="show_phone_2()"><i class="fa {{!show_phone2 ? 'fa-plus' : 'fa-minus'}}"></i></button>
+    </span>
+    
+</div>
+<small class="label label-warning" ng-if="phoneFalse">
+    {{'OBG_HinhNhuBanNhapSaoSDT' | translate}}</small>

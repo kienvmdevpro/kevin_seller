@@ -1,0 +1,362 @@
+<style>
+.ui-select-choices-row:hover > a{
+    background-color: #f5f5f5;
+    color: #151414 !important;
+}
+ .order-service  .ui-select-choices-row > a{
+            padding: 10px 10px 10px 10px;
+    }
+     .order-service .divider {
+         margin: 0;
+     }
+      .order-service .dropdown-header,.order-service .dropdown-menu>li>a {
+          padding: 2px 15px;
+      }
+      .order-select-country .ui-select-bootstrap .ui-select-toggle>.caret {
+        right: 3px;
+      }
+      .order-select-country .ui-select-choices{
+          width: 216px;
+      }
+      .order-select-country {
+          max-width: 40px;
+      }
+      .order-autocomplete-phone  .dropdown-menu{
+        left: 0px !important;
+      }
+</style>
+<div class="col-md-6">
+   
+    <p class="m-t-md m-b-md"><strong>1. {{'OBG_LayHangGuiTai' | translate}}<!-- 1. Lấy hàng gửi tại --></strong></p>
+
+    <div id="inventory_info">
+        <div class="form-group">
+            <label for="inventory" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_ChonKhoHang' | translate}}<!-- Chọn kho hàng --></label>
+            <div class="col-lg-9 col-md-8">
+                <div class="input-group">
+                    <ui-select ng-model="From.Inventory" name="inventory" ng-disabled="disabled" required>
+                        <ui-select-match placeholder="{{'OBG_KhoHang' | translate}}">{{$select.selected.name }}</ui-select-match>
+                        <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                        <ui-select-choices group-by="'inventory'" repeat="value in list_inventory | filter: $select.search track by $index">
+                            <span>{{value.name + ' - ' + value.phone}} <small ng-if="value.distance" class="text-info pull-right">cách đây : {{value.distance}} km</small><br/><span>{{value.full_address}} </span></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="addInventory()"><i class="fa fa-plus"></i></button>
+                    </span>
+                </div>
+                <!-- /input-group -->
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inventory_phone" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_SoDienThoai' | translate}}<!-- Số điện thoại --></label>
+            <div class="col-lg-9 col-md-8">
+                <input type="text" ng-model="From.Inventory.phone" class="form-control" name="inventory_phone_abx" id="inventory_phone" placeholder="0912328925"
+                    ng-disabled="From.Inventory.id && From.Inventory.id > 0" ng-if="From.Inventory.id && From.Inventory.id > 0"
+                    required>
+
+                <tags-input name="inventory_phone" id="inventory_phone" on-tag-added="addingPhone(From.Inventory.phone)" on-tag-removed="addingPhone(From.Inventory.phone)"
+                    min-length="9" max-length="14" max-tags="2" ng-if="!From.Inventory.id" ng-model="From.Inventory.phone" placeholder="{{'OBG_SDTNguoiGiaoHang' | translate}}"
+                    required>
+                </tags-input>
+                <small class="label label-warning" ng-if="phoneIsWrong" ng-if="!From.Inventory.id">{{'OBG_HinhNhuBanNhapSaiSDT' | translate}}
+                <!-- Hình như bạn nhập sai số điện thoại, vui lòng kiểm tra lại ?. --></small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inventory_username" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_HoTen' | translate}}<!-- Họ tên --></label>
+            <div class="col-lg-9 col-md-8">
+                <input type="text" ng-model="From.Inventory.user_name" class="form-control" id="inventory_username" placeholder="Nguyễn Văn A"
+                    ng-disabled="From.Inventory.id && From.Inventory.id > 0" required name="inventory_username">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inventory_address" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_DiaChi' | translate}} <!-- Địa chỉ --></label>
+            <div class="col-lg-9 col-md-8">
+                <input type="text" ng-model="From.Inventory.address" class="form-control" id="inventory_address" placeholder="{{'OBG_VDDiaChi' | translate }}"
+                    ng-disabled="From.Inventory.id && From.Inventory.id > 0" google-autocomplete details="inventory_add_details"
+                    ng-required="true" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_KhuVuc' | translate}}<!-- Khu vực --></label>
+            <div class="col-lg-9 col-md-8">
+
+
+                <input type="text" name="inventory_ward_name" class="form-control" value="{{From.Inventory.ward.ward_name}}, {{From.Inventory.province.district_name}}, {{From.Inventory.city.city_name}}"
+                    ng-if="From.Inventory.id && From.Inventory.id > 0" ng-disabled="From.Inventory.id && From.Inventory.id > 0"
+                    required>
+
+                <district-from-google-place ng-model="From.Inventory.Area" ng-if="!From.Inventory.id" details="inventory_add_details"></district-from-google-place required>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="From.Inventory.Area.district_id > 0">
+            <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_PhuongXa' | translate}}<!-- Phường/xã --></label>
+            <div class="col-lg-9 col-md-8">
+
+                <select ng-model="From.Inventory.ward_id" class="form-control" required>
+                                                        <option value="">{{'OBG_ChonPhuongXa' | translate}} <!-- Chọn Phường/xã --></option>
+                                                        <option value="{{item.id}}" ng-repeat="item in list_ward">{{item.ward_name}}</option>
+                                                    </select>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="!From.Inventory.id">
+            <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">&nbsp;</label>
+            <div class="col-lg-9 col-md-8">
+                <button class="btn btn-primary" type="button" ng-click="saveInventory(From.Inventory)" ng-disabled="!From.Inventory.ward_id || !From.Inventory.phone || !From.Inventory.user_name || !From.Inventory.Area.city_id || saveInventoryLoading">
+                {{'OBG_LuuThongTinKho' | translate}}<!-- Lưu thông tin kho --></button>
+
+                <button class="btn btn-default" type="button" ng-click="cancelAddInventory()">{{'OBG_Huy' | translate}}<!-- Hủy --></button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="col-md-6">
+    <p class="m-t-md m-b-md"><strong>{{'OBG_ThongTinNguoiNhan' | translate}}<!-- 2. Giao hàng tới người nhận --></strong></p>
+    <div id="buyer-info">
+        <div class="form-group">
+            <label for="buyer_phone" name="buyer_phone" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_SoDienThoai' | translate}}<!-- Số điện thoại --></label>
+
+            <div class="col-lg-9 col-md-8">
+                <div ng-include="'tpl/create/partials/input_phone.html?v=1.1'" ></div>
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-if="show_phone2">
+            <label for="buyer_phone2" class="col-lg-3 col-md-4 control-label text-left">&nbsp;</label>
+            <div class="col-lg-9 col-md-8">
+                
+                <input type="text" ng-disabled="[6,12].indexOf(Config.Service) >=0" ng-model="To.Buyer.Phone2" name="buyer_phone2" minlength="9" maxlength="14" class="form-control" placeholder="{{ 'OBG_SDTPhucuaNguoiNhan' | translate}}"
+                                                                        autofocus>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="buyer_name" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_HoTen' | translate}}<!-- Họ tên --></label>
+            <div class="col-lg-9 col-md-8">
+                <input type="text" ng-disabled="[6,12].indexOf(Config.Service) >=0" ng-model="To.Buyer.Name" name="buyer_name" class="form-control" id="buyer_name" placeholder="{{'OBG_HoTen' | translate}}"
+                    required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="buyer_address" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_DiaChi' | translate}}<!-- Địa chỉ --></label>
+            <div class="col-lg-9 col-md-8">
+
+                <input ng-disabled="[6,12].indexOf(Config.Service) >=0" class="form-control" ng-model="To.Buyer.Address" name="buyer_address" details="autocomplete_details" required google-autocomplete
+                    required placeholder="{{'OBG_NhapDiaChiDuongNgo' | translate}}" />
+
+                <!-- <input type="text" ng-model="To.Buyer.Address" class="form-control" id="buyer_address" placeholder="Nhập địa chỉ chính xác"> -->
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <label for="country" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_QuocGia' | translate}}<!-- Quốc gia --></label>
+            <div class="col-lg-6 col-md-5">
+                <ui-select ng-model="To.Buyer.Country" name="country"  required ng-disabled="[6,12].indexOf(Config.Service) >=0">
+                    <ui-select-match placeholder="{{'OBG_QuocGia' | translate}}">{{$select.selected.country_name }}</ui-select-match>
+                    <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                    <ui-select-choices repeat="value in list_country | filter: $select.search |limitTo: 30 track by $index">
+
+                        {{value.country_name}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-3 col-lg-3" style="padding-left:0px">
+                <input class="form-control" ng-model="To.Buyer.Zipcode" ng-disabled="[6,12].indexOf(Config.Service) >=0" name="buyer_address" details="autocomplete_details" placeholder="ZipCode" required ng-if="To.Buyer.Country.id != 237"/>
+                <input class="form-control" ng-model="To.Buyer.Zipcode" ng-disabled="[6,12].indexOf(Config.Service) >=0" name="buyer_address" details="autocomplete_details" placeholder="ZipCode" ng-if="To.Buyer.Country.id == 237"/>
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-if="To.Buyer.Country.id != 237">
+            <label for="country" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TinhThanh' | translate}}<!-- Tỉnh thành --></label>
+            <div class="col-lg-9 col-md-8">
+                <ui-select ng-model="To.Buyer.CityGlobal" name="country" ng-disabled="disabled" required >
+                    <ui-select-match placeholder="Tỉnh thành">{{$select.selected.city_name}}</ui-select-match>
+                    <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                    <ui-select-choices refresh-delay="300" refresh="loadCityGlobal(To.Buyer.Country.id, $select.search)" repeat="value in list_city_global | filter: $select.search |limitTo: 30 track by $index">
+                       {{value.city_name}}  <span ng-if="value.zipcode">({{value.zipcode}})</span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group" ng-if="To.Buyer.Country.id == 237">
+            <label for="buyer_name" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_KhuVuc' | translate}}<!-- Khu vực --></label>
+            <div class="col-lg-9 col-md-8   ">
+                <district-from-google-place    default-disabled="([6,12].indexOf(Config.Service) >=0) ? true: false" ng-model="To.Buyer.Area" name="buyer_area" default-district="To.Buyer.Area.district_id" details="autocomplete_details"></district-from-google-place required>
+                <!-- <input type="text" ng-model="To.Buyer.Area" class="form-control" id="buyer_name" placeholder="Ví dụ: Quận 19, TP. Hồ Chí Minh"> -->
+            </div>
+        </div>
+
+
+        <div class="form-group" ng-if="list_ward_by_district.length > 0">
+            <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_PhuongXa' | translate}}<!-- Phường/xã --></label>
+            <div class="col-lg-9 col-md-8">
+
+                <select ng-model="To.Buyer.ward_id" class="form-control" name="buyer_ward" required>
+                    <option value="">{{'OBG_ChonPhuongXa' | translate}}<!-- Chọn Phường/xã --></option>
+                    <option value="{{item.id}}" ng-repeat="item in list_ward_by_district">{{item.ward_name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="To.Buyer.Country.id != 237 ">
+            <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">&nbsp;</label>
+            <div class="col-lg-9 col-md-8">
+               <label class="checkbox i-checks ">
+                    <input type="checkbox" ng-model="To.Buyer.POBox" class="ng-valid ng-dirty ng-valid-parse ng-touched" tabindex="0" aria-checked="true" aria-invalid="false"><i></i>
+                    PO Box
+                </label>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="col-md-12">
+    <p class="m-t-md m-b-md"><strong>3. {{'OBG_ThamChieuVaGhiChu' | translate}}<!-- 3. Thôn g tin đơn hàng --></strong></p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="product_code" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_MaDonHang' | translate}}<!-- Mã đơn hàng --></label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Code" class="form-control" id="product_code" placeholder="{{'OBG_MaDonHangCuaBan' | translate}}">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <label for="order_note" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_GhiChuDonHang' | translate}}<!-- Ghi chú đơn hàng --></label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Description" class="form-control" id="product_note">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <p class="m-t-md m-b-md"><strong>{{'OBG_HangHoa' | translate}}<!-- 4. Hàng hóa --></strong></p>
+    <div class="product-info">
+        <div class="parcel">
+            <div class="row">
+
+                <div class="col-md-6 ">
+                    <div class="input-group m-b-sm select_bm_product">
+                        <ui-select ng-model="_boxme.selected_item" name="item.selected">
+                            <ui-select-match placeholder="{{'OBG_ChonSanPham' | translate}}">{{$select.selected.ProductName }}</ui-select-match>
+                            <ui-select-choices repeat="value in list_products | filter: $select.search track by $index ">
+                                <span >
+                                    {{value.SellerBSIN}} - {{value.ProductName}}
+                                    <p class="text-right" style="font-weight: initial;">
+                                        <span class="pull-left "> <convert-currency style="color:#993333" home-currency="value.PriceItem"></convert-currency>
+                                        </span>
+                                         {{'OBG_SoSanPhamTrongKho' | translate}} 
+                                        <span class="text-info">{{value.AvailableItem}}</span>
+                                    </p> 
+                               </span>    
+                                    <!--<p class="text-right" style="font-weight: initial;">{{'OBG_SoSanPhamTrongKho' | translate}}<span class="text-info">{{value.AvailableItem}}</span></p></span>
+                                <span ng-if="viewCurrency != ViewHomeCurrency">
+                            		{{value.SellerBSIN}} - {{value.ProductName}}{{convert_currency(value.PriceItem)| usdNumber  | number:2}}{{viewCurrency}} 
+                            		<br/><p class="text-right" style="font-weight: initial;">{{'OBG_SoSanPhamTrongKho' | translate}}<span class="text-info">{{value.AvailableItem}}</span></p></span>-->
+                        </ui-select-choices>
+                        </ui-select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-info" type="button" ng-click="AddItem(_boxme.selected_item)" ng-disabled="!_boxme.selected_item "><i class="fa fa-plus"></i>{{'OBG_ThemSanPham' | translate}} <!-- Thêm sản phẩm --></button>
+                        </span>
+                    </div>
+
+                    <div class="alert alert-warning text-right" ng-if="_boxme.selected_item && _boxme.selected_item.AvailableItem == 0">
+                        {{'OBG_SanPhamKhongConTrongKho' | translate }}
+                        <!-- Sản phẩm này không còn trong kho -->
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                </div>
+            </div><br/>
+
+            <table class="table">
+                <tr>
+                    <th>#</th>
+                    <th>SKU</th>
+                    <th width="18%">
+                        {{'OBG_TenSanPham' | translate}}</th>
+                    <th width="12%" class="text-right">{{'OBG_GiaBan' | translate}}
+                    </th>
+                    <th width="15%" class="text-right">{{'OBG_SoLuong' | translate}}
+                    </th>
+                    <th width="15%" class="text-right">{{'OBG_KhoiLuong' | translate}} (gram)
+                        <a href="javascript:;"><i class="icon-question" aria-hidden="true" tooltip="{{'OBG_KhoiLuongSauDonGoi' | translate }}"  tooltip-trigger="mouseenter"></i></a>
+                    </th>
+                    <th width="18%" class="text-right">{{'OBG_TamTinh' | translate}}
+                    </th>
+                    <th width="" class="text-center"></th>
+                </tr>
+                <tr ng-repeat="item in _boxme.Items track by $index">
+                    <td>{{$index+1}}</td>
+                    <td>{{item.SellerBSIN}}</td>
+                    <td>{{item.ProductName}}</td>
+                    <td class="text-right" ng-if="viewCurrency == ViewHomeCurrency">{{item.PriceItem | vnNumber}}{{viewCurrency}}</td>
+                    <td class="text-right" ng-if="viewCurrency != ViewHomeCurrency">{{convert_currency(item.PriceItem) | usdNumber | number:2}}{{viewCurrency}}</td>
+
+                    <td><input type="number" minlength="1" min="1" class="form-control" name="item-{{$index}}" ng-model="item.Quantity"
+                            style="margin-left:10px; margin-right:10px" ng-change="_boxme.ItemChange()"></td>
+                    <td class="text-right" >
+                        {{item.WeightPacked >= item.WeightItem ? item.WeightPacked : item.WeightItem }}
+                    </td>
+                    <td class="text-right" ng-if="viewCurrency == ViewHomeCurrency">{{item.PriceItem * (1 *item.Quantity) | vnNumber}}đ</td>
+                    <td class="text-right" ng-if="viewCurrency != ViewHomeCurrency">{{convert_currency(item.PriceItem) | usdNumber | number:2}}{{viewCurrency}}</td>
+                    <td>
+                        <a class="btn btn-xs btn-danger" ng-click="_boxme.remoteProductItem(item)"><i class="fa fa-minus"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2" class="text-right"></td>
+                    <td class="text-right" ng-if="viewCurrency == ViewHomeCurrency">{{_boxme.TotalItemAmount | vnNumber}}{{viewCurrency}}</td>
+                    <td class="text-right" ng-if="viewCurrency != ViewHomeCurrency">{{convert_currency(_boxme.TotalItemAmount) | usdNumber | number:2}}{{viewCurrency}}</td>
+                    <td  class="text-right"></td>
+                    <td class="text-right">{{_boxme.TotalItemWeight}}(gram)</td>
+                    <td></td>
+                </tr>
+                <tr ng-if="Config.Type == 1">
+                    <td colspan="3"></td>
+                    <td colspan="2" class="text-right"><strong>{{'OBG_TienThiHo' | translate}}<!-- Tiền thu hộ (đ) --></strong></td>
+                    <td class="text-right">
+                        <input type="text" ng-if="viewCurrency == ViewHomeCurrency" ng-model="Product.MoneyCollect" id="money_collect" formatnumber
+                            class="form-control text-right" id="product_collect" placeholder="" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }"
+                            tooltip-trigger="focus">
+                        <input type="text" ng-if="viewCurrency != ViewHomeCurrency" ng-change="Product.MoneyCollect=convert_currency_to_home_currency(Product.MoneyCollect_curernt_2)"
+                            ng-model="Product.MoneyCollect_curernt_2" id="money_collect" class="form-control text-right" id="product_collect"
+                            placeholder="" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }"
+                            tooltip-trigger="focus" boxme-number-format>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="clearfix"></div>
+        <br/>
+    </div>
+</div>

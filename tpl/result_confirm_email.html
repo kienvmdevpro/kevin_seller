@@ -1,0 +1,56 @@
+<div ng-controller="ConfirmEmailCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col">
+            <div class="tab-container col-lg-8 col-lg-offset-2">
+                <div class="tab-content tab-fake padder-xs" ng-if="loadingProcess == false">
+                  <div class="row text-center padder">
+                    <p>Đang tải dữ liệu</p>
+                    <p><i class="fa fa-spinner fa-spin"></i></p>
+                  </div>
+                  
+                </div>
+                <div class="tab-content tab-fake padder-xs" ng-if="loadingProcess == true">
+                    
+                    <div class="row text-center padder" ng-if="error_code == '' ">
+                       <h3>
+                           <div class="alert alert-success radius">
+                               Chúc mừng {{userInfo.fullname}} đã xác thực tài khoản thành công với email {{userInfo.email}}. Nhấn vào <a href="/#/order/create"><span class="text-info">đây</span></a> để tạo vận đơn và vận chuyển ngay bây giờ hoặc xem các hướng dẫn sau !
+                           </div>
+                       </h3>
+                    </div>
+
+
+                    <div class="row text-center padder" ng-if="error_code == 'EMPTY' ">
+                       <h3>
+                           <div class="alert alert-warning radius">
+                               Mã xác thực của bạn không đúng, vui lòng kiểm tra lại đường dẫn trong hòm thư , hoặc liên hệ bộ phân CSKH của Shipchung để được hỗ trợ.
+                           </div>
+                       </h3>
+                    </div>
+
+
+                    <div class="row text-center padder" ng-if="error_code == 'EXPIRED' ">
+                       <h3>
+                           <div class="alert alert-warning radius">
+                           Đường dẫn xác thực của bạn đã hết hạn, vui lòng nhấn vào <a href="javascript:;" ng-click="ResendVerifyEmail()"><span class="text-info">đây</span></a> để gửi lại email xác thực . Hoặc liên hệ bộ phận CSKH của Shipchung để được hỗ trợ.
+                           </div>
+                       </h3>
+                    </div>
+
+
+  
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center">
+    <p><a href="http://seller.shipchung.vn"><span class="text-info">[Quay về trang chủ]</span></a></p>
+</div>
+<style>
+  .col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3{
+    display: none;
+  }
+</style>

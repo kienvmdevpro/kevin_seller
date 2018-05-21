@@ -1,0 +1,220 @@
+<!-- first -->
+<ul class="nav">
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+        <span  class="ng-scope" translate>nav_order_quanlydonhang</span> <!-- Quản lý đơn hàng -->
+    </li>
+    
+    <li ng-class="{active:$state.includes('order.list')}">
+        <a ui-sref="order.list({time_start:time_start})" ui-sref-opts="{reload: true}" class="text-success">
+            <i class="fa fa-columns icon text-info-lter"></i>
+            <span><strong translate>nav_order_dangcot</strong></span> <!-- Dạng cột -->
+        </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('order.management')}">
+        <a ui-sref="order.management({verify: '',status:''})" ui-sref-opts="{reload: true}" class="text-success">
+            <i class="fa fa-inbox icon text-info-lter"></i>
+            <span><strong translate>nav_order_dangdanhsach</strong></span> <!-- Dạng danh sách -->
+        </a>
+    </li>
+
+    <li ng-class="{active:$state.includes('order.problem')}">
+        <a ui-sref="order.problem" ui-sref-opts="{reload: true}" class="text-primary">
+            <i class="fa fa-star text-primary"></i>
+            <!--b class="label bg-primary pull-right" ng-if="_OrderProcess.total > 0">{{_OrderProcess.total || 0}}</b-->
+            <span><strong translate>nav_order_doncanxyly</strong> </span> <!-- Đơn cần xử lý -->
+        </a>
+    </li>
+    
+    <li ng-class="{active:$state.includes('order.post_office')}">
+        <a ui-sref="order.post_office" ui-sref-opts="{reload: true}" class="text-primary">
+            <i class="fa fa-university" aria-hidden="true"></i>
+            <span><strong translate>nav_order_buucuc</strong> </span> <!-- Bưu cục -->
+        </a>
+    </li>
+    <li ng-class="{active:$state.includes('order.sync_order')}">
+        <a ui-sref="order.sync_order" ui-sref-opts="{reload: true}" class="text-primary">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+            <span><strong translate>nav_order_sync</strong> </span> <!-- Bưu cục -->
+        </a>
+    </li>
+    <style>
+    .active .boxmeNav {
+    	height:75px !important;
+    	 background-color: #1c2b36 !important;
+    }
+    .active .boxmeNav {
+    	height:75px !important;
+    	 background-color: #1c2b36 !important;
+    }
+    .boxmeLi > a{
+     background-color: #1c2b36 !important;
+    }
+    </style>
+    <!-- ----------------- NHAPKHO SHIPMENT -------------------->
+    <!-- <li class="line dk"></li> -->
+    
+    <!-- <li class=" boxmeLi {{fulfillment ? '' : 'active'}}">
+		<a class="text-primary boxmeA ">
+			<span class="pull-right text-muted">
+				<i class="fa fa-fw fa-angle-right text"></i>
+				<i class="fa fa-fw fa-angle-down text-active"></i>
+			</span>
+			<span ><strong  translate>nav_shipment_nhapkho</strong></span>
+		</a>
+		<ul class=" boxmeNav nav nav-sub dk" >
+			<li ui-sref-active="active">
+				
+				<a ui-sref="product.shipment">
+				<i class="fa fa-paper-plane-o"></i>
+					<span  class="ng-scope" translate>nav_manage_danhsachnhapkho</span>
+				</a>
+			</li>
+            <li ui-sref-active="active">
+            	
+                <a ui-sref="product.shipment-create">
+                <i class="fa fa-plus"></i>
+                    <span  class="ng-scope" translate>nav_shipment_taoyeucaunhapkho</span>
+                </a>
+            </li>
+			
+		</ul>
+	</li> -->
+    <!-- <li class="line dk"></li> -->
+	<li class="hidden-folded padder m-t m-b-sm text-muted text-xs" ng-click="showShipment()">
+       <span  class="ng-scope" translate>nav_shipment_nhapkho</span>
+        <span  class="pull-right" > <i class="fa {{hideShipment ? 'fa-minus':'fa-plus'}}"></i></span>
+    </li>
+    <li ng-show="hideShipment || !isShipchung">
+        <a  ui-sref="product.shipment" class="text-primary">
+            <i class="fa fa-paper-plane-o"></i>
+            <span><strong translate>nav_manage_danhsachnhapkho</strong> </span>
+        </a>
+    </li>
+    <li ng-show="hideShipment || !isShipchung">
+        <a ui-sref="product.shipment-create" class="text-primary">
+            <i class="fa fa-plus"></i>
+            <span><strong translate>nav_shipment_taoyeucaunhapkho</strong> </span>
+        </a>
+    </li> 
+    <!-- ----------------- END NHAPKHO - SHIPMENT ---------------->
+    <!-- ----------------- SAN PHAM - PRODUCT -------------------->
+   
+   <li class="hidden-folded padder m-t m-b-sm text-muted text-xs" ng-click="showProduct()">
+        <span  class="ng-scope" translate>nav_product_quanlyhanghoa</span>
+        <span  class="pull-right" > <i class="fa {{hideProduct ? 'fa-minus':'fa-plus'}}"></i></span>
+    </li>
+    <li ng-show="hideProduct || !isShipchung">
+        <a ui-sref="product.list" class="text-primary">
+            <i class="fa fa-archive"></i>
+            <span><strong translate>nav_product_danhsachhanghoa</strong> </span>
+        </a>
+    </li>
+    <li ng-show="hideProduct || !isShipchung">
+        <a ui-sref="product.addnew" class="text-primary"> 
+            <i class="fa fa-plus"></i>
+            <span><strong translate>nav_product_taosanpham</strong> </span>
+        </a>
+    </li>
+    
+    <!-- ----------------- END SAN PHAM - PRODUCT ---------------->
+    
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+        <span  class="ng-scope" translate>nav_ticket_yeucauhotro</span> <!-- Yêu cầu hỗ trợ -->
+    </li>
+    
+    <li  ng-class="{active:$state.includes('ticket.request.management')}" ng-if="[0,1,2].indexOf(userRole) >=0">
+        <a ui-sref="ticket.request.management({time_start:time_start, id: null})" ui-sref-opts="{reload: true}">
+          <i class="fa fa-ticket" ></i>
+          <span translate>nav_ticket_danhsach</span> <!-- Danh sách -->
+        </a>
+    </li>
+
+    <li>
+        <a href="javascript:;" ng-click="open_popup('','')"><i class="icon-note fa-fw"></i> <span translate>nav_ticket_taoyeucau</span></a><!-- Tạo yêu cầu -->
+    </li>
+
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs"  ng-if="[0,1].indexOf(userRole)  >=0">
+        <span class="ng-scope" translate>nav_user_taikhoan</span> <!-- Tài khoản -->
+    </li>
+    <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0"> 
+        <a ui-sref="cashin.payment_type">
+            <i class="fa fa-money"></i>
+            <span translate>nav_user_naptien</span> <!--  Nạp tiền -->
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole)  >=0">
+        <a ui-sref="order.warehouse_fee">
+            <i class="fa  fa-check-square"></i>
+            <span translate>nav_user_bankeluukho</span> 
+        </a>
+    </li> 
+    <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole)  >=0">
+        <a ui-sref="order.verify">
+            <i class="fa  fa-check-square"></i>
+            <span translate>nav_user_tienthuho</span> <!-- Tiền thu hộ --> 
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole)  >=0">
+        <a ui-sref="order.transaction">
+            <i class="fa fa-dollar"></i>
+            <span translate>nav_user_lichsugiaodich</span> <!-- Lịch sử giao dịch -->
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+        <a ui-sref="order.invoice">
+            <i class="fa fa-file-text"></i>
+            <span translate>nav_user_hoadon</span> <!-- Hóa đơn -->
+        </a>
+    </li>
+    
+    <li ng-class="{active:$state.includes('app.config')}">
+        <a ui-sref="app.config.account">
+          <i class="fa fa-cogs"></i>
+          <span translate>nav_user_cauhinhtaikhoan</span> <!-- Cấu hình tài khoản -->
+        </a>
+    </li>
+
+
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs" >
+        <span class="ng-scope" translate>nav_baocao</span> <!-- Báo cáo -->
+    </li>
+    <li ng-class="{active:$state.includes('app.dashbroad')}" ng-if="[0,1,2].indexOf(userRole) >=0">
+        <a ui-sref="app.dashbroad" ui-sref-opts="{reload: true}">
+            <i class="fa fa-dashboard fa-lg"></i>
+            <span translate>nav_baocaothongke</span>  <!-- Báo cáo thống kê -->
+        </a>
+    </li>
+    <li>
+        <a ng-if="[0,1,2].indexOf(userRole) >=0" ui-sref="product.report" class="text-primary" > <!-- bao cao ton kho -->
+            <i class="icon-bar-chart"></i>
+            <span><strong translate>nav_report_product_inventory</strong> </span>
+        </a>
+    </li>
+    <li ui-sref-active="active" n>
+        <a ui-sref="app.report_employer_list">
+         	<i class="fa fa-group"></i>
+        	<span translate>nav_report_employer_page</span>
+        </a>
+    </li>
+    <li class="line dk"></li>
+
+    <!-- <li> 
+        <a href="https://www.shipchung.vn/wp-content/uploads/sites/13/2017/07/Bang-phi-dich-vu-van-chuyen-Shipchung.vn-01.07.2017.pdf" target="_blank">
+            <i class="fa fa-file"></i>
+            <span translate>nav_bangia</span>  
+        </a>
+    </li> -->
+
+    <li >
+        <a href="https://www.shipchung.vn/huong-dan/" target="_blank">
+            <i class="fa fa-support "></i>
+            <span translate>nav_huongdansudung</span> <!-- Hướng dẫn sử dụng -->
+        </a>
+    </li>
+    
+</ul>
+<!-- / third -->

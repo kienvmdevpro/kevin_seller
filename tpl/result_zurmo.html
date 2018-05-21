@@ -1,0 +1,28 @@
+<div ng-controller="ResultSyncZurmoCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm" style="margin-top: ">
+        <div class="col">
+            <div class="tab-container col-lg-8 col-lg-offset-2">
+                <div class="tab-content tab-fake padder-xs">
+                    <div class="row text-center" ng-show="!process">
+                       <h3>
+                           <div  class="alert alert-success radius" ng-if="data.message == 'SUCCESS'">
+                               Bạn chưa tạo vận đơn nào, hãy tạo vận đơn ngay để ShipChung.vn phục vụ bạn tốt nhất. 
+                           </div>
+
+                           <div  class="alert alert-warning radius" ng-if="data.message != 'SUCCESS'">
+                               Shipchung cám ơn bạn đã tin dùng dịch vụ của shipchung, nếu có vướng mắc trong qua trình xử dụng bạn hãy  liên hệ bộ phận chăm sóc khách hàng của Shipchung để được hỗ trợ.
+                           </div>
+                       </h3>
+                    </div>
+                    <div ng-show="process" class="row text-center">
+                        <i class="fa-3x fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="row text-center">
+    <p><a href="http://seller.shipchung.vn"><span class="text-info">[Quay về trang chủ]</span></a></p>
+</div>

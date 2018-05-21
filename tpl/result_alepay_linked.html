@@ -1,0 +1,52 @@
+<div ng-controller="ResultAlepayLinkedCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="row text-center">
+                   <h3>
+                       <div ng-if="!process && info.alepay_cardnumber" class="alert alert-success radius">Bạn đã liên kết thẻ Visa/Master thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</div>
+                       <div ng-if="!process && !info.alepay_cardnumber" class="alert alert-danger radius">{{error || 'Liên kết thẻ thất bại, vui lòng thử lại'}}</div>
+                   </h3>
+                </div>
+
+                <div class="well m-t-lg bg-light lt" ng-if="!process && info.alepay_cardnumber">
+                  <div class="row">
+                    <div class="col-lg-12">
+
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr ng-show="process">
+                                <td colspan="2" class="text-center">
+                                    <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                </td>
+
+                            </tr>
+                            <tr ng-if="info.alepay_cardnumber">
+                                <td colspan="2" class="text-base font-bold">
+                                    Thông tin liên kết thẻ.
+                                </td>
+                            </tr>
+                            <tr ng-if="info.alepay_cardnumber">
+                                <td>
+                                    <i class="icon-money"></i>Họ tên
+                                </td>
+                                <td class="tk-right"><strong>{{info.cardHolderName}}</strong>
+                                </td>
+                            </tr>
+                            <tr ng-if="info.alepay_cardnumber">
+                                <td>
+                                    <i class="icon-money"></i>Mã thẻ liên kết
+                                </td>
+                                <td class="tk-right"><strong>{{info.alepay_cardnumber}}</strong>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

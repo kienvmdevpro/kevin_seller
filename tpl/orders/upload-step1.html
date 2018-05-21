@@ -1,0 +1,39 @@
+<div class="fade-in-right">
+    <div class="wrapper-md bg-light b-b">
+        <h1 class="m-n font-thin h3">{{'HEAD_taonhieudonExcel' | translate }}<!-- Tạo nhiều đơn hàng (xls) --></h1>
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="clearfix m-b">
+                <div class="panel panel-default">
+                    <div class="panel-header">
+                        <div style="margin:7px" class="alert alert-info m-b-none text-base">
+                            <strong style="margin-bottom: 10px;/*display: block;*/">
+                                <i class="fa fa-star-half-o fa-2x"></i>{{'ORDERC_thongbao' | translate}}<!--  Thông báo: --> </strong>
+                            <!-- Shipchung đã tiến hành cập nhật mẫu file excel mới, <strong>quý khách vui lòng tải file excel mới về để tạo đơn -->
+                            {{'EXC_Shipchungdatienhanhcapnhat' | translate}}
+                            </strong> <a class="text-info" ng-href="/tpl/template/Template_VanDon2016.xls">{{'SHIPC_tab1_p_helpLink' | translate}}<!-- tại đây --></a>.
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <h4>{{'EXC_Buoc1' | translate}}<!-- Bước 1: Tải file danh sách đơn hàng của quý khách --></h4>
+                        <p>
+                            <!-- Để bắt đầu, quý khách hàng tải file tạo đơn hàng mẫu để đăng lên. Bạn có thể mở file mẫu bằng các phần mềm như Micrrosoft Excel -->
+                            {{'EXC_Buoc1_DeBatDau' | translate}}
+                        </p>
+                        <p>
+                            {{'EXC_Buoc1_SauKhiTiaFile' | translate}}
+                            <!-- Sau khi tải file về quý khách vui lòng đọc kỹ nội dung hướng dẫn và trang ví dụ. Nếu quý khách cần hướng dẫn thêm về chức năng này vui lòng liên hệ tổng đài --> <strong>1900-636-030</strong>  email <a href="" class="text-info">hotro@shipchung.vn</a>.
+                        </p>
+                        <a class="btn btn-toolbar" ng-if="[217203,87834].indexOf(userInfo.id) >=0"  ng-href="/tpl/template/Template_VanDon2016_217203.xls"  download="Template_VanDon.xls"><i class="fa fa-upload"></i> {{'EXC_Taifile' | translate}}</a>
+                        <a class="btn btn-toolbar"  ng-if="[217203,87834].indexOf(userInfo.id) <0" ng-href="/tpl/template/Template_VanDon2016.xls" download="Template_VanDon.xls"><i class="fa fa-upload"></i> {{'EXC_Taifile' | translate}}</a>
+                        <button class="btn btn-info" ui-sref="order.upload2({bc: $stateParams.bc})" type="button">{{'EXC_Tieptuc' | translate}} <i class="fa fa-chevron-right"></i></button>
+                    </div>
+                </div> 
+                <!--/ Panel-->
+
+            </div>
+        </div>
+    </div>
+</div>

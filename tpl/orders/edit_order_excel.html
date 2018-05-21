@@ -1,0 +1,89 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="save()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">Sửa đơn hàng</h4>
+    </div>
+    <div class="modal-body">
+        <span ng-if="waitting_add_store" style="position: absolute;top:50%;left:45%;z-index:1000">
+            <i style="font-size:45px" class="fa-2x fa fa-spinner fa-spin"></i>
+        </span>
+        <div class="row">
+            <div class="col-md-3">
+                <strong>1. Địa chỉ người nhận</strong>
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Tên người nhận" name="item.to_name" ng-model="item.to_name" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Số điện thoại" name="item.to_phone" ng-model="item.to_phone" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Địa chỉ" name="item.to_address" ng-model="item.to_address" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <select placeholder="Thành phố" name="item.to_city" ng-options="val.id as val.city_name for val in list_city" ng-model="item.to_city"
+                    class="form-control" ng-change="change_city(item.to_city,item)" require></select>
+                <div class="clearfix m-b-sm"></div>
+                <select placeholder="Quận huyện" name="item.to_district" ng-options="val.id as val.district_name for val in list_district[item.to_city]"
+                    ng-model="item.to_district" class="form-control" require></select>
+                <div class="clearfix m-b-sm"></div>
+                <input ng-if="item.zipcode" type="text" placeholder="Zipcode" name="item.to_zipcode" ng-model="item.to_zipcode" class="form-control">
+                
+            </div>
+            <div class="col-md-3">
+                <strong>2. Thông tin sản phẩm</strong>
+                <div class="clearfix m-b-sm"></div>
+                <div ng-repeat="item_product in item.order_items">
+                    <p>Sản phẩm {{$index+1}}</p>
+                    <input placeholder="Tên sản phẩm" name="item.order_items[$index].name" ng-model="item.order_items[$index].name" class="form-control">
+                    <div class="clearfix m-b-sm"></div>
+                    <input placeholder="Mã SKU" name="item.order_items[$index].sku" ng-model="item.order_items[$index].sku" class="form-control">
+                    <div class="clearfix m-b-sm"></div>
+                    <input placeholder="Số lượng" name="item.order_items[$index].quantity" ng-model="item.order_items[$index].quantity" class="form-control">
+                    <div class="clearfix m-b-sm"></div>
+                </div>
+                <hr>
+                <p>Tổng Khối Lượng</p>
+                <input placeholder="Khối lượng" name="item.weight" ng-model="item.item_weight" class="form-control">
+                <span ng-if="item.item_weight">{{item.item_weight | vnNumber}}(gram)</span>
+                <span ng-if="!item.item_weight && !item.boxme_inventory" style="color: #f00">{{'OBG_ChuaCoCanNang' | translate}}</span>
+            </div>
+            <div class="col-md-3">
+                <strong>3. Dịch vụ</strong>
+                <div class="clearfix m-b-sm"></div>
+                <select ng-model="item.vas" name="item.vas" ng-options="item.id as item.name for item in list_pay_pvc" class="form-control"
+                    required></select>
+                </p>
+                <div class="clearfix m-b-sm"></div>
+                <select class="form-control" require ng-model="item.courier" stype="width:100%" ng-options="val.id as val.name for (k,val) in list_courier"></select>
+                <div class="clearfix m-b-sm"></div>
+                <ui-select class="order-service" ng-model="item.service" required id="service_select">
+                    <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}">
+                        <i class="fa {{$select.selected.icons}} " aria-hidden="true"></i>
+                        {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}}
+                        <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span>
+                    </ui-select-match>
+                    <ui-select-choices group-by="'group'" repeat="value.id as value in item.list_service | filter: $select.search">
+                        <span>
+                            <i class="fa {{value.icons}} " aria-hidden="true"></i> {{keyLang=='vi' ? value.name : value.name_en}}
+                            <!-- {{value.name}} -->
+                            <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span>
+                        </span>
+                    </ui-select-choices>
+                </ui-select>
+                <div class="clearfix m-b-sm"></div>
+                <label class="i-checks m-b-none">
+                    <input type="checkbox" ng-model="item.checking" ng-checked="item.checking == 1" ng-true-value="1" ng-false-value="2" ng-change="changeChecking(item.checking)"
+                    />
+                    <i></i>
+                    {{ item.checking == 1 && 'OBG_ChoKhachXemHangKhiNhan' || 'EXC_KHongChoKhachXemHangKhiNhan' | translate }}
+            </div>
+            <div class="col-md-3">
+                <strong>4. Tiền hàng/Thu hộ</strong>
+                <div class="clearfix m-b-sm"></div>
+                <input placeholder="Tổng tiền hàng" name="item.item_price" ng-model="item.item_price" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input placeholder="Tổng thu hộ" name="item.collect" ng-model="item.collect" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+        <button type="submit" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    </div>
+</form>

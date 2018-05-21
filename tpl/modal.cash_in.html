@@ -1,0 +1,69 @@
+     <form name="FormCreate" class="form-horizontal form-validation" ng-submit="save(data)" role="form">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-7 pull-left no-padder">
+                    <h4 class="modal-title">Nạp tiền phí vận chuyển</h4>
+                </div>
+                <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+   
+    <div class="modal-body wrapper-md">
+        <div class="input-group">
+            <input type="text" class="form-control text-sm" fcsa-number="{min : 10000}" ng-model="data.money" name="money" placeholder="Số tiền cần nạp (tối thiểu 10.000đ)" required />
+            <span class="input-group-btn">
+                <button type="submit" ng-disabled="FormCreate.money.$invalid || data.money == 0 || frm_submit" class="btn btn-success" type="button"><i class="fa fa-thumbs-o-up"></i> Nạp tiền</button>
+            </span>
+        </div>
+        <span ng-show="FormCreate.money.$invalid" class="help-block m-b-none text-danger"><i class="fa fa-times"></i> Số tiền tối thiểu 10.000đ.</span>
+
+         <div class="form-group b-b text-xs m-t-md">
+             <label class="col-sm-2 iconCheckout icoNL"></label>
+             <div class="col-sm-10 text-left">
+                 <div class="radio">
+                     <label>
+                         <input type="radio" checked ng-model="data.type" value="1" name="optionsRadios">
+                            <span style="color: #333;font-size: 15px;line-height: 22px;">Thanh toán thông qua cổng thanh toán & Ví điện tử NgânLượng</span><br />
+                            <span class="text-danger">MIỄN PHÍ</span> giao dịch. Đăng ký ví NgânLượng.vn miễn phí <a class="text-info" ng-href="https://www.nganluong.vn/?portal=nganluong&page=user_register" target="_blank">tại đây</a>
+                     </label>
+                 </div>
+             </div>
+         </div>
+         <div class="form-group">
+             <label class="col-sm-2 iconCheckout icoMerchant"></label>
+             <div class="col-sm-10">
+                 <div class="radio">
+                     <label>
+                         <input type="radio" checked="" ng-model="data.type" value="2" name="optionsRadios">
+                         <span style="color: #333;font-size: 15px;line-height: 22px;">Chuyển khoản trực tiếp vào tài khoản Ngân Hàng của Shipchung.vn (Techcombank và Vietcombank)</span><br />
+                         Sau khi chuyển khoản, quý khách hàng vui lòng gửi nội dung chuyển khoản vào mail hotro@shipchung.vn.
+                     </label>
+                 </div>
+                 <br/>
+                    <div class="col-sm-12">
+                         <table class="table table-striped animate-show m-l-xs text-xs" ng-show="data.type == 2">
+                             <tbody>
+                                <tr>
+                                    <td>
+                                        1. Chủ tài khoản: Công ty cổ phần giải pháp phần mềm Hoà Bình<br />
+                                        Số tài khoản : 10820260142017<br />
+                                        <span class="font-bold">Ngân hàng kỹ thương việt nam (Techcombank) Chi nhánh Hoàn Kiếm - Hà Nội</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        2. Chủ tài khoản: Công ty cổ phần giải pháp phần mềm Hoà Bình.<br />
+                                        Số tài khoản : 0451001278136<br />
+                                        <span class="font-bold">Ngân hàng ngoại thương Việt Nam (Vietcombank) Chi nhánh Thành Công - Hà Nội</span>
+                                    </td>
+                                </tr>
+                             </tbody>
+                         </table>
+                    </div>
+             </div>
+         </div>
+    </div>
+
+    </form>

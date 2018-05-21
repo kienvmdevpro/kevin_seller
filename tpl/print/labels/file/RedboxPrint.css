@@ -1,0 +1,87 @@
+﻿         .pleft {
+             float:left;
+         }
+         .pright {
+             float:right;
+         }         
+         .mainPrints {   
+             max-width: 100%         
+             max-height: 14.85cm;   
+             margin: 0 auto;     
+             background: white; 
+         }
+         .page {
+            width: 21cm;
+            max-height: 29.7cm;
+            margin: 0 auto; 
+         }
+         @page {
+             size: A4;
+             margin: 0;
+         }
+         @media print {
+             .page {
+                 margin: 0;
+                 border: initial;
+                 border-radius: initial;
+                 width: initial;
+                 min-height: initial;
+                 box-shadow: initial;
+                 background: initial;
+             }
+         }
+         .Print_title {
+             border-bottom: 5px solid #d97014;
+             margin-top: 20px;
+             width: 460px;
+         }
+             .Print_title span {
+                 float: right;
+             }
+        .barcodetitle, .barCode_Code {
+             padding:5px;
+         }
+         .barcodetitle {
+             margin-left: 283px;
+         }
+         .pcclear {
+             clear: both;
+             border:0;
+             margin:0;
+             padding:0;
+         }
+         .print_td {
+             height: 120px;
+             max-height: 200px;
+             width: 50%;
+             padding: 5px;
+             line-height:20px;
+             font-size: 11px;
+             border:solid 1px #000;
+         }
+         .print_td2{   
+             width: 50%;            
+             line-height:14px;
+             font-size: 11px;     
+             height: 90px;     
+             border-right: solid 1px;
+             text-align: center;
+         }
+         .print_td3 {   
+             width: 50%;            
+             line-height:14px;
+             font-size: 11px;     
+             height: 90px; 
+             text-align: center; 
+         }
+         .print_codetype {
+            width: 41%;
+			line-height: 20px;
+			font-size: 11px;
+			border-right: solid 1px;
+         }
+         .print_dichvu {
+            width: 49%;
+			line-height: 17px;
+			font-size: 11px;
+         } 

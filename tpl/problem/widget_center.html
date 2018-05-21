@@ -1,0 +1,225 @@
+<ul class="breadcrumb m-b-sm">
+    <li>
+        <a href="javascript:;">{{list_option[option] || ''}}</a>
+    </li>
+</ul>
+
+<div class="row">
+    <div class="col-lg-3 col-md-3">
+        <div class="text-center" ng-show="total == 0 && waiting">
+            <i class="fa-3x fa fa-spinner fa-spin"></i>
+        </div>
+			<!-- <a ng-click="action(1,2,2)">giau test</a> -->
+        <form class="form-horizontal text-base" ng-show="total > 0 && !waiting">
+            <div class="panel panel-info m-b-sm pointer fade-in-up"
+                 ng-animate="{enter: 'enter', leave: 'leave'}" class="fade-in-right"
+                 data-ng-repeat="item in list_data" ng-class="{'b-l-m' : detail.order_id == item.order_id, 'panel-info' : list_unactive.indexOf(item.order_id) == -1, 'panel-warning' : list_unactive.indexOf(item.order_id) != -1}" data-ng-click="get_detail(item.order_id)">
+                <div class="panel-body padder-tb">
+                    <div class="form-group m-b-none">
+                        <div class="col-lg-12 col-sm-12 col-xs-12 padder-lr" ng-click="gotoDetail(order)">
+                            <span class="pull-left text-xs text-primary">{{item.order_status[0].meta_status['name'] || ''}}</span>
+                            <span class="label pull-right text-xs" ng-class="{'bg-info' : item.status == 0, 'bg-primary' : item.status == 1, 'bg-warning' : item.status == 3, 'bg-success' : item.status == 2}">{{list_status_process[item.status] || ''}}</span>
+                            <br />
+                            <a class="font-bold" ui-sref="detail({code:detail.tracking_code})" target="_blank">{{item.tracking_code}}</a>
+                            <br />
+                            {{item.order.to_phone | limitTo : 25 }} &nbsp;<strong>.</strong>&nbsp; {{item.order.to_name | limitTo : 25}}
+                            <br />
+                            <span class="pull-left text-xs text-muted">{{item.time_create * 1000   | date:'HH:mm dd-MM-yyyy'}}</span>
+                            <div ng-if="item.status == 0">
+                                <span class="pull-right text-xs" style="color:rgb(255, 97, 97)" ng-if="processTimer(item).isExpired" tooltip="{{'ORDERC_daquahanxulydonhang' | translate}}">{{'ORDERC_daquahanxulydonhang' | translate}}</span>
+                                <span class="pull-right text-xs text-muted" ng-if="!processTimer(item).isExpired" tooltip="{{'Problem_Banco24hdexuly' | translate}}">{{keyLang=='vi' ? 'Còn':'Remain'}} {{processTimer(item).diff}}h</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="text-right text-center-xs pull-left m-l-sm" ng-if="total > 0 && !waiting">
+            <pagination total-items="total" ng-model="currentPage" data-max-size="maxSize"
+                        items-per-page="{{item_page}}"
+                        ng-change="setPage(frm.option, search, currentPage)"></pagination>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6 padder padder-tb bg-white" ng-show="detail  && !waiting">
+        <div class="row" ng-show="detail  && !waiting">
+            <div class="col-lg-12 col-md-12">
+                <div class="col-md-8 no-padder">
+                    <h4 ng-if="detail.status == 0">{{detail.tracking_code || ''}} - {{list_option[detail.type] || 'Problem_CanXuLy' | translate }}</h4>
+                    <h4 ng-if="detail.status > 0">{{detail.tracking_code || ''}} - {{status_detail[detail.type][detail.action] || 'Problem_CanXuLy' | translate}}</h4>
+                </div>
+
+                <span class="label pull-right text-sm" ng-class="{'bg-info' : detail.status == 0, 'bg-primary' : detail.status == 1, 'bg-warning' : detail.status == 3, 'bg-success' : detail.status == 2}">{{list_status_process[detail.status] || ''}}</span>
+            </div>
+
+            <div class="col-lg-12 col-md-12">
+                <div class="m-b">
+                    <a class="pull-left thumb-sm avatar" href=""><img ng-src="http://seller.shipchung.vn/img/sc-icon.png" alt="Shipchung" style="margin-top:10px;"></a>
+                    <div class="m-l-xxl">
+                        <div class="pos-rlt wrapper b b-light r r-2x">
+                            <span class="arrow left pull-up"></span>
+                            <p class="m-b-none" ng-bind-html="detail.note"> </p>
+                            <p class="pull-right text-muted text-xs" ng-if="(detail.type == 1 || detail.type == 2)  && detail.zms != 2"><i>{{'Problem_MauZaLoSCGui' | translate}}</i></p>
+                            <p class="pull-right text-muted text-xs" ng-if="(detail.type == 1 || detail.type == 2)  && detail.zms == 2">
+                                {{'Problem_ShipchungthongbaoquaZalo' | translate}}<!-- Shipchung thông báo người nhận qua Zalo ZMS · --> {{ detail.time_send_zms * 1000  | date : "dd-MM-yyyy  HH:mm"}}.
+                            </p>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12" data-ng-repeat="item in detail.report_process">
+                <div class="m-b">
+                    <a class="pull-left thumb-sm avatar" href="">
+                        <img ng-show="item.pipe_status.status == 711" ng-src="http://seller.shipchung.vn/ticket/img/sc-icon.png" alt="Avatar" style="margin-top:10px;">
+                        <img ng-show="item.pipe_status.status != 711" ng-src="http://seller.shipchung.vn/img/customer.png" alt="Avatar" style="margin-top:10px;">
+                    </a>
+                    <div class="m-l-xxl">
+                        <div class="pos-rlt wrapper b b-light r r-2x">
+                            <span class="font-bold" ng-show="item.pipe_status.status == 711">{{item.user.fullname || "ShipChung"}} - {{item.pipe_status.name || 'Trạng thái xử lý'}}</span>
+                            <span class="font-bold" ng-show="item.pipe_status.status != 711">{{item.user.fullname || "Quý khách"}} - {{'Problem_KHguiYCphatlai' | translate}}<!-- Khách hàng gửi yêu cầu phát lại --></span>
+                            <span class="arrow left pull-up"></span>
+                            <p class="m-b-none" ng-bind-html="item.note"> </p>
+                            <p class="pull-right text-muted text-xs" tooltip="{{item.time_create *1000 | date:'HH:mm:ss dd-MM-yyyy'}}">{{TimeBefore(item.time_create) || "1 phút"}} trước</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phát thất bại - Chờ xác nhận chuyển hoàn -->
+            <div class="col-lg-12 col-md-12" ng-init="show = false" ng-if="[1,2].indexOf(1*detail.type) != -1">
+                <div class="m-b">
+                    <div class="m-l-xxl" >
+                        <div class="btn-group-vertical m-b-sm" ng-show="[0,3].indexOf(1*detail.status) != -1">
+                            <button class="btn btn-default" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" data-ng-click="action(detail.type, 2, 61)"><i class="fa fa-retweet text-info" ng-class="{'text-danger' : list_unactive.indexOf(detail.order_id) != -1}">{{'Problem_XacNhanHoanHang' | translate}}<!-- Xác nhận hoàn hàng --></i></button>
+                        </div>
+                        <div class="btn-group-vertical m-b-sm" ng-show="detail.type == 1 && detail.status == 0" style="margin-left:170px;">
+                            <button class="btn btn-default" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" data-ng-click="storeStock()"><i class="fa fa-home text-danger" ng-class="{'text-danger' : list_unactive.indexOf(detail.order_id) != -1}">{{'Problem_BaoLuuKho' | translate}}<!-- Báo lưu kho --></i></button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="m-b" ng-if="detail.status == 0 && list_unactive.indexOf(detail.order_id) == -1">
+                    <div class="m-l-xxl">
+                        <h4>{{'Problem_YeuCauPhatLaiDonHangNay' | translate}}<!-- Yêu cầu phát lại đơn hàng này ? --></h4>
+                        <form class='bootbox-form form-horizontal' name='form_confirm' action=''>
+                            <div class='checkbox'>
+                                <label class='i-checks'>
+                                    <input ng-model='frm_confirm.send_zalo' checked='' type='checkbox'><i></i>  {{'Problem_GuiTinNhanZalo' | translate}}<!-- Gửi tin nhắn zalo cho người nhận ? -->
+                                </label>
+                            </div>
+                            <div class='clearfix'>&nbsp;</div>
+                            <textarea maxlength="149" ng-model='frm_confirm.note' class='bootbox-input bootbox-input-textarea form-control'
+                                      placeholder="{{'Problem_ThongtindiachiSdt' | translate}}"></textarea>
+
+                            <div class='clearfix'>&nbsp;</div>
+
+                            <button ng-show="detail.status == 0" class="btn btn-success pull-right" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" data-ng-click="action_confirm(frm_confirm.send_zalo, frm_confirm.note, detail.type)"><i class="fa fa-check"> {{'Problem_XacNhan' | translate}}<!-- Xác nhận --></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lấy thất bại-->
+            <div class="col-lg-12 col-md-12" ng-if="detail.type == 3">
+                <div class="m-b">
+                    <div class="m-l-xxl" >
+                        <div class="btn-group-vertical m-b-sm" ng-show="[0,3].indexOf(1*detail.status) != -1">
+                            <button class="btn btn-default" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" data-ng-click="action(detail.type, 2, 28)"><i class="fa fa-warning text-info pull-left" ng-class="{'text-danger' : list_unactive.indexOf(detail.order_id) != -1}"> {{'Problem_BaoHuy' | translate}}<!--  --></i></button>
+                            <button class="btn btn-default" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" ng-click="open_popup('', detail.tracking_code)"><i class="fa fa-ticket text-info pull-left" ng-class="{'text-danger' : list_unactive.indexOf(detail.order_id) != -1}"> {{'Problem_GuiYeuCauKhieuNai' | translate}}<!-- Gửi yêu cầu/Khiếu nại --></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-b" ng-if="detail.status == 0 && list_unactive.indexOf(detail.order_id) == -1">
+                    <div class="m-l-xxl">
+                        <h4>{{'Problem_CauKhieuThuLai' | translate}}<!-- Yêu cầu thu lại đơn hàng này ? --></h4>
+                        <form class='bootbox-form form-horizontal' name='form_confirm_pickup' action=''>
+                            <textarea ng-model='frm_confirm.note_pickup' class='bootbox-input bootbox-input-textarea form-control'
+                                      placeholder='Nội dung gửi đến bưu tá'></textarea>
+
+                            <div class='clearfix'>&nbsp;</div>
+
+                            <button ng-show="detail.status == 0" class="btn btn-success pull-right" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" data-ng-click="action_confirm_pickup(frm_confirm.note_pickup)"><i class="fa fa-check"> {{'Problem_XacNhan' | translate}}</i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vượt cân -->
+            <div class="col-lg-12 col-md-12" ng-if="detail.type == 4">
+                <div class="m-b">
+                    <div class="m-l-xxl" >
+                        <div class="btn-group-vertical m-b-sm" ng-show="[0,3].indexOf(1*detail.status) != -1">
+                            <button ng-show="detail.status == 0" class="btn btn-default" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" data-ng-click="accept_overweight()"><i class="fa fa-check text-info pull-left" ng-class="{'text-danger' : list_unactive.indexOf(detail.order_id) != -1}"> {{'Problem_XacNhanVuotCan' | translate}}</i></button>
+                            <button class="btn btn-default" ng-disabled="list_unactive.indexOf(detail.order_id) != -1" type="button" ng-click="open_popup('', detail.tracking_code)"><i class="fa fa-ticket text-info pull-left" ng-class="{'text-danger' : list_unactive.indexOf(detail.order_id) != -1}"> {{'TIC_guiyeucau_khieunai' | translate}}<!-- Gửi yêu cầu/Khiếu nại --></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3">
+        <div class="panel no-border b" ng-show="detail && !waiting">
+            <ul class="list-group list-group-lg m-b-none">
+                <li class="list-group-item">
+                    <b>{{'ORDERC_nguoinhan' | translate}}</b>
+                </li>
+                <li class="list-group-item">
+                    <a class="pull-left thumb-sm avatar m-r" herf="">
+                        <img class="img-circle" ng-src="http://seller.shipchung.vn/img/customer.png" alt="">
+                    </a>
+                    <div class="clear">
+                        <div><a href="javascript:;">{{detail.order.to_name}}</a></div>
+                        <small class="text-muted">{{detail.order.to_phone}}</small>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <p>
+                        <a href class="text-info"><i class="fa fa-phone"></i> {{'Problem_GoiSoDiDong' | translate}}<!-- Gọi điện số di động --></a>
+                    </p>
+                    <p>
+                        <a href class="text-info"><i class="fa fa-facebook"></i> {{'Problem_NTWaFacebook' | translate}}<!-- Nhắn/Gọi qua Facebook --></a>
+                    </p>
+                </li>
+                <li class="list-group-item text-muted">
+                    <p>
+                        {{'nav_donhang' | translate}} : {{detail.order.order_code}}
+                    </p>
+                    <p>
+                        {{'Problem_VanDon' | translate}}<!-- Vận đơn : --> <a class="text-info" ui-sref="detail({code:detail.tracking_code})" target="_blank">{{detail.tracking_code}}</a>
+                    </p>
+                    <p>
+                        <span class="label text-xs {{list_color[1*list_status[detail.order.status]]}}">{{list_group[list_status[detail.order.status]]}}</span>
+                    </p>
+                    <p>
+                        {{'Problem_SanPham' | translate}}<!-- Sản phẩm --> : {{detail.order.product_name}}
+                    </p>
+                    <p>
+                        {{'Problem_ThuHo' | translate}} {{detail.order_detail.money_collect | vnNumber}}đ - {{detail.order.total_weight | vnNumber}}g
+                    </p>
+                </li>
+                <li class="list-group-item">
+                    <div class="streamline b-l m-b">
+                        <div class="sl-item b-l" data-ng-repeat="item in detail.order_status" ng-if="$index < 3"
+                             ng-class="{'b-danger': $index == 0, 'b-warning' : $index == 1}">
+                            <div class="m-l">
+                                <div class="text-muted">{{item.time_create *1000 | date:'HH:mm:ss dd-MM-yyyy'}}</div>
+                                <p>
+                                    <span class="label text-xs {{list_color[list_status[item.status]]}}">{{list_group[list_status[item.status]]}}</span> <br />
+                                    <span class="text-muted text-xs">{{item.city_name}}</span> <br />
+                                    <span class="text-muted text-xs">
+                                        {{item.note}}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="fade-in-right" ng-controller="UploadCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <h1 class="m-n font-thin h3">{{'HEAD_taonhieudonExcel' | translate }}<!-- Tạo nhiều đơn hàng (xls) --></h1>
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="clearfix m-b">
+                <div class="panel panel-default">
+                    <div class="panel-header">
+                        <div style="margin:7px" class="alert alert-info m-b-none text-base">
+                            <strong style="margin-bottom: 10px;/*display: block;*/">
+                                <i class="fa fa-star-half-o fa-2x"></i>{{'ORDERC_thongbao' | translate}}<!--  Thông báo: --> </strong>
+                            {{'EXC_Shipchungdatienhanhcapnhat' | translate}}
+                            </strong> <a class="text-info" ng-href="/tpl/template/Template_VanDon2016.xls">{{'SHIPC_tab1_p_helpLink' | translate}}<!-- tại đây --></a>.
+                        </div>
+                    </div>
+
+                    <div class="panel-body">
+                        <h4>{{'EXC_Buoc1' | translate}}<!-- Bước 1: Tải file danh sách đơn hàng của quý khách --></h4>
+                        <p>
+                            <!-- Để bắt đầu, quý khách hàng tải file tạo đơn hàng mẫu để đăng lên. Bạn có thể mở file mẫu bằng các phần mềm như Micrrosoft Excel -->
+                            {{'EXC_Buoc1_DeBatDau' | translate}}
+                        </p>
+                        <p>
+                            {{'EXC_Buoc1_SauKhiTiaFile' | translate}}
+                        </p>
+                        <!-- <a class="btn btn-toolbar" ng-href="/tpl/template/Template_VanDon2016.xls" download="Template_VanDon.xls"><i class="fa fa-upload"></i> {{'EXC_Taifile' | translate}}</a> -->
+                        <a class="btn btn-toolbar" ng-if="[217203,87834].indexOf(userInfo.id) >=0"  ng-href="/tpl/template/Template_VanDon2016_217203.xls"  download="Template_VanDon.xls"><i class="fa fa-upload"></i> {{'EXC_Taifile' | translate}}</a>
+                        <a class="btn btn-toolbar"  ng-if="[217203,87834].indexOf(userInfo.id) <0" ng-href="/tpl/template/Template_VanDon2016.xls" download="Template_VanDon.xls"><i class="fa fa-upload"></i> {{'EXC_Taifile' | translate}}</a>
+                        <h4>{{'EXC_Buoc2' | translate}}<!-- Bước 2: Tải file đơn hàng lên hệ thống --></h4>
+                        
+                        <div class="col-lg-4" style="padding-left: 0px">
+                            <input type="file" tabindex="-1"
+                                style="position: absolute; clip: rect(0px 0px 0px 0px);"
+                                ui-jq="filestyle" 
+                                nv-file-select
+                                uploader="uploader"  
+                                data-icon="false" 
+                                data-classbutton="btn btn-default" 
+                                data-classinput="form-control inline v-middle input-s"
+                            />
+                        </div>
+
+                        <button class="btn btn-info" type="button" ng-click="uploader.uploadAll()"><i ng-if="!waiting" class="fa fa-upload"></i><i ng-if="waiting" class="fa fa-spinner fa-spin"></i>   Upload</button>
+                        <p class="m-t-sm">
+                            <!-- Bạn cần tải file theo đúng định dạng cho phép xls, xlsx, csv. -->
+                            {{'EXC_Buoc2_BanCanTaiFile' | translate}}
+                        </p>
+                    </div>
+                </div> 
+                <!--/ Panel-->
+            </div>
+        </div>
+    </div>
+</div>

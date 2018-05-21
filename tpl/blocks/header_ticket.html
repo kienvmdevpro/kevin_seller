@@ -1,0 +1,101 @@
+      <!-- navbar header -->
+      <div class="navbar-header bg-white padder-xs-lr text-center">
+        <button class="pull-right visible-xs dk" ui-toggle-class="show" data-target=".navbar-collapse">
+          <i class="glyphicon glyphicon-cog"></i>
+        </button>
+        <button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll="app">
+          <i class="glyphicon glyphicon-align-justify"></i>
+        </button>
+        <!-- brand -->
+        <style>
+        .logohedeBM { margin-left: -5px;}
+        .logoasia {width: 100%;}
+        </style>
+        <a href="#/" class="navbar-brand text-lt no-padder">
+          <!-- <img class="max-height-none" ng-src="img/logo-SC-final1.png" alt="."/> -->
+           <img ng-if="keyLang=='vi'" class="max-height-none"  ng-class="isShipchung ? '' : BMasia ? 'logoasia' :'logohedeBM' "  style="max-height: 100px;max-width: 157px;" ng-src="{{site.logo_heard}}" alt="." />
+          <img ng-if="keyLang!='vi'" ng-src="{{site.login.logo_en}}" alt="{{app.name}}" style="max-height: 100px;max-width: 140px;"/>
+        </a>
+        <!-- / brand -->
+      </div>
+      <!-- / navbar header -->
+
+      <!-- navbar collapse -->
+      <div class="collapse navbar-collapse box-shadow bg-white-only">
+        <div class="row bg-white-only m-r-n-sm" ng-class="{'pos-rlt pull-right w-98': app.settings.asideFolded}" style="margin-right: 2px;">
+            <!-- buttons -->
+            <div class="nav navbar-nav hidden-xs">
+              <a href class="btn no-shadow navbar-btn" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
+                <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
+              </a>
+            </div>
+            <!-- / buttons -->
+    
+            <!-- link and dropdown -->
+            <ul class="nav navbar-nav hidden-sm">
+                <li class="dropdown-submenu">
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" ><i class="fa fa-list fa-fw"></i> 
+                    	<span class="hidden-md hidden-sm"> {{'nav_yeucau' | translate}} {{ keyLang == 'vi' ? list_time[time_start] : list_time_en[time_start]}} <!-- Yêu cầu {{list_time[time_start]}} --></span> <span class="caret"></span></a>
+                    <ul class="dropdown-menu left-none" role="menu">
+                        <li>
+                            <a ng-click="time_start = '7day'" ui-sref="ticket.request.management({time_start:'7day' ,id: null})">
+                                <i class="fa fa-list fa-fw"></i> {{'nav_yeucau7ngay' | translate}} <!-- Yêu cầu 7 ngày qua -->
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a ng-click="time_start = '14day'" ui-sref="ticket.request.management({time_start:'14day' ,id: null})">
+                                <i class="fa fa-list fa-fw"></i> {{'nav_yeucau14ngay' | translate}} <!-- Yêu cầu 14 ngày qua -->
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a ng-click="time_start = 'month'" ui-sref="ticket.request.management({time_start:'month' ,id: null})">
+                                <i class="fa fa-list fa-fw"></i> {{'nav_yeucau1thang' | translate}} <!-- Yêu cầu 1 tháng trước -->
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a ng-click="time_start = '3months'" ui-sref="ticket.request.management({time_start:'3months' ,id: null})">
+                                <i class="fa fa-list fa-fw"></i> {{'nav_yeucau3thang' | translate}} <!-- Yêu cầu 3 tháng trước -->
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" ng-click="open_popup('','')"><i class="icon-note fa-fw"></i> <span translate="">{{'nav_taoyeucau' | translate}} <!-- Tạo yêu cầu --></span></a>
+                </li>
+            </ul>
+            <!-- / link and dropdown -->
+    
+            <!-- search form -->
+            <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" target=".navbar-collapse" role="search" >
+              <div class="form-group">
+                <div class="input-group">
+                  <input    type="text"
+                            class="form-control input-sm bg-light no-border rounded padder"
+                            ng-model="root_search"
+                            placeholder="{{'HEAD_madonhang' | translate}}"
+                  />
+                  
+                  <span class="input-group-btn">
+                    <a ui-sref="detail({code:root_search})" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></a>
+                  </span>
+                </div>
+              </div>
+            </form>
+            <!-- / search form -->
+    
+
+           
+            
+            <!-- nabar right -->
+              <div data-ng-include=" 'tpl/blocks/user_nav.html' ">
+            <!-- / navbar right -->
+        </div>
+      </div>
+      <script id="ModalCashInCtrl.html" type="text/ng-template">
+          <div ng-include="'tpl/modal.cash_in.html'"></div>
+      </script>
+      <!-- / navbar collapse -->
+      <!-- <div data-ng-include=" 'tpl/blocks/notice_order_process.html' "> -->

@@ -1,0 +1,61 @@
+<div ng-controller="ResultCashCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col">
+            <div class="tab-container col-lg-8 col-lg-offset-2">
+                <div class="tab-content tab-fake padder-xs">
+                    <div class="row text-center">
+                       <h3>
+                           <div ng-if="amount > 0 && !process" class="alert alert-success radius">Bạn đã nạp tiền thành công vào tài khoản Shipchung. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</div>
+                           <div ng-if="!(amount > 0) && !process" class="alert alert-danger radius">Có lỗi xảy ra. Hãy thử lại!</div>
+                       </h3>
+                    </div>
+                    
+                    <div class="well m-t-lg bg-light lt">
+                      <div class="row">
+                        <div class="col-lg-12">
+
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr ng-show="process">
+                                    <td colspan="2" class="text-center">
+                                        <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                    </td>
+
+                                </tr>
+                                <tr ng-if="amount > 0">
+                                    <td colspan="2" class="text-center text-base font-bold">
+                                        Thông tin chi tiết.
+                                    </td>
+                                </tr>
+                                <tr ng-if="amount > 0">
+                                    <td>
+                                        <i class="icon-money"></i>Số tiền nạp thành công
+                                    </td>
+                                    <td class="tk-right"><strong>{{amount | vnNumber}} đ </strong>
+                                    </td>
+                                </tr>
+                                <tr ng-if="amount > 0">
+                                    <td>
+                                        <i class="icon-money"></i>Hình thức:
+                                    </td>
+                                    <td class="tk-right">
+                                        <strong ng-if="type = 'NL'">Thanh toán qua ví Ngân Lượng</strong>
+                                        <strong ng-if="type != 'NL'">Thanh toán qua tài khoản ngân hàng</strong>
+                                    </td>
+                                </tr>
+                                <tr ng-if="!process">
+                                    <td colspan="2" class="text-left">
+                                        <a target="_blank" href="http://shipchung.vn/document/Quy_Dinh_Thanh_Toan_Shipchung_15032014.pdf">Quy định thanh toán của Shipchung
+                                            (Hỗ trợ: 1900 636 030)</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

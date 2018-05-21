@@ -1,0 +1,98 @@
+<div ng-controller="ConfigBusinessCtrl" ng-model="business.name" tour-step order="5" content="{{'BUS_NeuBanLaDaiDienCTy' | translate}}" placement="top">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b" 
+        tour-step order="7" 
+        content="Cấu hình kho" 
+        placement="right"
+    >
+        <h3 class="font-thin m-n">{{'BUS_CauHinhDoanhNghiep' | translate}}<!-- Cấu hình doanh nghiệp --></h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white">
+        <form name="frmBusiness" ng-submit="save()" role="form" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">{{'BUS_ThongTinDoanhNghiep' | translate}}<!-- Thông tin doanh nghiệp --></div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_TenDoanhNghiep' | translate}}<!-- Tên doanh nghiệp --></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input ng-model="business.name" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">Website</label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input ng-model="business.website" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_NganhNghe' | translate}}<!-- Ngành nghề --></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input type="text" ng-model="business.industry" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_GiamDoc_DaiDien' | translate}}<!-- Giám đốc/đại diện --></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input ng-model="business.ceo" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_GiayPhepKinhDoanh' | translate}}<!-- Giấy phép kinh doanh --></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input  ng-model="business.license" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_MaSoThue' | translate}} <!-- Mã số thuế --></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input ng-model="business.taxCode" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_SDT' | translate}} <!-- Điện thọại --></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <input ng-model="business.phone" type="tel" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'BUS_DiaChi' | translate}} <!-- Địa chỉ --></label>
+                        <div class="col-sm-3 col-md-4 col-lg-2">
+                            <select ng-options="city.id as city.city_name for city in list_city" ng-model="business.city_id"
+                                class="form-control" default-label="{{'BUS_ChonTinhThanh' | translate}}">
+                            </select>
+                        </div>
+                        <div class="col-sm-3 col-md-4 col-lg-2">
+                            <select
+                                required
+                                boxme-district-by-province
+                                province-id="business.city_id"
+                                district-id="business.district_id"
+                                default-label="{{'BUS_ChonQuanHuyen' | translate}}"
+                                ng-model="business.district_id"
+                                class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                        <div class="col-sm-6 col-md-8 col-lg-4">
+                            <textarea  ng-model="business.address" class="form-control" rows="3" ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div> <!--/ panel-->
+            <button type="submit" class="btn btn-success"
+                ng-disabled="fsubmit"
+                tour-step order="6" 
+                content="{{'BUS_VaCapNhat' | translate}}" 
+                placement="right"
+                on-next="onTourEnd()"
+             >
+             {{'Btt_update' | translate}}<!-- Cập nhật --></button>
+        </form>
+    </div>
+    <!--/ Content-->
+</div>

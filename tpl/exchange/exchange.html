@@ -1,0 +1,234 @@
+<div ng-controller="ExchangeCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm" ng-controller="ExchangeOrderCtrl">
+
+
+        <div class="col wrapper-sm">
+            <!-- <br/>
+            <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Lưu ý</strong> : Đối với những đơn hàng tuyến huyện, chuyển đến vùng xa quý khách vui lòng điền <strong>2 số điện thoại</strong> liên lạc để đảm bảo giao hàng đúng hẹn cho khách hàng !.
+                </div>
+            </div> -->
+            <div class="clearfix"></div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="tab-container">
+                        <div class="table-responsive">
+
+                            <div class="row text-center" ng-show="exchange.sender_order_code && exchange.sender_order_code != ''">
+                                <strong>Bạn đã tạo thành công đơn hàng đổi trả .</strong><br /> <br />
+                                <a class="label bg-light text-base text-info" ui-sref="detail({code:exchange.sender_order_code})" target="_blank">
+                                    {{exchange.sender_order_code}} <i class="fa fa-external-link text-info" ></i>
+                                </a>
+                            </div>
+
+                            <div class="row" ng-show="!exchange.sender_order_code || exchange.sender_order_code == ''">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading font-bold">
+                                            <i class="fa fa-edit"></i> Đơn hàng đổi trả từ người bán
+                                        </div>
+                                        <div class="panel-body">
+                                            <form class="form-validation" role="form" ng-submit="Create()" name="frmSender">
+                                                <div class="row m-n">
+                                                    <div class="form-group">
+                                                        <div class="col-lg-12">
+                                                            <label class="control-label">Dịch vụ vận chuyển</label>
+                                                            <div class="clearfix"></div>
+                                                            <div class="checkbox-inline no-padder-l">
+                                                                <div class="radio m-t-xs m-b-xs">
+
+                                                                    <label class="i-checks checkbox-inline">
+                                                                        <input type="radio" value="2" ng-model="sender.service_id" name="service" />
+                                                                        <i></i>
+                                                                        Chuyển phát nhanh
+                                                                    </label>
+                                                                    <label class="i-checks checkbox-inline">
+                                                                        <input type="radio" value="1" ng-model="sender.service_id" name="service" />
+                                                                        <i></i>
+                                                                        Chuyển phát tiết kiệm
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="clearfix">&nbsp;</div>
+
+                                                <div class="row m-n">
+                                                    <div class="form-group">
+                                                        <label class="control-label padder">Dịch vụ cộng thêm</label>
+                                                        <div class="clearfix"></div>
+                                                        <div class="col-lg-6 padder-b-xs">
+                                                            <label class="checkbox-inline i-checks">
+                                                                <input type="checkbox" ng-false-value="2" ng-true-value="1" ng-checked="sender.CoD == 1" ng-model="sender.CoD" class="ng-pristine ng-valid" checked="checked"><i></i> Giao hàng thu tiền(CoD)
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-lg-6 padder-b-xs">
+                                                            <label class="checkbox-inline i-checks">
+                                                                <input type="checkbox" ng-false-value="2" ng-true-value="1" ng-checked="sender.checking == 1" ng-model="sender.checking" class="ng-pristine ng-valid" checked="checked"><i></i> Cho người nhận xem(coi) hàng
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <label class="checkbox-inline i-checks">
+                                                                <input type="checkbox" ng-false-value="2" ng-true-value="1" ng-checked="sender.protected == 1" ng-model="sender.protected" class="ng-pristine ng-valid" checked="checked"><i></i> Mua bảo hiểm hàng hóa
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="clearfix">&nbsp;</div>
+                                                <div class="row m-n">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Tên các loại hàng hóa</label>
+                                                            <input type="text" class="form-control" placeholder="Nhập tên sản phẩm" ng-model="sender.product_name" required />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-6" ng-show="!show_size">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Tổng khối lượng (gram)<span class="text-danger">*</span></label>
+                                                            <input formatnumber type="text" class="form-control" placeholder="Tổng khối lượng sản phẩm (gram)" ng-model="sender.total_weight" />
+                                                            <!-- a class="help-block m-b-none text-info" href="javascript:;" ng-click="show_size = !show_size; sender.total_weight = ''; "><i class="fa fa-won"></i> Quy đổi theo kích thước.</a -->
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- div class="row col-lg-6 m-n" ng-show="show_size">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Kích thước</label> <span class="text-danger text-xs" tooltip="Hàng kích thước lớn (Dài/Rộng/Cao > 30cm)">(Áp dụng cho hàng hóa cồng kềnh)</span>
+                                                            <div class="row">
+                                                                <div class="col-sm-4 no-padder-r">
+                                                                    <input formatsize type="text" class="form-control" placeholder="Dài(cm)" ng-model="sender.boxsize.longs" />
+                                                                </div>
+                                                                <div class="col-sm-4 padder-xs-lr">
+                                                                    <input formatsize type="text" class="form-control" placeholder="Rộng(cm)" ng-model="sender.boxsize.width" />
+                                                                </div>
+                                                                <div class="col-sm-4 no-padder-l">
+                                                                    <input formatsize type="text" class="form-control" placeholder="Cao(cm)" ng-model="sender.boxsize.height" />
+                                                                </div>
+                                                            </div>
+                                                            <a class="help-block m-b-none text-info" href="javascript:;" ng-click="show_size = !show_size; sender.boxsize = ''; "><i class="fa fa-won"></i> Quy đổi theo khối lượng.</a>
+                                                        </div>
+                                                    </div  -->
+                                                </div>
+
+
+
+
+                                                <div class="row m-n">
+
+                                                    <div class="col-lg-6 col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Mô tả hàng hóa</label>
+                                                            <textarea placeholder="Nhập mô tả hàng hóa" rows="4" class="form-control" ng-model="sender.description"></textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-6 col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Số lượng <span class="text-danger">*</span></label>
+                                                            <input formatnumber type="text"  maxlength="3" class="form-control" placeholder="Số lượng sản phẩm" ng-model="sender.quantity" required />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Tổng giá trị hàng hóa (đ) <span class="text-danger">*</span></label>
+                                                            <input formatnumber type="text" class="form-control" placeholder="Tổng giá trị đơn hàng" ng-model="sender.total_amount" required ng-minlength="5"/>
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div style="position:absolute;left:50%;top:40%" ng-show="waiting_sender">
+                                        <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                    </div>
+                                    <div class="panel panel-default" ng-class="{'opactity-7' : waiting_sender}">
+                                        <div class="panel-heading font-bold">
+                                            <i class="fa fa-money"></i> Cước vận chuyển
+                                        </div>
+                                        <div class="panel-body">
+                                            <table class="table-condensed table-hover w-full form-validation">
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">Phí vận chuyển</td>
+                                                    <td class="text-right">{{(1*calculate.fee_detail.pvc + 1*calculate.courier.money_pickup) || '0' |vnNumber}}đ</td>
+                                                </tr>
+                                                <tr ng-if="calculate.fee_detail.vas.cod > 0">
+                                                    <td class="text-left">Phí thu hộ (CoD)</td>
+                                                    <td class="text-right">{{calculate.fee_detail.vas.cod || '0' |vnNumber}}đ</td>
+                                                </tr>
+                                                <tr ng-if="calculate.fee_detail.vas.protected > 0">
+                                                    <td class="text-left">Phí Bảo Hiểm</td>
+                                                    <td class="text-right">{{calculate.fee_detail.vas.protected || '0' |vnNumber}}đ</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left">Tổng tiền thu hộ (người nhận trả)</td>
+                                                    <td class="text-right">
+                                                        <input type="text"
+                                                               class        ="text-right w-xs"
+                                                               name         ="discount"
+                                                               ng-model     ="calculate.fee_detail.collect"
+                                                               formatnumber
+                                                                />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="!calculate.courier">
+                                                    <td class="text-left">Hãng vận chuyển</td>
+                                                    <td class="text-right"></td>
+                                                </tr>
+                                                <tr ng-if="!calculate.courier">
+                                                    <td class="text-left">Thời gian vận chuyển trung bình</td>
+                                                    <td class="text-right">0 (h)</td>
+                                                </tr>
+                                                <tr ng-if="calculate.courier">
+                                                    <td class="text-left">Hãng vận chuyển</td>
+                                                    <td class="text-right">
+                                                        <select class="form-control" ng-model="calculate.courier" ng-options="item as item.courier_name for item in calculate.list_courier" ng-change="calculate.leatime_total = calculate.courier.leatime_total" />
+                                                    </td>
+                                                </tr>
+
+                                                <tr ng-if="calculate.courier">
+                                                    <td class="text-left">Thời gian vận chuyển trung bình</td>
+                                                    <td class="text-right">
+                                                        {{1*calculate.leatime_total > 24 ? (calculate.leatime_total/24) : calculate.leatime_total || '0' | number:0}}
+                                                        <span ng-if="calculate.leatime_total > 24"> (ngày)</span>
+                                                        <span ng-if="calculate.leatime_total < 24"> (h)</span>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="form-group pull-right" ng-if="tracking_code == ''">
+                                            <button type="submit" class="btn m-b-xs btn-lg btn-success" ng-disabled="!calculate.fee_detail.pvc || calculate.fee_detail.pvc == 0 || waiting || waiting_create">Tạo & duyệt đơn hàng <i class="fa fa-hand-o-left"></i></button>
+                                        </div>
+
+                                        <div class="alert alert-success m-b-none text-base" ng-if="tracking_code != ''">
+                                            <strong>Bạn đã tạo vận đơn <a class="text-orange"  ui-sref="detail({code:tracking_code})" target="_blank">{{tracking_code}}</a> thành công.</strong><br />
+                                            Chú ý: Quý khách cần ghi mã vận đơn <a class="text-orange"  ui-sref="detail({code:tracking_code})" target="_blank">{{tracking_code}}</a> và tên hãng vận chuyển lên gói hàng
+                                            <br />
+                                            <a class="text-orange" ui-sref="print_hvc({code:tracking_code})" target="_blank"><i class="fa fa-print"></i> In vận đơn </a>&nbsp;
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

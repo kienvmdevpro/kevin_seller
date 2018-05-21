@@ -1,0 +1,166 @@
+<div class="fade-in-right" ng-controller="UploadLamidoCtrl">
+    <div class="wrapper-md bg-light">
+        <span class="m-n font-thin h3"><i class="fa fa-cloud-upload text-info"></i> Tạo vận đơn Lamido <span class="font-thin text-sm">( Upload Lamido's order )</span> </span>
+        <div class="pull-right">
+            <img ng-src="http://static.lamido.vn/cms/Lamido-180x55_by-lazada-group_new-logo.png">
+        </div>
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="clearfix m-b">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-lg-12">
+                            <div class="col-lg-4 no-padder" ng-show="!$stateParams.id">
+                                <input type="file" tabindex="-1"
+                                       style="position: absolute; clip: rect(0px 0px 0px 0px);"
+                                       ui-jq="filestyle"
+                                       nv-file-select
+                                       uploader="uploader"
+                                       data-icon="false"
+                                       data-classbutton="btn btn-default"
+                                       data-classinput="form-control inline v-middle input-s"
+                                        />
+                            </div>
+                            <button ng-show="!$stateParams.id" class="btn btn-info m-l-md" type="button" ng-click="uploader.uploadAll()"><i ng-if="!waiting" class="fa fa-upload"></i><i ng-if="waiting" class="fa fa-spinner fa-spin"></i> Upload</button>
+                            <button ng-show="$stateParams.id && tab == 'ALL' && total_not_active > 0" class="btn bg-orange btn-lg m-b pull-right" type="button" ng-click="create_multi()" ng-disabled="create_all">Tạo vận đơn</button>
+                            <p class="m-t-xs" ng-show="!$stateParams.id">
+                                <a target="_blank" ng-href="{{link_storage}}template/Lamido.xls" class="text-info"><i class="fa fa-upload"></i> Download Template</a>
+                            </p>
+                        </div>
+
+                        <tabset class="col-lg-12 tab-container tab-inside" ng-if="$stateParams.id">
+                            <tab ng-click="load(1,'ALL')">
+                                <tab-heading>
+                                    &nbsp;Tất cả&nbsp;
+                                </tab-heading>
+                            </tab>
+                            <tab ng-click="load(1,'SUCCESS')">
+                                <tab-heading>
+                                    &nbsp;Thành công&nbsp;
+                                </tab-heading>
+                            </tab>
+                            <tab ng-click="load(1,'FAIL')">
+                                <tab-heading>
+                                    &nbsp;Thất bại&nbsp;
+                                </tab-heading>
+                            </tab>
+                            <tab ng-click="load(1,'CANCEL')">
+                                <tab-heading>
+                                    &nbsp;Hủy&nbsp;
+                                </tab-heading>
+                            </tab>
+                        </tabset>
+
+                        <div class="col-lg-12 tab-container" ng-if="$stateParams.id">
+                            <progressbar ng-if="dynamic != 0 && dynamic != 100" value="dynamic" type="success">{{dynamic || '0'}}%</progressbar>
+                            <table class="table table-striped b-t b-light table-hover table-condensed">
+                                <thead>
+                                    <th>
+                                        #
+                                    </th>
+                                    <th>Thông tin</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Người nhận</th>
+                                    <th style="width:5%">Số lượng</th>
+                                    <th>Khối lượng</th>
+                                    <th>TT Hàng</th>
+                                    <th>Thu hộ</th>
+                                    <th class="text-center"></th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="waiting">
+                                        <td colspan="9" class="text-center">
+                                            <i class="text-3x fa fa-spinner fa-spin"></i>
+                                        </td>
+                                    </tr>
+                                    <tr ng-if="totalItems == 0 && !waiting">
+                                        <td colspan="9" class="text-center">
+                                            Không có dữ liệu
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="(key,item) in list_data">
+                                        <td class="text-center">
+                                            {{item_stt + $index + 1}}
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" editable-email="item.email" onbeforesave="change(key, item.email, $data, 'email')">{{item.email | limitTo : 50}}</a><br />
+                                            <a href="javascript:;" editable-text="item.item_name" onbeforesave="change(key, item.item_name, $data, 'item_name')">{{item.item_name | limitTo : 50}}</a>
+                                        </td>
+                                        <td>
+                                            <a
+                                               editable-select="item.to_city"
+                                               onaftersave="change_city($data,item)"
+                                               e-ng-options="val.id as val.city_name for val in list_city"
+                                               onbeforesave="change(key, item.to_city, $data, 'to_city')"
+                                            >
+                                                {{item.city_name || 'empty'}}
+                                            </a>
+                                            <br />
+                                            <a
+                                                    editable-select="item.to_district"
+                                                    onshow ="loadDistrict(item.to_city)"
+                                                    e-ng-options="val.id as val.district_name for val in list_district[item.to_city]"
+                                                    onbeforesave="change(key, item.to_district, $data, 'to_district')"
+                                                    >
+                                                {{item.district_name || 'empty'}}
+                                            </a>
+                                            <br />
+                                            <a href="javascript:;" editable-text="item.to_address" onbeforesave="change(key, item.to_address, $data, 'to_address')">{{item.to_address | limitTo : 200}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" editable-text="item.to_name" onbeforesave="change(key, item.to_name, $data, 'to_name')">{{item.to_name | limitTo : 50}}</a><br />
+                                            <a href="javascript:;" editable-tel="item.to_phone" onbeforesave="change(key, item.to_phone, $data, 'to_phone')">{{item.to_phone | limitTo : 50}}</a><br />
+                                            <a href="javascript:;" editable-text="item.to_email" onbeforesave="change(key, item.to_email, $data, 'to_email')">{{item.to_email | limitTo : 50}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" e-style="width: 60px" editable-number="item.item_qty" e-min="1" e-max="1000" onbeforesave="change(key, item.item_qty, $data, 'item_qty')">
+                                                {{item.item_qty || '0' | vnNumber}}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" e-style="width: 100px" editable-number="item.item_weight" e-min="1" e-max="1000000" onbeforesave="change(key, item.item_weight, $data, 'item_weight')">
+                                                {{item.item_weight || '0' | vnNumber}}
+                                            </a>gram
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" e-style="width: 100px" editable-number="item.item_price" e-min="1" e-max="1000000000" onbeforesave="change(key, item.item_price, $data, 'item_price')">
+                                                {{item.item_price || '0' | vnNumber}}
+                                            </a>đ
+                                        </td>
+                                        <td>
+                                            <a href="javascript:;" e-style="width: 100px" editable-number="item.money_collect" e-min="1" e-max="1000000000" onbeforesave="change(key, item.money_collect, $data, 'money_collect')">
+                                                {{item.money_collect || '0' | vnNumber}}
+                                            </a>đ
+                                        </td>
+                                        <td ng-if="item.active == 0">
+                                            <div class="btn-group-vertical w-m">
+                                                <button class="btn bg-orange" type="button" ng-click="create(key)">Tạo vận đơn</button>
+                                                <button class="btn btn-default" ng-click="change(key, 0, 3, 'active')">Hủy</button>
+                                            </div>
+                                        </td>
+                                        <td class="text-center" ng-show="item.active != 0">
+                                            <p>
+                                                <span class="label" ng-class="{'bg-success': item.status == 'SUCCESS', 'bg-danger': item.status != 'SUCCESS'}">{{list_status[item.status]}}</span>
+                                            </p>
+                                            <p><a ui-sref="detail({code:item.trackingcode})" class="text-info" href="javascript:;" target="_blank">{{item.trackingcode}}</a></p>
+                                        </td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-sm-4 text-right text-center-xs pull-right">
+                                    <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="load(currentPage,tab)"></pagination>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div> 
+                <!--/ Panel-->
+
+            </div>
+        </div>
+    </div>
+</div>

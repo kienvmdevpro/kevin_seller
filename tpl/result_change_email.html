@@ -1,0 +1,55 @@
+<div ng-controller="ChangeEmailCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col">
+            <div class="tab-container col-lg-8 col-lg-offset-2">
+                <div class="tab-content tab-fake padder-xs">
+                    <div class="row text-center" ng-show="!process">
+                       <h3>
+                           <div ng-if="email_nl" class="alert alert-success radius">
+                               Bạn đã thay đổi tài khoản liên kết ngân lượng thành công. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!
+                           </div>
+                           <div ng-if="!email_nl" class="alert alert-danger radius">{{error_message || 'Có lỗi xảy ra, vui lòng thử lại !'}}</div>
+                       </h3>
+                    </div>
+
+                    <div ng-show="process" class="row text-center">
+                                <i class="fa-3x fa fa-spinner fa-spin"></i>
+                    </div>
+                    
+                    <div ng-show="email_nl && !process" class="well m-t-lg bg-light lt">
+                      <div class="row">
+                        <div class="col-lg-12">
+
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <td colspan="2" class="text-center text-base font-bold">
+                                        Thông tin chi tiết.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Email Ngân Lượng :
+                                    </td>
+                                    <td class="tk-right"> {{email_nl || ''}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="row text-center">
+    <p><a href="http://seller.shipchung.vn"><span class="text-info">[Quay về trang chủ]</span></a></p>
+</div>

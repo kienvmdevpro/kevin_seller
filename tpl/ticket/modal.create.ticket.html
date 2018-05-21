@@ -1,0 +1,212 @@
+     <form name="FormCreate" class="form-horizontal form-validation" ng-submit="save(datacase, data, refer)" role="form">
+        <div class="modal-header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-7 pull-left no-padder">
+                        <h4 ng-if="id == 0" class="modal-title">{{'TIC_guiyeucau_khieunai' | translate}}<!-- Gửi yêu cầu/khiếu nại --></h4>
+                        <h4 ng-if="id > 0" class="modal-title">{{'TIC_guithanhcongyeucauso' | translate}}<!-- Gửi thành công yêu cầu số --> <a class="text-info" target="_blank" ui-sref="ticket.request.management({time_start:'14day', id: id})">#{{id}}</a></h4>
+                    </div>
+                    <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-body wrapper-md" ng-if="id > 0">
+            <div class="col-md-12 text-center">
+                <img ng-src="img/sc_logo.jpg" src="img/sc_logo.jpg">
+                <h4>{{'Shipchung_congvanchuyenthutientoanquoc' | translate}}<!-- Cổng vận chuyển giao nhận và thu tiền toàn quốc --></h4>
+            </div>
+            <br/>
+            <br/>
+            <div class="padder"> <br/>
+                <a class="text-info" target="_blank" ui-sref="ticket.request.management({time_start:'14day', id: id})">
+                    {{'TIC_camonquykhachdaguiyeucauvevande' | translate: {id: id } }} <strong>{{savedData.data.title}}</strong> </a><br/>
+                    <!-- Thời gian xử lý dự kiến là : --> {{'TIC_Chungtoisexulytrong24htoi' | translate}} <!-- Chúng tôi sẽ xử lý yêu cầu của quý khách trong vòng 24h tới --> <br/>
+                    <!-- Quý khách có thể kiểm tra & gửi phản hồi yêu cầu trên trong chức năng gửi yêu cầu hoặc gọi tổng đài CSKH 1900.63.60.30 --> <br/>
+                    {{'TIC_Quykhachcothekiemtravaguiphanhoi' | translate}}
+                    {{'TIC_Trantrongcamonquykhach' | translate}}
+                </div>
+            </div> 
+
+            <div class="modal-body wrapper-md" ng-if="id == 0">
+    <!-- <div style="margin:7px" class="alert alert-info m-b-none text-base">
+            <strong style="margin-bottom: 10px;/*display: block;*/">
+               <i class="fa fa-star-half-o fa-2x"></i> {{'TIC_Thongbao' | translate}}Thông báo: </strong>
+            {{'TIC_Thongbao_Ketungay1_11_2016' | translate:{isShipchung : isShipchung} }} <a class="text-info" target="_blank" href="http://seller.shipchung.vn/#/order/can-xu-ly">{{'TIC_taiday' | translate}}tại đây</a>. {{'TIC_camonquykhachdahoptac' | translate}}
+        </div> -->
+        <div class="form-group m-b-none">
+            <div class="col-sm-12">
+
+                <input type="text" placeholder="{{'TIC_Nhapvachontieudeyeucau' | translate}}" class="form-control"
+                ng-model                ="datacase.content"
+                ng-change               ="onChange()"
+                typeahead-min-length    = '0'
+                typeahead-wait-ms       = '500'
+                typeahead               ="item as item.type_name for item in getCase($viewValue) | limitTo:8"
+                typeahead-loading       ="loadingCase"
+                required
+                />
+                <div class="clearfix m-b-sm"></div>
+
+                <div ng-if="case_msg !== ''" class="alert alert-warning">{{case_msg}}</div>
+            </div>
+        </div>
+        <div ng-if="listTicketRefer.length > 0 " class="form-group padder" style="word-wrap: break-word;">
+            <strong><!-- Các yêu cầu bạn đã gửi liên quan đến vận đơn : {{ids.join(',')}} . <br/> -->
+                {{'TIC_Banvuilongkiemtralaicacyeucauđuoiay' | translate}} </strong>
+                <div ng-if="!referLoading">
+                    <div ng-repeat="item in listTicketRefer" style="padding: 4px 0px;"><a title="{{item.content}}" ng-click="$state.go('ticket.request.management.detail', {code: item.id});cancel()" href="" style="color:#19a9d5"> #{{item.id}} <label class="label " ng-class="data_status[item.status].bg">{{data_status[item.status].name}}</label> {{item.title}}   &nbsp; [{{'TIC_guiphanhoi' | translate}}]<!-- [gửi phản hồi] --></a></div>
+                </div> <br/>
+                <div>
+                    <strong> {{'TIC_Neubancoyeucaukhac' | translate}}</strong>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <tags-input
+                    class="sc_code_tagging"
+                    ng-model="refer"
+                    placeholder=" {{'TIC_Nhapmavandonlienquan' | translate}}"
+                    min-length="8"
+                    max-length="30"
+                    max-tags="6"
+                    on-tag-added="onAddedTags($tag)"
+                    on-tag-removed="onAddedTags($tag)"
+                    ></tags-input>
+                </div>
+            </div>
+
+            
+            
+            <!-- ng-if="listOrderDelivery.pipe_journey > 0" -->
+
+            <div ng-if="listOrderDelivery && show_confirm_delivery && listOrderDelivery.pipe_journey.length == 0"  class="m-b-md">
+                <div ng-if="!confirm_delivered">
+                    <p>{{'TIC_Cophaibanmuonguiyeucauphatlai_vd' | translate}}<!-- Có phải bạn muốn gửi yêu cầu phát lại vận đơn --> <strong>{{listOrderDelivery.tracking_code}}</strong> ?</p>
+                    <div class='text-center'>
+                        <button class="btn btn-success btn-md" type="button" ng-click="confirm_delivery(listOrderDelivery)" ng-disabled="confirm_delivery_loading">
+                            <!-- Yêu cầu phát lại -->
+                            {{'TIC_Yeucauphatlai' | translate}}
+                        </button>
+                        <button class="btn btn-info btn-md" type="button" ng-click="switchShowConfirm()">
+                            <!-- Không, tôi muốn gửi yêu cầu khác -->
+                            {{'TIC_Khongtoimuonguiyeucaukhac' | translate}}
+                        </button>
+                    </div>
+                </div>
+                <div ng-if="confirm_delivered">
+                    {{'TIC_Donhangcuabandaguiyeucaugiaolai' | translate:{isShipchung : isShipchung} }} <a ui-sref="order.process"><span class="text-info">{{'nav_order_doncanxyly' | translate}}<!-- Đơn hàng cần xử lý --></span></a>
+                </div>
+
+            </div>
+
+            <div ng-if="show_confirm_delivery && listOrderDelivery.pipe_journey.length > 0">
+                {{'TIC_Donhangnaydaguiyeucaugiaolai' | translate}} <a href="http://seller.shipchung.vn/#/detail/{{listOrderDelivery.tracking_code}}" target="_blank"><span class="text-info">{{'TIC_taiday' | translate}}</span></a>.{{'TIC_Neubanguiyeucaukhieunaikhac' | translate}}<!-- Nếu bạn muốn gửi yêu cầu khiếu nại khác, vui lòng nhấn vào --> <a ng-click="switchShowConfirm()"><span class="text-info">{{'TIC_taiday' | translate}}</span></a>
+                
+            </div>
+            
+            <div class="text-center" ng-if="referLoading">
+                <center>
+                    <i class="text-2x fa fa-spinner fa-spin"></i>
+                </center>
+            </div>
+            
+            <div ng-if="!show_confirm_delivery">
+                <div class="form-group padder" ng-show="show_respond ">
+                <!-- <a class="pull-right" ng-click="toogle_show()">
+                  <i class="glyphicon glyphicon-transfer text-md text-muted wrapper-sm"></i>
+              </a> -->
+              <textarea rows="5" class="form-control w-full" ng-model="data.content"  placeholder="{{'TIC_Noidungyeucaukhachhangxulyhoacgopy' | translate}}" required ng-disabled="show_confirm_delivery"></textarea>
+          </div>
+
+          
+
+          <div class="form-group padder" ng-show="!show_respond ">
+                <!-- <a class="pull-right" ng-click="toogle_show()">
+                  <i class="glyphicon glyphicon-transfer text-md text-muted wrapper-sm"></i>
+              </a> -->
+              <div class="col-md-12 no-padder">
+                <div class="form-control wrapper-xxs b-success b-1x scroll-y" markdown="data.content" style="height: 117px;" >
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="form-group" >
+            <div class="col-sm-12">
+                <div class="b-a b-dashed" nv-file-drop="" uploader="uploaderPopup">
+                    <div nv-file-over="" uploader="uploaderPopup" over-class="another-file-over-class">
+                        <input type="file" class="w-full input-uploader-popup" nv-file-select="" uploader="uploaderPopup" multiple />
+                        <span class="content-uploader-popup"><i class="fa fa-picture-o fa-lg"></i> {{'TIC_keothatoida5filehoacclickdechon' | translate}}</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="form-group text-xs m-b-none" ng-if="uploaderPopup.queue.length > 0">
+            <div class="col-sm-12">
+                <table class="table m-b-none">
+                    <thead>
+                        <tr>
+                            <th width="50%" translate>TIC_name</th>
+                            <th ng-show="uploaderPopup.isHTML5" translate>TIC_kichthuoc</th>
+                            <th ng-show="uploaderPopup.isHTML5" translate>TIC_xuly</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in uploaderPopup.queue">
+                            <td><strong>{{ item.file.name }}</strong></td>
+                            <td ng-show="uploaderPopup.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                            <td ng-show="uploaderPopup.isHTML5">
+                                <div class="progress" style="margin-bottom: 0;">
+                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                            </td>
+                            <td nowrap>
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                    <span class="glyphicon glyphicon-trash"></span> {{'Btt_delete' | translate}}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        
+        <div class="modal-footer" ng-if="id == 0">
+            <button type="button" class="btn btn-default" ng-click="cancel()">{{'Btt_cancel' | translate}}</button>
+            <button  class="btn btn-info" ng-disabled="FormCreate.$invalid || frm_submit || show_confirm_delivery" >{{'TIC_guiyeucau' | translate}}</button>
+            <!-- <a ng-if="!toggleCountinue"  ng-click="toggle()" class="btn btn-success" >Tiếp tục gửi yêu cầu</a> -->
+        </div>
+        
+        <div class="modal-footer" ng-if="id > 0">
+            <button type="button" class="btn btn-default" ng-click="cancel()">{{'Btt_close' | translate}}</button>
+            
+            <!-- <a ng-if="!toggleCountinue"  ng-click="toggle()" class="btn btn-success" >Tiếp tục gửi yêu cầu</a> -->
+        </div>
+    </div>
+
+</form>
+
+<script id="ModalBonus.html" type="text/ng-template">
+    <div ng-include="'tpl/orders/modal.form.bonus.html'"></div>
+</script>
+
+<style>
+    .tags-input .tags{
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        border:1px solid #cdcdcd !important;
+
+    }
+</style>

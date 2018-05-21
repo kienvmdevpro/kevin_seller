@@ -1,0 +1,326 @@
+<div ng-controller="SyncOrderCtrl">
+    <style>
+        .order-service .ui-select-choices {
+            min-width: 220px;
+        }
+    </style>
+    <div class="wrapper-md bg-light">
+        <span class="m-n h2 title-page">
+            <i class="fa fa-refresh text-info"></i> {{'nav_order_sync' | translate}}
+            <!-- Quản lý vận đơn -->
+        </span>
+    </div>
+    <div class="panel-heading">
+        <form class="form-validation" role="form" name="frmSearch">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="form-group controls">
+                        <input type="text" class="form-control" placeholder="{{'ORDERC_Madonhang_sdt' | translate}}" ng-model="frm.search"
+                        />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group controls">
+                        <select ng-click="ChangeShop(frm.platform)" class="form-control" ng-model="frm.platform">
+                            <option value="">{{'ORDERL_Sanbanhang' | translate}}</option>
+                            <option ng-if="userInfo.store_connect.shopify" value="1">Shopify</option>
+                            <option ng-if="userInfo.store_connect.magento" value="2">Magento</option>
+                            <option ng-if="userInfo.store_connect.lazada" value="3">Lazada</option>
+                            <option ng-if="userInfo.store_connect.woocommerce" value="4">Woocommerce</option>
+                            <option ng-if="userInfo.store_connect.etsy" value="5">Etsy</option>
+                            <option ng-if="userInfo.store_connect.ebay" value="6">Ebay</option>
+                            <option ng-if="userInfo.store_connect.haravan" value="7">Haravan</option>
+                            <option ng-if="userInfo.store_connect.robins" value="8">Robins</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group controls">
+                        <ui-select ng-model="frm.store_id" ng-disabled="disabled" required>
+                            <ui-select-match placeholder="{{'ORDERL_Shopbanhang' | translate}}">{{$select.selected.value.store_name ? $select.selected.value.store_name : $select.selected.value.user_name }}</ui-select-match>
+                            <ui-select-choices refresh-delay="300" repeat="value.value.id as (key, value) in list_store | filter: $select.search">
+                                {{value.value.store_name ? value.value.store_name : value.value.user_name}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <input type="text" class="form-control" placeholder="{{'ORDERL_Taotungay' | translate}}" datepicker-popup="dd-MM-yyyy" is-open="time_create_start"
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" ng-model="time.time_create_start"
+                        ng-click="time_create_start = true" min-date="minDate" max-date="maxDate" required />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <input type="text" class="form-control" placeholder="{{'ORDERL_Taodenngay' | translate}}" datepicker-popup="dd-MM-yyyy" is-open="time_create_end"
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" ng-model="time.time_create_end"
+                        ng-click="time_create_end = true" min-date="minDate" max-date="maxDate" required />
+                </div>
+
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-lg-3">
+                    <button type="button" class="btn m-b-xs btn-info" ng-click="setPage('')">
+                        <i class="fa fa-search"></i> {{'Btt_search' | translate}}</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div style="padding-left:15px" class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="tab-container">
+            <div class="tab-content tab-fake">
+                <div class=" wrapper-sm">
+                    <div class="clearfix m-b">
+                        <div class="panel" ng-class="{'panel-default' : total > 0, 'panel-info' : total == 0}">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div style="line-height: 35px;float:left;margin-right:15px" class="padder-lg">
+                                        <label class="i-checks m-b-none" ng-if="total > 0">
+                                            <input type="checkbox" ng-change="toggleSelectionAll(checkall)" ng-checked="true" ng-true-value="1" ng-false-value="0" ng-model="checkall"
+                                            />
+                                            <i></i>
+                                        </label>
+                                        <span>{{'Btt_bandangchon' | translate}} {{check_box.length}}/{{total}} {{'Btt_donhang'
+                                            | translate}}</span>
+                                    </div>
+                                    <div style="float:left">
+                                        <button ng-show="total > 0" class="btn btn-default" type="button" ng-disabled="create_all || total - total_disabled == 0"
+                                            ng-click="action_create(check_box)">{{'ORDERC_taodonhang' | translate}}
+                                            <!-- Tạo đơn hàng -->
+                                        </button>
+                                        <button ng-show="total > 0" class="btn btn-success" type="button" ng-disabled="create_all || total - total_disabled == 0"
+                                            ng-click="action_create(check_box,1)">{{'EXC_BTTTaoVaDuyet' | translate}}
+                                            <!-- Tạo & Duyệt đơn hàng ngay -->
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <table class="table table-striped b-t b-light table-hover table-condensed">
+                                    <thead>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th width="10%">{{'Btt_donhang' | translate}}
+                                            <!-- Thông tin sản phẩm (SKU) -->
+                                        </th>
+                                        <th width="15%">{{'PO_diachi' | translate}}
+                                            <!-- Địa chỉ -->
+                                        </th>
+                                        <th width="15%">{{'ORDERC_nguoinhan1' | translate}}
+                                            <!-- Người nhận -->
+                                        </th>
+                                        <th width="20%">{{'EXC_SoLuong_KhoiLuong' | translate}}
+                                            <!-- Số lượng/Khối lượng -->
+                                        </th>
+
+                                        <th width="15%">{{'EXC_Dichvu' | translate}}
+                                            <!-- Hình thức vận chuyển -->
+                                        </th>
+                                        <th width="15%">{{'EXC_ThuHo' | translate}}
+                                            <!-- Tổng thu hộ -->
+                                        </th>
+                                        <th width="10%" class="text-center"></th>
+                                    </thead>
+                                    <tbody class="text-sm">
+                                        <tr ng-show="!total && waiting">
+                                            <td colspan="9" class="text-center ng-binding">
+                                                <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="!total && !waiting">
+                                            <td colspan="9" class="text-center ng-binding">
+                                                Không tìm thấy dữ liệu
+                                            </td>
+                                        </tr>
+                                        <tr ngif="total && !waiting" ng-repeat="item in list_data ">
+                                            <td class="text-center">{{item_stt + $index + 1}}
+                                                <label class="i-checks m-b-none" ng-if="item.active == 0">
+                                                    <input type="checkbox" ng-model="check" ng-change="toggleSelection($index)" ng-checked="check_list($index)" ng-disabled="(item.to_city == 0)"
+                                                    />
+                                                    <i></i>
+                                                </label>
+                                            </td>
+                                        
+                                            <td>
+                                                <p e-placeholder="{{'OBG_GhiChuDonHang' | translate}}">
+                                                    {{item.order_number || item.order_code}} ({{item.platform}})
+                                                </p>
+                                                <ui-select ng-model="item.inventory" name="inventory" ng-disabled="disabled" required  on-select="change_inventory(item,$index)">
+                                                        <ui-select-match placeholder="{{'OBG_KhoHang' | translate}}">{{$select.selected.name }}</ui-select-match>
+                                                        <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                                                        <ui-select-choices group-by="'inventory'" repeat="value.id as value in list_inventory | filter: $select.search track by $index">
+                                                            <span>{{value.name + ' - ' + value.phone}}
+                                                                <small ng-if="value.distance" class="text-info pull-right">cách đây : {{value.distance}} km</small>
+                                                                <br/>
+                                                                <span>{{value.full_address}} </span>
+                                                            </span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                        
+                                        
+                                            </td>
+                                        
+                                            <td style="position: relative">
+                                                <div class="clearfix" style="position:absolute;top:10px;right:5px;">
+                                                    <i style="float:right; cursor:pointer;font-size:15px" class="fa fa-edit" ng-click="edit_address(item,$index)"></i>
+                                                </div>
+                                                <p style="width: 100%" e-required>
+                                                    <i class="fa fa-map-marker"></i>&nbsp;{{item.to_address}}
+                                                </p>
+                                                <p style="width: 100%" ng-class="{'text-danger' : item.to_city == 0}" required>
+                                                    {{item.city_name || 'Không tìm thấy thành phố'}}
+                                                </p>
+                                                <p ng-if="!item.is_global" style="width: 100%" ng-class="{'text-danger' : item.to_district == 0}" e-required>
+                                                    {{item.district_name || 'Không tìm thấy quận huyện' }}
+                                                </p>
+                                                <p ng-if="item.zipcode">
+                                                    {{item.zipcode}} - {{item.country_code}}
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <p style="margin-bottom:10px" name="to_name" e-required>
+                                                    {{item.to_name}}
+                                                </p>
+
+                                                <p style="margin-bottom:10px" name="to_phone" e-required>
+                                                    {{item.to_phone}}
+                                                </p>
+                                            </td>
+
+                                            <td style="position: relative">
+                                                <div ng-if="!item.boxme_inventory || (item.boxme_inventory && check_load_product)" class="clearfix" style="position:absolute;top:10px;right:5px;">
+                                                    <i style="float:right; cursor:pointer;font-size:15px" class="fa fa-edit" ng-click="edit_product_info(item,$index,list_products)"></i>
+                                                </div>
+
+                                                <p ng-if="!item.boxme_inventory" style="margin-bottom:10px" name="item_name">
+                                                   {{item.item_name }}
+                                                </p>
+                                                <p ng-if="!item.boxme_inventory" style="margin-bottom:10px" name="item_qty" e-required>
+                                                    {{item.item_qty }} {{'nav_product_quanlyhanghoa' | translate}}
+                                                </p>
+                                                <p ng-if="item.boxme_inventory" style="margin-bottom:10px" name="item_qty" e-required>
+                                                    {{item.order_items.length }} {{'nav_product_quanlyhanghoa' | translate}}
+                                                </p>
+                                                <p>
+                                                    <span ng-if="item.item_weight">{{item.item_weight | vnNumber}}(gram)</span>
+                                                    <span ng-if="!item.item_weight && !item.boxme_inventory" style="color: #f00">{{'OBG_ChuaCoCanNang' | translate}}</span>
+                                                </p>
+                                                <div ng-if="item.boxme_inventory && !item.name_str" ng-repeat="item_product in item.order_items">
+                                                    <p>
+                                                        <i class="fa fa-star-o"></i>&nbsp;{{item_product.sku}} x {{item_product.quantity}}&nbsp;</p>
+                                                </div>
+                                                <div ng-if="item.boxme_inventory && item.name_str">
+                                                    <span ng-bind-html="item.name_str"></span>
+                                                </div>
+                                                <p editable-text="item.item_price" e-name="collect" e-form="rowform" e-required>
+                                                    <i class="fa fa-dollar"></i>&nbsp;{{item.item_price | vnNumber}}&nbsp;(vnd)
+                                                </p>
+                                            </td>
+
+                                            <td style="position: relative">
+                                                <div class="clearfix" style="position:absolute;top:10px;right:5px;">
+                                                    <i style="float:right; cursor:pointer;font-size:15px" class="fa fa-edit" ng-click="edit_service(item,$index,list_courier,list_inventory)"></i>
+                                                </div>
+                                                <p style="margin-bottom:10px" e-required>
+                                                    <span ng-if="pay_pvc[item.vas]">{{ pay_pvc[item.vas] }}</span>
+                                                    <span class="text-danger" ng-if="!pay_pvc[item.vas]">Chưa chọn dịch vụ thu hộ</span>
+                                                </p>
+                                                <p style="margin-bottom:10px" e-required>
+                                                    <span ng-if="service[item.service]">{{ service[item.service] }}</span>
+                                                    <span class="text-danger" ng-if="!service[item.service]">Chưa chọn dịch vụ vận chuyển</span>
+                                                </p>
+                                                <p style="margin-bottom:10px" e-required style="width: 100%">
+                                                    <span ng-if="courier[item.courier]">{{ courier[item.courier] }}</span>
+                                                    <span class="text-danger" ng-if="!courier[item.courier]">Chưa chọn hãng vận chuyển</span>
+                                                </p>
+                                                <!-- <p> -->
+                                                <!-- <span> -->
+                                                <!-- {{ item.checking == 1 && 'OBG_ChoKhachXemHangKhiNhan' || 'EXC_KHongChoKhachXemHangKhiNhan' | translate }} -->
+                                                <!-- {{ item.checking == 1 && "Cho khách xem hàng" || "Không cho khách xem hàng" }} -->
+                                                <!-- </span> -->
+                                                <!-- </p> -->
+
+                                            </td>
+
+                                            <td>
+                                                <p editable-text="item.collect" e-name="collect" e-form="rowform" e-required>
+                                                    <i class="fa fa-dollar"></i>&nbsp;{{item.collect | vnNumber}}&nbsp;({{item.currency}})
+                                                </p>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <form ng-show=" rowform.$visible && (item.active == 0 || item.status == 'FAIL')" class="form-buttons form-inline" editable-form
+                                                    name="rowform" onbeforesave="save($data,item,$index)" shown="inserted == item">
+                                                    <div class="btn-group-vertical w-m">
+                                                        <button type="submit" class="btn btn-success" type="button" ng-disabled="rowform.$waiting || rowform.$invalid">{{'Btt_update' | translate}}</button>
+                                                        <button type="button" class="btn btn-default" ng-disabled="rowform.$waiting" ng-click="remove($index)" type="button">{{'Btt_delete' | translate}}</button>
+                                                    </div>
+                                                </form>
+
+                                                <div class="btn-group-vertical w-m" ng-show="item.active == 0 && !item.waiting_create">
+                                                    <a style="color:#23b7e5" ng-disabled="item.waiting_create" ng-click="create($index,item)" ng-disabled="item.to_city == 0 || item.has_sku_not_found">
+                                                        {{'HEAD_taodonhang' | translate}}
+                                                    </a><br/><br/>
+                                                    <a style="color:#23b7e5" ng-click="remove($index,item.partner)">{{'Btt_delete' | translate}}</a>
+                                                </div>
+                                                <i ng-if="item.waiting_create" class="fa fa-spin fa-spinner text-3x"></i>
+
+                                                <div ng-show="item.active != 0 && !rowform.$visible">
+                                                    <p>
+                                                        <span class="label" ng-class="{'bg-success': item.status == 'SUCCESS', 'bg-danger': item.status == 'FAIL'}">{{list_status[item.status]}}</span>
+                                                    </p>
+
+                                                    <p>
+                                                        <a ui-sref="detail({code:item.trackingcode})" class="text-info" href="javascript:;" target="_blank">{{item.trackingcode}}</a>
+                                                    </p>
+                                                    <div class="btn-group-vertical w-m">
+                                                        <a ng-if="item.status == 'FAIL'" style="color:#23b7e5" ng-disabled="item.waiting_create" ng-click="create($index,item)" ng-disabled="item.to_city == 0 || item.has_sku_not_found">
+                                                            {{'HEAD_taodonhang' | translate}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--/ Panel-->
+                        <footer class="panel-footer">
+                            <div class="row" ng-show="total">
+                                <div class="col-sm-3 wrapper-md pull-left">
+                                    <strong>{{'ORDERL_tongso' | translate}}</strong> :
+                                    <i class="text-danger">{{totalItems || '0'}}</i> {{'ORDERL_vandon' | translate}}
+                                </div>
+                                <div class="col-sm-4 text-right text-center-xs pull-right">
+                                    <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage('')"></pagination>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/ng-template" id="EditAddressExcel.html">
+    <div ng-include="'tpl/orders/edit_address_excel.html'"></div>
+</script>
+
+<script type="text/ng-template" id="EditProductInfo.html">
+    <div ng-include="'tpl/orders/edit_product_info_excel.html'"></div>
+</script>
+
+<script type="text/ng-template" id="EditService.html">
+    <div ng-include="'tpl/orders/edit_service_excel.html'"></div>
+</script>

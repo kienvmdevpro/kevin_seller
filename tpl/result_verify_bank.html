@@ -1,0 +1,73 @@
+<div ng-controller="ResultVerifyBankCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm" style="margin-top: ">
+        <div class="col">
+            <div class="tab-container col-lg-8 col-lg-offset-2">
+                <div class="tab-content tab-fake padder-xs">
+                    <div class="row text-center" ng-show="!process">
+                       <h3>
+
+                           <div  class="alert alert-success radius" ng-if="data.message == 'SUCCESS'">
+                               Tài khoản ngân hàng của bạn đã được xác thực, cảm ơn bạn đã sử dụng dịch vụ của chúng tôi !
+                           </div>
+
+                           <div  class="alert alert-warning radius" ng-if="data.message == 'TOKEN_EXPIRED' || data.message == 'TOKEN_NOT_FOUND'">
+                               Shipchung thông báo : Đã hết thời hạn xác nhận thông tin tài khoản ngân hàng, quý khách vui lòng thử cập nhật lại thông tin, hoặc liên hệ bộ phận chăm sóc khách hàng của Shipchung để được hỗ trợ.
+                           </div>
+
+                           
+                       </h3>
+                    </div>
+
+                    <div ng-show="process" class="row text-center">
+                                <i class="fa-3x fa fa-spinner fa-spin"></i>
+                    </div>
+                    
+                    <div ng-show="data.data && !process" class="well m-t-lg bg-light lt">
+                      <div class="row">
+                        <div class="col-lg-12">
+
+                            <table class="table table-striped">
+                                <tbody>
+                                <tr>
+                                    <td colspan="2" class="text-center text-base font-bold">
+                                        Thông tin tài khoản.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Ngân hàng :
+                                    </td>
+                                    <td class="tk-right"> {{bankName(data.data.bank_code) || ''}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Tên chủ thẻ :
+                                    </td>
+                                    <td class="tk-right"> {{data.data.account_name || ''}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Mã thẻ :
+                                    </td>
+                                    <td class="tk-right"> {{data.data.account_number || ''}}
+                                    </td>
+                                </tr>
+
+
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="row text-center">
+    <p><a href="http://seller.shipchung.vn"><span class="text-info">[Quay về trang chủ]</span></a></p>
+</div>

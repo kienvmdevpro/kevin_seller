@@ -1,0 +1,254 @@
+<div ng-controller="TicketDetailCtrl" tour >
+
+    <div class="col-md-8 dk bg-auto" >
+        <!--Content-->
+            <div class="col-sm-12 text-title ">
+                <div ng-if="!detail.id && show_wating" class="app-header-fixed">
+                <center>
+                <i class="text-3x fa fa-spinner fa-spin"></i>
+                </center>
+                </div>
+                
+                <center ng-if="!detail.id && !show_wating">
+                   {{'TICM_banchuacoyeucaunao' | translate}} <!-- Bạn chưa có yêu cầu nào ! -->
+                </center>
+                
+                <form name="frmsubmit" class="form-validation form-horizontal" ng-submit="save('CLOSED')" enctype="multipart/form-data" role="form" ng-if="detail.id">
+                    <div class="form-group text-lgx m-b-none m-r-none">
+                      <label class="text-black col-lg-8 no-padder">#{{detail.id}} - {{detail.title}}</label>
+                      <div class="col-lg-4 no-padder">
+                        <span class="label pull-right" ng-class="data_status[detail.status].bg">{{data_status[detail.status].name}}</span>
+                      </div>
+                    </div>
+                    <div class="form-group text-base m-b-none m-r-none">
+                        <p class="m-b-xs" ng-show="detail.refer" style="word-wrap: break-word;"><i class="fa fa-code-fork"></i> : <a class="text-info" ng-repeat="val in detail.refer">{{val.code}}&nbsp;<i ng-if="!$last">,</i>&nbsp</a></p>
+                        <p ng-if="detail.time_update_str" class="m-b-xs">{{'PROA_Capnhat' | translate}} {{detail.time_update_str}} 
+                        <br/><!-- Ngày tạo : -->{{'TICM_ngaytao' | translate}} {{detail.time_create * 1000 | date:'dd-MM-yyyy'}}</p>
+                        <p ng-if="!detail.time_update_str" class="m-b-xs">{{'TICM_moicapnhat' | translate }} <br/>{{'TICM_ngaytao' | translate}} : {{detail.time_create * 1000 | date:'dd-MM-yyyy'}}</p>
+                        <p ng-if="detail.time_over" class="m-b-xs"> {{'TICM_Dukienxulyxongtruoc' | translate}}<!-- Dự kiến xử lý xong trước --> : {{detail.time_over * 1000 | date:'HH:mm:ss dd-MM-yyyy'}}</p>
+                        <p class="m-b-xs">
+                            <!-- Người tiếp nhận: -->{{'TICM_Nguoitiepnhan' | translate}}
+                            <span class="text-info ng-binding ng-scope" ng-repeat="val in detail.assign">
+                                {{User[val.assign_id]['fullname']}}<i ng-if="!$last" class="ng-scope">,</i>
+                            </span>
+                        </p>
+                        <p ng-if="!detail.assign"> <i class="fa fa-user"></i> : <span class="text-info" ng-repeat="val in detail.assign">{{val.user_assign.fullname}}<i ng-if="!$last">, </i>&nbsp;</span></p>
+                    </div>
+                    
+                    <div class="form-group m-r-none" ng-if="detail.status != 'CLOSED'" ng-show="show_respond">
+                        <a class="pull-right" ng-click="toogle_show('show_respond')">
+                          <i class="glyphicon glyphicon-transfer text-md text-muted padder-xs-lr"></i>
+                        </a>
+
+                        <div class="alert alert-warning alert-dismissible fade in m-t-md" role="alert" ng-if="detail.link.length > 0"> 
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                          <i class="fa fa-exclamation-triangle"></i> &nbsp; {{'TICM_Yeucaunatdabitrung' | translate}}  <a href="javascript:;" ng-click="show_detail(detail.duplicate[0])"><span class='text-info'>#{{detail.link[0].id}}</span></a>, {{'TICM_Banyeucauxemtinhtrangxulyvatraloi' | translate}} <a href="javascript:;" ng-click="show_detail(detail.link[0].id)"><span class='text-info'>{{'TIC_taiday' | translate}}</span></a>.
+                        </div>
+                        
+                        <textarea ng-if="detail.link.length == 0" rows="5" class="form-control w-full" ng-model="data_respond.content" ng-disabled="detail.status == 'CLOSED'"  placeholder=" {{'TICM_Guithongtinhoacphanhoi' | translate}}" ></textarea>
+                    </div>
+                    <div class="form-group m-r-none" ng-if="detail.status != 'CLOSED'" ng-show="!show_respond">
+                        <a class="pull-right" ng-click="toogle_show('show_respond')" style="cursor: pointer;">
+                          <i class="glyphicon glyphicon-transfer text-md text-muted padder-xs-lr"></i>
+                        </a>
+                        <div class="col-md-12 no-padder">
+                            <div class="form-control  wrapper-xxs b-success b-1x scroll-y" markdown="data_respond.content" style="height: 117px;" >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group m-b-none m-r-none b-a b-dashed" ng-if="detail.link.length == 0 && detail.status != 'CLOSED' ">
+                        <div class="col-sm-12 no-padder">
+                            <div nv-file-drop="" uploader="uploader">
+                                <div nv-file-over="" uploader="uploader" over-class="another-file-over-class">
+                                    <input type="file" class="w-full input-uploader" nv-file-select="" uploader="uploader" multiple />
+                                    <span class="content-uploader"><i class="fa fa-picture-o fa-lg"></i> {{'TIC_keothatoida5filehoacclickdechon' | translate}}</span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="form-group text-xs" ng-if="uploader.queue.length > 0">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="50%" translate>TIC_name</th>
+                                    <th ng-show="uploader.isHTML5" translate>TIC_kichthuoc</th>
+                                    <th ng-show="uploader.isHTML5" translate>TIC_xuly</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in uploader.queue">
+                                    <td><strong>{{ item.file.name }}</strong></td>
+                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                    <td ng-show="uploader.isHTML5">
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                    </td>
+                                    <td nowrap>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                            <span class="glyphicon glyphicon-trash"></span> {{'Btt_delete' | translate}}
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-group" ng-if="detail.link.length == 0 && detail.status != 'CLOSED' ">
+                        <div class="padder-tb">
+                            <button class="btn btn-info" type="button" ng-disabled="frm_submit || !data_respond.content.length" ng-click="save('')" >{{'TICM_Guitraloi' | translate}}</button>
+                            <button ng-if="['PROCESSED'].indexOf(detail.status) != -1" class="btn btn-success" type="submit" ng-disabled="frm_submit || !data_respond.content.length" >{{'TICM_traloivadongyeucau' | translate}}</button>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="detail.status == 'CLOSED'">
+                        <div class="padder-tb">
+                            <button class="btn btn-info" type="button" ng-click="save('PENDING_FOR_CUSTOMER')" >{{'TICM_Molai' | translate}}</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 alert alert-success text-center m-l-none m-r-none" style="overflow:overlay;" ng-if="detail.id && ( detail.status == 'PROCESSED' || detail.status == 'CLOSED') && detail.rating.length == 0 && !sended">
+                         <p style="font-size:15px">{{'TICM_yeucaunaydadcshipchungxuly' | translate:{isShipchung : isShipchung} }} </p><br/>
+                        <div style="margin-top:10px;">
+                            <div class="col-md-4 col-md-offset-4">
+                                <div class="col-md-4 col-md-offset-2">
+                                    <button class="btn btn-success btn-circle" type="button" ng-click="save_rating({1:'1'})" ng-disabled="saveRatingProcess"> <i class="fa fa-smile-o" style="display:block;font-size:40px"></i> {{'TICM_Tot' | translate}}</button>    
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-dark btn-circle" type="button" ng-disabled="saveRatingProcess" ng-click="save_rating({1:'3'})"> <i class="fa fa-frown-o" style="display:block;font-size:40px"></i> {{'TICM_Te' | translate}}</button> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-base m-l-none m-r-none">
+                        <p>{{'TICM_Lichsutraodoiyeucaunay' | translate}} </p>
+                             
+                             <div class="streamline b-l b-info  m-b padder-v">
+                                <div> <!-- content request -->
+                                <a class="pull-left thumb-sm avatar m-l-n-md">
+                                <img ng-src="{{userInfo.avatar}}" class="img-circle" alt="avatar" />
+                                </a>
+                                  <div class="m-l-lg">
+                                    <div class="m-b-xs">
+                                      <span class="h4">{{'TICM_Noidung' | translate}}</span>
+                                      <span class="text-muted m-l-sm pull-right">
+                                        {{detail.time_create * 1000 | date:'HH:mm:ss dd-MM-yyyy'}}
+                                      </span>
+                                    </div>
+                                    <div class="m-b">
+                                      <div markdown="detail.content"></div>
+                                        <div ng-repeat="at in detail.attach">
+                                            <p><a class="text-info" href="{{link_storage}}{{at.link_tmp}}" target="_blank"> {{at.name || 'File Name'}}</a></p>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div> <!-- end content request -->
+
+                                <div class="" >
+                                    <table class="table table-condensed">
+                                        <tbody ng-repeat="item in listOrderRef" style="border-top: 1px solid #ddd;">
+                                            <tr ng-if="item.pipe_journey.length > 0" >
+                                                <td colspan="7" class="text-left">
+                                                    <div class="status-process clear row padder">
+                                                        <div class=" text-center first_status" >
+                                                            <section >
+                                                                <span class="status-title  ng-binding">
+                                                                    <strong>{{item.tracking_code}}</strong>
+                                                                </span> <br/>
+                                                                <span class="status-title  ng-binding">
+                                                                    {{item.meta_status.name}}
+                                                                </span> <br/>
+
+                                                                <span class="status-time ng-binding">
+                                                                </span>
+                                                            </section>
+                                                        </div>
+                                                        <div class="journey {{$last ? 'status-current' : ''}}"  ng-repeat="it in item.pipe_journey" tooltip-html-unsafe="{{it.note}}">
+                                                            <section >
+                                                                <span class="status-title  ng-binding">
+                                                                    {{pipe_status[it.pipe_status] || 'Hành trình'}} 
+                                                                </span>
+                                                                <span class="status-time ng-binding">
+                                                                    <span ng-show='item.time_create > 0'>{{ it.time_create * 1000 | date : 'dd-MM-yyyy  HH:mm' }}</span>
+                                                                </span>
+                                                            </section>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div ng-repeat="item in detail.link">
+                                    <div class="m-l-lg">
+                                        <div class="panel b-a">
+                                            <div class="panel-heading pos-rlt">
+                                              <span class="arrow left pull-up"></span>
+                                              <div class="row">
+                                                    <div class="col-xs-8">
+                                                        <small class="text-muted m-l-sm"><!-- Liên quan đến  -->{{'TICM_Lienquanden' | translate}}<a ng-click="show_detail(item.id)">#{{item.id}}</a></small><br />
+                                                        <span ng-click="show_detail(item.id)">{{item.title}} </span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-right">
+                                                        <span class="label pull-right" ng-class="data_status[item.status].bg">
+                                                            {{data_status[item.status].name}}<br />
+                                                        </span>
+                                                        <br />
+                                                        <small class="text-muted m-l-sm">{{item.time_create*1000 | date : 'dd/MM/yy HH:mm'}}</small>
+                                                    </div>
+                                              </div>
+
+
+                                              <div class="pull-right">
+
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div ng-repeat="val in list_feedback" ng-if="list_feedback">
+                                  <a class="pull-left thumb-sm avatar m-l-n-md">
+                                    <img ng-src="http://www.gravatar.com/avatar/{{User[val.user_id].md5_email}}?s=80&d=mm&r=g" alt="avatar" />
+                                  </a>         
+                                   
+                                  <div class="m-l-lg m-b-lg panel b-a" ng-class="{'bg-light lter': val.user_id == userInfo.id}">
+                                    <div class="panel-heading pos-rlt b-light">
+                                      <span class="arrow arrow-light left"></span>   
+                                      <a href='javascript:;' ng-if="val.user_id == userInfo.id">{{'TICM_toi' | translate}} </a>
+                                      <a href='javascript:;' ng-if="val.user_id != userInfo.id">{{User[val.user_id].fullname || 'Người lạ'}} : </a>
+                                      
+                                      <span class="text-muted m-l-sm pull-right" ng-if="val.time_create_str"> 
+                                        {{val.time_create_str}} 
+                                      </span>
+                                      <span class="text-muted m-l-sm pull-right" ng-if="!val.time_create_str">
+                                        {{'TICM_vuacapnhat' | translate}}
+                                      </span>
+                                    </div>
+                                   
+                                    <div class="panel-body">
+                                      <div markdown="val.content"></div>
+                                      <div ng-repeat="v in val.attach" ng-if="val.attach">
+                                        <p><a class="text-info" href="{{link_storage}}{{v.link_tmp}}" target="_blank"> {{v.name || 'File Name'}}</a></p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                            </div>
+                               
+                    </div>
+                </form>
+            </div>
+        <!--/ Content-->
+        </div>

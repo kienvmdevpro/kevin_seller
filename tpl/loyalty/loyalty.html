@@ -1,0 +1,89 @@
+<div ng-controller="LoyaltyCtrl">
+    <div class="col-md-9 no-padder">
+        <div class="b-b grad-loyalty">
+        <span class="row">
+            <div class="col-md-2">
+                <img ng-if="userInfo.loy_level == 2"  class="max-height-none" style="max-width: 110px;" ng-src="img/golden.png" alt="." />
+                <img ng-if="userInfo.loy_level == 1"  class="max-height-none" style="max-width: 110px;" ng-src="img/silver.png" alt="." />
+                <img ng-if="userInfo.loy_level == 0"  class="max-height-none" style="max-width: 110px;" ng-src="img/badges-new.png" alt="." />
+            </div>
+            <div class="col-md-6 m-t-sm m-b-sm text-white">
+                <span class="text-2x">{{userInfo.fullname}}</span>  <br />
+                <span class="text-xs">{{loyalty_level[userInfo.loy_level]['name']}}</span> <br />
+                <button class="btn btn-rounded btn-success m-t-sm" data-ng-click="get_gift()">&nbsp;&nbsp;Đổi thưởng&nbsp;&nbsp;</button>
+            </div>
+            <div class="col-md-2 text-white m-t-sm text-center">
+                <span class="text-3x m-t-md">{{data.user.current_point || '0' | vnNumber }}</span>  <br />
+                <span class="text-xs">Điểm trong tháng</span>
+            </div>
+            <div class="col-md-2 text-white m-t-sm text-center">
+                <span class="text-3x m-t-md">{{data.user.total_point || '0' | vnNumber }}</span>  <br />
+                <span class="text-xs">Tổng điểm tích lũy</span>
+            </div>
+        </span>
+        </div>
+
+        <div class="hbox hbox-auto-xs hbox-auto-sm">
+            <div class="wrapper bg-white b-b">
+                <ul class="nav nav-pills nav-sm">
+                    <li ng-class="{active:tab_loyalty == 1}"><a href="javascript:;" data-ng-click="tab_loyalty = 1">Tất cả lịch sử</a></li>
+                    <li ng-class="{active:tab_loyalty == 2}"><a href="javascript:;" data-ng-click="tab_loyalty = 2">Tích lũy điểm</a></li>
+                    <li ng-class="{active:tab_loyalty == 3}"><a href="javascript:;" data-ng-click="tab_loyalty = 3">Thay đổi hạng</a></li>
+                    <li ng-class="{active:tab_loyalty == 4}"><a href="javascript:;" data-ng-click="tab_loyalty = 4">Đổi quà</a></li>
+                </ul>
+            </div>
+
+            <div class="padder">
+                <div data-ng-include=" 'tpl/loyalty/history.html' " ng-show="tab_loyalty == 1"></div>
+                <div data-ng-include=" 'tpl/loyalty/point.html' " ng-show="tab_loyalty == 2"></div>
+                <div data-ng-include=" 'tpl/loyalty/level.html' " ng-show="tab_loyalty == 3"></div>
+                <div data-ng-include=" 'tpl/loyalty/gift.html' " ng-show="tab_loyalty == 4"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="panel no-border">
+            <div class="panel-heading wrapper b-b b-light">
+                <h5 class="font-thin m-t-none m-b-none text-muted">Thông tin chương trình</h5>
+            </div>
+            <ul class="list-group list-group-lg m-b-none font-thin text-sm">
+                <li class="list-group-item">
+                    <p>
+                        Khảo sát nhu cầu sử dụng hộp carton/túi đóng gói <a class="text-info" href="https://docs.google.com/forms/d/e/1FAIpQLSeXl6qohiFnN3ln2HiLMYQQofI3xBCf_WveOfqkQ1J41Wn98g/viewform" target="_blank"> tại đây.</a>
+                    </p>
+                    <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> Cập nhật ngày 08/09/2016</small>
+                </li>
+                <li class="list-group-item">
+                    <p>
+                        Đăng ký lấy hàng ngày chủ nhật <a class="text-info" href="https://docs.google.com/forms/d/16mjZB5A5uW4Ljt5e5vL-73sdILSSfu2N3Fupx-9nIUA/viewform" target="_blank"> tại đây.</a>
+                    </p>
+                    <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> Cập nhật ngày 01/06/2016</small>
+                </li>
+                <li class="list-group-item">
+                    <p>
+                    Quy định đổi thưởng khách hàng thân thiết <a class="text-info" href="https://www.shipchung.vn/khach-hang-than-thiet-nhanh-tay-mo-the-nhan-ngay-uu-dai/" target="_blank"> tại đây.</a>
+                    </p>
+                    <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> Cập nhật ngày 10/05/2016</small>
+                </li>
+                <li class="list-group-item">
+                    <p>
+                    Thể lệ và điều kiện tham gia khách hàng thân thiết <a class="text-info" href="https://www.shipchung.vn/khach-hang-than-thiet-nhanh-tay-mo-the-nhan-ngay-uu-dai/" target="_blank"> tại đây.</a>
+                    </p>
+                    <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> Cập nhật ngày 10/05/2016</small>
+                </li>
+                <li class="list-group-item">
+                    <p>
+                        Hướng dẫn đổi thưởng tại đây <a class="text-info" href="https://www.shipchung.vn/huong-dan-doi-thuong-chuong-trinh-khach-hang-than-thiet/" target="_blank"> tại đây.</a>
+                    </p>
+                    <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> Cập nhật ngày 10/05/2016</small>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <script id="ModalGiftLoyaltyCtrl.html" type="text/ng-template">
+        <div ng-include="'tpl/loyalty/modal.get_gift.html'"></div>
+    </script>
+</div>

@@ -1,0 +1,59 @@
+<div ng-controller="ShipmentsDetailController" ng-init="load();">
+	<div boxme-header='header' app="app">
+		<div class="m-l-sm hidden-xs navbar-btn">
+			<a class="btn btn-default" ui-sref="product.shipment">
+				<i class="glyphicon glyphicon-chevron-left"></i> {{'SHIPD_trolai' | translate }}<!-- Trở lại -->
+			</a>
+		</div>
+        <div class="inline pull-right">
+            <a class="btn btn-success" ui-sref="print-shipment({id: id})" style="width: 110px">
+                <i class="fa fa-print"></i> {{'SHIPD_Inbangke' | translate }}<!-- In bảng kê -->
+            </a>
+            <a class="btn bg-white-opacity no-shadow pos-abt hidden-print" ui-sref="print.shipment({id:id})" style="width: 110px"><i class="fa fa-gears"></i> In chi tiết</a>
+        </div>
+	</div>
+	<boxme-content>
+		<div class="wrapper-md bg-light b-b">
+			<h1 class="m-n font-thin h3">Shipment {{ShipmentItem.RequestCode}}</h1>
+            <div class="m-t-sm">
+                <p>
+                    <span>{{'SHIPD_Tenkhachhang' | translate }}: {{ShipmentItem.SellerName}}</span>
+                    <span> , {{'SHIPD_Dienthoai' | translate }} {{ShipmentItem.SellerPhone}}</span>
+                </p>
+                <p>{{'SHIPD_Ngaytao' | translate }}<input-utc-time time="ShipmentItem.CreateDate" utc="7" format="'dd/MM/yyyy HH:mm'"></input-utc-time></p>
+                <!-- <p>Ngày tạo: {{ShipmentItem.CreateDate*1000 | date:'dd/MM/yyyy HH:mm:ss'}}</p> -->
+            </div>
+		</div>
+		<div class="hbox hbox-auto-xs hbox-auto-sm">
+			<div class="col wrapper-sm">
+				<div class="clearfix m-b">
+					<div class="panel panel-default">
+						<table class="table table-striped table-bordered b-t b-light">
+							<thead>
+								<tr>
+									<th class="text-center v-middle hidden-md hidden-sm hidden-xs">{{'SHIPD_STT' | translate }}<!-- STT --></th>
+									<th class="text-center v-middle" translate>{{'SHIPD_SKU' | translate }} <!-- SKU --></th>
+									<th class="text-left v-middle" translate>{{'SHIPD_Tensanpham' | translate }}<!-- Tên sản phẩm --></th>
+									<th class="text-center v-middle" translate>{{'SHIPD_Soluong' | translate }} <!-- Số lượng --></th>
+								</tr>
+							</thead>
+							<tbody class="animated">
+								<tr ng-repeat="item in ShipmentItem.ShipmentItems">
+									<td class="text-center v-middle hidden-md hidden-sm hidden-xs">{{$index + 1}}</td>
+									<td class="text-center v-middle">{{item.SellerSKU}}</td>
+									<td class="text-left v-middle">{{item.ProductName}}</td>
+									<td class="text-center v-middle">{{item.QuantityShipped}}</td>
+								</tr>
+								<tr ng-if="!ShipmentItem.ShipmentItems.length">
+									<td class="text-center v-middle" colspan="6">
+										<em>{{'SHIPD_khongcoketqua' | translate}}<!-- Không có kết quả --></em>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</boxme-content>
+</div>

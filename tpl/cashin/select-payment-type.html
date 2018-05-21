@@ -1,0 +1,435 @@
+<style>
+	.plan .btn.active {
+		background-color: #fad733!important;
+		border-color: #fad733!important;
+	}
+	.nav-tabs>li>a{
+		border-bottom: none!important;
+	}
+</style>
+<div ng-controller="CashinController">
+	<div class="wrapper-md bg-light b-b">
+		<span class="m-n h2 title-page"><i class="fa fa-usd text-info"></i> {{'Cashin_Naptienvanchuyen' | translate}}<!-- Nạp tiền phí vận chuyển --></span>
+	</div>
+	<div class="wrapper-sm" style="background:white">
+		<div class="hbox hbox-auto-xs hbox-auto-sm">
+			<div class="col wrapper-sm">
+				<div class="col-md-8 padder-lg">
+					<div class="row">
+						<div class="col-md-12">
+							<h4>{{'Cashin_Banvuilongchonnhapsotien' | translate}}<!-- 1. Bạn vui lòng chọn/nhập số tiền muốn nạp --></h4>
+							<p>
+								{{'Cashin_Neunhubansudungdichvu' | translate:{isShipchung : isShipchung} }}
+								<!-- Nếu như bạn sử dụng dịch vụ không hết số tiền đã nạp, bạn có thể rút/chuyển số tiền còn lại về tài khoản theo các đợt thanh toán đối soát của Shipchung.vn. -->
+							</p>
+						</div>
+					</div>
+
+					<div class="row plan">
+						<div class="col-md-12">
+							<div class="btn-group btn-group-justified m-r ng-scope">
+								<label class="btn btn-default" ng-class="{'active': item.price == get_number(frm.total_amount)}" ng-click="setTotalAmount(item.price)"
+								aria-invalid="false" ng-repeat="item in list_plan_price">
+								<span ng-if="ViewHomeCurrency != viewCurrency">{{convert_currency(item.price) ? (convert_currency(item.price) | number:2): '...'}}{{viewCurrency}} ({{item.text}})</span>
+								<span ng-if="ViewHomeCurrency == viewCurrency">{{keyLang == 'vi' ? item.text:item.text_en}}</span>
+
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="row m-t-md">
+					<div class="col-md-12">
+						<div class="input-group" ng-init="set_currency_cashin(frm.total_amount)">
+							<input ng-if="ViewHomeCurrency == viewCurrency" type="text" class="form-control" id="exampleInputAmount" placeholder="{{'Cashin_Sotiencannap' | translate}}" ng-model="frm.total_amount"
+							formatnumber>
+							<input ng-if="ViewHomeCurrency != viewCurrency" ng-change="change_currency_cashin(frm.total_amount_curent_2,frm.total_amount)" class="form-control" id="exampleInputAmount" 
+							placeholder="{{'Cashin_Sotiencannap' | translate}} ({{viewCurrency}})" ng-model="frm.total_amount_curent_2" type="text"  >
+							<div class="input-group-addon">{{viewCurrency}}</div>
+						</div>
+						<span  style="float:right;color:red;font-weight: bold;" ng-if="ViewHomeCurrency !=viewCurrency">
+							Exchange: {{frm.total_amount || '0' | number:0}} {{ViewHomeCurrency}}
+						</span>
+					</div>
+				</div>
+
+				<div class="row m-t-sm">
+					<div class="col-md-12">
+						<h4>{{'Cashin_Chonmottrngcacphuocthuc' | translate}} <!-- 2. Chọn 1 trong các phương thức nạp tiền dưới đây --></h4>
+					</div>
+				</div>
+
+				<div class="clearfix">&nbsp;</div>
+				<div class="row m-t-md b-b">
+					<label class="col-sm-2 iconCheckout icoVS"></label>
+					<div class="col-sm-10 text-left">
+						<div class="radio">
+							<label>
+								<input type="radio" checked ng-click="click_type(3)" ng-model="data.type" value="3" name="optionsRadios">
+								<span style="color: #333;font-size: 15px;line-height: 22px;">
+									<!-- Sử dụng thẻ đã liên kết -->
+									{{'Cashin_Thanhtoanthongquathelienket' | translate}}
+								</span>
+
+								<br />
+								<span class="text-danger">{{'Cashin_Mienphi' | translate}}<!-- MIỄN PHÍ --></span> {{'Cashin_Dangkithelienket' | translate}}
+								<a class="text-info" ng-href="#/app/config/payment-linked" target="_blank">{{'Cashin_taiday' | translate}}<!-- tại đây --></a>. {{'Cashin_last_lienketthe' | translate}}
+								<!-- Đăng ký ví NgânLượng.vn miễn phí -->
+							</label>
+
+								<!-- <select name="option_linked" class="form-control  m-b-none" ng-show="data.type == 3 && !saveStep">
+									<option data-ng-repeat="item in list_linked" value="{{item.id}}">{{item.cardNumber}}</option>
+								</select>
+							-->	
+							<div class="col-xs-12 col-md-6 m-b-15 radio" ng-show="data.type == 3 && !saveStep" style="margin-top: 10px">
+								
+								<ui-select ng-if="list_linked" ng-model="data.linked_id">
+									<ui-select-match>{{$select.selected.cardNumber}}</ui-select-match>
+									<ui-select-choices ng-model="data.linked_id" repeat="item.id as item in list_linked | filter: $select.search">
+										<div ng-bind-html="item.cardNumber | highlight: $select.search"></div>
+									</ui-select-choices>
+								</ui-select>
+								<p style="padding-left: 5px;color: red"  ng-if="!list_linked.length">{{'Cashin_chualienketthe' | translate}}</p>
+							</div>
+
+								<!-- <table class="table table-striped m-b-none" ng-show="data.type == 3 && !saveStep">
+									<thead class="text-bold">
+									<tr>
+										<td>
+											Thẻ mặc định
+										</td>
+										<td>
+											Loại thẻ
+										</td>
+										<td>
+											Ngân hàng
+										</td>
+										<td>
+											Số thẻ
+										</td>
+										<td>
+											Ngày hết hạn
+										</td>
+									</tr>
+									</thead>
+									<tbody>
+									<tr data-ng-repeat="item in list_linked">
+										<td class="text-center">
+											<div class="radio">
+												<label class="i-checks">
+													<input type="radio" name="option_linked" ng-checked="1*item.active == 1" value="{{item.id}}" ng-model="data.linked_id">
+													<i></i>
+												</label>
+											</div>
+										</td>
+										<td>
+											{{item.paymentMethod}}
+										</td>
+										<td>
+											{{item.bankCode}}
+										</td>
+										<td>
+											{{item.cardNumber || ''}}
+										</td>
+										<td>
+											{{item.cardExpireMonth || ''}}/{{item.cardExpireYear}}
+										</td>
+									</tr>
+
+									<tr ng-if="list_linked">
+										<td colspan="30">&nbsp;</td>
+									</tr>
+									</tbody>
+								</table> -->
+
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">&nbsp;</div>
+					<div class="row b-b">
+						<label class="col-sm-2 iconCheckout icoNL"></label>
+						<div class="col-sm-10 text-left">
+							<div class="radio">
+								<label>
+									<input type="radio" checked ng-model="data.type" ng-click="click_type(1)" value="1" name="optionsRadios">
+									<span style="color: #333;font-size: 15px;line-height: 22px;">
+										<!-- Thanh toán thông qua thẻ ATM, Visa, Master Card, Internet Banking & Ví điện tử NgânLượng -->
+										{{'Cashin_ThanhtoanthongquaAtmVisa' | translate}}
+									</span><br />
+									<span class="text-danger">{{'Cashin_Mienphi' | translate}}<!-- MIỄN PHÍ --></span> {{'Cashin_Dangkinganluongmienphi' | translate}}
+									<!-- Đăng ký ví NgânLượng.vn miễn phí -->
+									<a class="text-info" ng-href="https://www.nganluong.vn/?portal=nganluong&page=user_register" target="_blank">{{'Cashin_taiday' | translate}}<!-- tại đây --></a>
+									<br />
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix">&nbsp;</div>
+
+					<div class="row b-b">
+						<label class="col-sm-2 iconCheckout icoMerchant"></label>
+						<div class="col-sm-10">
+							<div class="radio">
+								<label>
+									<input type="radio" checked="" ng-click="click_type(2)" ng-model="data.type" value="2" name="optionsRadios">
+									<span style="color: #333;font-size: 15px;line-height: 22px;">
+										{{'Cashin_chuyenkhoantructiepvao' | translate :{isShipchung : isShipchung} }}
+										<!-- Chuyển khoản trực tiếp vào tài khoản Ngân Hàng của Shipchung.vn (Techcombank, Vietcombank và ACB) --></span><br />
+										{{'Cashin_Sau30phut' | translate:{isShipchung : isShipchung} }}
+										<!-- Sau 30 phút kể từ khi Shipchung.vn nhận được giao dịch nạp tiền trên ngân hàng -->
+<!-- 					                         Sau khi chuyển khoản, quý khách hàng vui lòng gửi nội dung chuyển khoản vào mail hotro@shipchung.vn.
+-->					       		</label>
+</div>
+<br/>
+
+<div class="col-sm-12" ng-show="data.type == 2 && !saveStep">
+	<div>
+		<!-- <p>Quý khách vui lòng chuyển khoản  vào 1 trong các tài khoản dưới đây của Shipchung.vn số tiền là <strong>{{frm.total_amount}}đ</strong>:</p> -->
+		<p>{{'Cashin_Quykhachvuilongchuyensotienla' | translate:{isShipchung : isShipchung} }} <strong>{{frm.total_amount}}({{viewCurrency}})</strong>:</p></p>
+	</div>
+
+	<br/>
+
+	<tabset>
+		<tab >
+			<tab-heading ng-click="data.transfer_bank = 'TCB'">
+				<img src="http://www.techcombank.com.vn/Content/images/logo.png" alt="" width="130px">
+			</tab-heading>
+
+				<div class="padder m-t-sm" >
+					<p><strong>{{'Cashin_Nganhang' | translate}}<!-- Ngân hàng --></strong> :
+					{{'Cashin_NganhangthuongmaicophanTechcomback' | translate}}<!-- Ngân hàng thương mại cổ phần kỹ thương Việt Nam (Techcombank) Chi nhánh Hai Bà Trưng – PGD Lĩnh Nam - Hà Nội --></p>
+					<p><strong>{{'Cashin_chutaikhoan' | translate }}<!-- Chủ tài khoản --></strong>:CÔNG TY CỔ PHẦN THƯƠNG MẠI ĐIỆN TỬ SHIPCHUNG VIỆT NAM<!--  --></p>
+					<p><strong>{{'Cashin_Sotaikhoan'  | translate}}</strong> : <span class="text-md">19130623042016</span><br /></p>
+				</div>
+				
+			</tab>
+
+			<tab >
+				<tab-heading ng-click="data.transfer_bank = 'VCB'">
+					<img src="http://www.vietcombank.com.vn/images/News_Imgs/vietcombank.png" alt="" width="130px" >
+				</tab-heading>
+
+				<div class="padder m-t-sm">
+					<p><strong>{{'Cashin_Nganhang' | translate}}    <!-- Ngân hàng -->    </strong>: {{'Cashin_NganhangVietcombank' | translate}} <!-- Ngân hàng thương mại cổ phần ngoại thương Việt Nam (Vietcombank) PGD Kim Ngưu - Chi nhánh Chương Dương - Hà Nội --></p>
+					<p><strong>{{'Cashin_chutaikhoan' | translate}} <!-- Chủ tài khoản --></strong>: CÔNG TY CỔ PHẦN THƯƠNG MẠI ĐIỆN TỬ SHIPCHUNG VIỆT NAM </p>
+					<p><strong>{{'Cashin_Sotaikhoan'  | translate}} <!-- Số tài khoản --> </strong> : <span class="text-md">0541000273670</span><br /></p>
+				</div>
+			</tab>
+
+			<tab >
+				<tab-heading ng-click="data.transfer_bank = 'ACB'">
+					<img src="/img/acb_logo.png" alt="" width="130px">
+				</tab-heading>
+
+				<div class="padder m-t-sm">
+					<p><strong>{{'Cashin_Nganhang' | translate}}    <!-- Ngân hàng --></strong> : {{'Cashin_NganhangcophanAChauACB' | translate}}<!-- Ngân hàng thương mại cổ phần Á Châu Việt Nam( ACB ) Chi nhánh Hà Nội --></p>
+					<p><strong>{{'Cashin_chutaikhoan' | translate}} <!-- Chủ tài khoản --></strong>: CÔNG TY CỔ PHẦN THƯƠNG MẠI ĐIỆN TỬ SHIPCHUNG VIỆT NAM <!-- CÔNG TY CỔ PHẦN THƯƠNG MẠI ĐIỆN TỬ SHIPCHUNG VIỆT NAM --></p>
+					<p><strong>{{'Cashin_Sotaikhoan'  | translate}} <!-- Số tài khoản --></strong> : <span class="text-md">388888368</span> <br /></p>
+				</div>
+
+
+			</tab>
+
+		</tabset>
+
+
+		<br/>
+		<div>
+			<p>
+				{{'Cashin_KhichuyenkhoanvuilongghilaiMGD' | translate}}
+				<!-- Khi chuyển khoản quý khách vui lòng ghi lại/xem lại mã giao dịch sau đó nhấn nút Cập nhật dưới đây để thực hiện bước cập nhật thông tin -->
+			</p>
+		</div>
+	</div>
+
+
+
+	<div class="col-md-12" id="frm-guithongtin" ng-show="data.type == 2 && saveStep && !saveSuccess">
+		<div>
+			<p>
+				{{'Cashin_KhichuyenkhoanvuilongghilaiMGDsaudocapnhat' | translate}}
+				<!-- Khi chuyển khoản quý khách vui lòng ghi lại/xem lại mã giao dịch, sau đó quay lại cập nhật các thông tin dưới đây để chúng tôi kiểm tra và nạp tiền vào tài khoản. --></p>
+			</div>
+
+			<div>
+				<form>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="text">
+									{{'Cashin_ChuyentienvaotaikhoanSC' | translate:{isShipchung : isShipchung} }}
+									<!-- Chuyển tiền vào tài khoản ngân hàng Shipchung.vn: --></label>
+									<select name="" id="" class="form-control" ng-model="data.transfer_bank">
+										<option value="VCB">Vietcombank</option>
+										<option value="ACB">ACB</option>
+										<option value="TCB">Techcombank</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="text">{{'Cashin_Hotenchuthechuyentien' | translate}}<!-- Họ tên chủ thẻ chuyển tiền: --></label>
+									<input type="text" class="form-control" id="text" ng-model="data.card_name">
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="text">{{'Cashin_Sothe' | translate}}<!-- Số thẻ: --></label>
+									<input type="text" class="form-control" id="text" ng-model="data.card_number">
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="text">{{'Cashin_Sotien' | translate}}<!-- Số tiền : --></label>
+									<input ng-if="ViewHomeCurrency == viewCurrency" type="text" class="form-control" id="text" ng-model="data.amount" formatnumber>
+									<input ng-init="set_amount_curent_2(data.amount)" ng-if="ViewHomeCurrency != viewCurrency" ng-change="data.amount=convert_currency_to_home_currency(data.amount_curent_2)" type="text" class="form-control" id="text" ng-model="data.amount_curent_2" >
+
+									<span  style="float:right;color:red;font-weight: bold;" ng-if="ViewHomeCurrency !=viewCurrency">
+										Exchange: {{data.amount || '0' | number:0}} {{ViewHomeCurrency}}
+									</span>
+								</div>
+							</div>
+
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="date">{{'Cashin_Thoigiannaptien' | translate}}<!-- Thời gian nạp tiền : --></label>
+
+									<input type="text" class="form-control" placeholder=""
+									datepicker-popup="dd-MM-yyyy"
+									is-open="transfer_time"
+									datepicker-options="dateOptions"
+									close-text="Close"
+									ng-model="data.transfer_time"
+									ng-click="transfer_time = true"
+									min-date="minDate"
+									max-date="maxDate"
+									/>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="text">{{'Cashin_Solenhgiaodich' | translate}}<!-- Số lệnh giao dịch/Số bút toán : --></label>
+									<input type="text" class="form-control" id="text" ng-model="data.transfer_code" >
+								</div>
+							</div>
+
+							<div class="col-md-6">
+
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="content">{{'Cashin_Noidungchuyentien' | translate}}<!-- Nội dung chuyển tiền: --></label>
+									<textarea name="" id="" class="form-control" ng-model="data.transfer_body"></textarea>
+									<em>{{'Cashin_Noidungchuyenkhoanphaikhop' | translate}}<!-- Nội dung chuyển khoản phải khớp với nội dung chuyển khoản ghi trên ngân hàng --></em>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+
+			<div class="col-md-12" ng-show="saveSuccess">
+				<p>
+					{{'Cashin_Capnhatgiaodichthanhcong' | translate:{isShipchung : isShipchung} }}
+					<!-- Cập nhật giao dịch nạp tiền thành công, Shipchung sẽ xử lý giao dịch và nạp tiền vào tài khoản của quý khách trong vòng 5 phút. Shipchung cảm ơn anh/chị/quý khách đã tin cậy sử dụng dịch vụ của chúng tôi --></p>
+
+				</div>
+
+			</div>
+		</div>
+
+		<div class="clearfix"></div>
+
+		<div style="margin-top: 15px;" class="row">
+			<div class="col-md-12">
+				<button class="btn btn-success pull-right btn-lg btn-naptien" ng-click="nextStep(data)" ng-if="!saveStep && !saveSuccess" ng-disabled="naptiendisabled">
+					<span ng-if="data.type == 2" >{{'Cashin_Toidachuyenkhoan' | translate}}<!-- Tôi đã chuyển khoản > --></span>
+					<span ng-if="data.type == 1 || data.type == 3"><i class="fa fa-usd" aria-hidden="true"></i> {{'Cashin_Naptien' | translate}}<!-- Nạp tiền > --></span>
+				</button>
+				<div class="pull-right m-r-lg">
+					<button class="btn btn-default btn-lg" ng-click="goBack()" ng-if="!saveSuccess && saveStep" ng-disabled="frm_submit">
+						<span>{{'Cashin_Quaylai' | translate}}<!-- Quay lại --></span>
+					</button>
+
+					<button class="btn btn-success btn-lg" ng-click="save(data, saveStep)" ng-if="!saveSuccess && saveStep" ng-disabled="frm_submit">
+						<span>{{'Cashin_guithongtin' | translate}} <!-- Gửi thông tin --></span>
+					</button>
+				</div>
+
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+
+
+	</div>
+	<div class="col-md-4">
+		<div class="row">
+			<div class="col-md-12">
+				<h4>{{'Cashin_cauhoithuonggap' | translate}}<!-- Câu hỏi thường gặp --></h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="{{'Cashin_NapTienVaoTaiKhoanKhongThay' | translate}}"  is-open="true">
+						<div class="padder m-t-md">
+							<p>
+								{{'Cashin_Bancothechuahuithongtinchuyenkhoan' | translate:{isShipchung : isShipchung} }}
+								<!-- Có thể bạn chưa gửi thông tin chuyển khoản cho Shipchung. Bạn vui lòng gửi thông tin chuyển khoản ngay sau khi thực hiện ở bước 2 để được hỗ trợ nạp tiền nhanh nhất. --></p>
+								<p>
+									{{'Cashin_qukhachcothechatvoiCSKH' | translate}}
+									<!-- Quý khách có thể chat với nhân viên cskh hoặc gửi thông tin chuyển tiền vào email --> <a href="mailto:hotro@shipchung.vn"><span class="text-info">hotro@shipchung.vn</span></a>.</p>
+
+								</div>
+							</accordion-group>
+
+							<accordion-group heading="{{'Cashin_SoDuKhaDungLaGi' | translate}}"  is-open="true">
+								<div class="padder m-t-md">
+									<p>
+										{{'Cashin_Sodukhadungbang' | translate}}
+										<!-- Số dư khả dụng = Số dư hiện tại + số tiền thu hộ tạm tính + Số tín dụng – Phí vận chuyển tạm tính --></p>
+
+										<strong>{{'Cashin_trongdo' | translate}}<!-- Trong đó --></strong>
+
+										<p>
+											<strong>{{'Cashin_Soduhientai' | translate}}<!-- Số dư hiện tại --></strong>: 
+											{{'Cashin_Lasotientrongvicuaban' | translate}}
+											<!-- Là số tiền trong ví của bạn. Số dư hiện tại sẽ thay đổi theo các kỳ đối soát hoặc bạn nạp tiền vào tài khoản. --><br/>
+											<strong>{{'Cashin_Tienthuhotamtinh' | translate}}<!-- Tiền thu hộ tạm tính --></strong>: 
+											{{'Cashin_LatongphivanchuyendonhangchuaDS' | translate}}
+											<!-- Là tổng phí vận chuyển các đơn hàng chưa đối soát --> <br/>
+											<strong>{{'Cashin_Sotindung' | translate}}<!-- Số tín dụng --></strong>: 
+											{{'Cashin_Macdinhtindung' | translate}}
+											<!-- Mặc định tín dụng với các khách hàng là 200.000đ --> <br/>
+											{{'Cashin_Sodukhadungdexacnhan' | translate}}
+											<!-- Số dư khả dụng dùng để xác định khả năng thanh toán & tạo đơn hàng của quý khách.  -->
+										</p>
+									</div>
+								</accordion-group>
+							</accordion>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

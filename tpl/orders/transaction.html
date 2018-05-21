@@ -1,0 +1,176 @@
+<div ng-controller="TransactionCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2"><i class="fa fa-file-text text-info"></i> {{'nav_user_lichsugiaodich' | translate}}<!-- Lịch sử giao dịch --></span>
+    </div>
+    <div class="wrapper-sm">
+        <div class="alert alert-info m-b-none text-base">
+           <!--  Lịch sử các giao dịch cộng trừ tiền trên số dư hiện tại của khách hàng. -->
+           {{'Trans_LichSuCacGiaoDich' | translate}}<br />
+           {{'Trans_HeThongGhiNhanCacGiaoDich' | translate}}
+            <!-- Hệ thống luôn ghi nhận các giao dịch trên bảng kê thanh toán thu hộ, nạp tiền, rút tiền trên số dư, hoàn tiền. -->
+        </div>
+    </div>
+    
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form class="form-validation" role="form" name="frmSearch">
+                        <div class="row m-b-sm">
+
+                            <div class="col-lg-3">
+                                <input type="number" class="form-control" placeholder="{{'Trans_MaGiaoDich' | translate}}"
+                                       ng-model="search"
+                                        />
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control" placeholder="{{'Trans_TuNgay' | translate}}"
+                                       ng-model="time_start"
+                                       datepicker-popup="dd-MM-yyyy"
+                                       is-open="time_start_open"
+                                       datepicker-options="dateOptions"
+                                       ng-required="true"
+                                       close-text="Close"
+                                       ng-click="time_start_open = true"
+                                        />
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control" placeholder="{{'Trans_DenNgay' | translate}}"
+                                       datepicker-popup="dd-MM-yyyy"
+                                       is-open="time_end_open"
+                                       datepicker-options="dateOptions"
+                                       date-disabled="disabled(date, mode)"
+                                       close-text="Close"
+                                       ng-model="time_end"
+                                       ng-click="time_end_open = true"
+                                        />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <button class="btn btn-info" ng-disabled="frmSearch.$invalid" ng-click="setPage()" type="button"><i class="glyphicon glyphicon-search"></i>{{'Btt_search' | translate}}<!--  Tìm kiếm --></button>
+                            </div>
+                            <div class="col-lg-3 col-lg-offset-6">
+                                <button ng-click="exportExcel()" ng-disabled="frmSearch.$invalid" class="btn m-b-xs btn-success pull-right"><i class="fa fa-file-excel-o"></i> {{'Btt_excel' | translate}}<!-- Xuất excel --></button>
+                            </div>
+                        </div>
+                    </form>
+
+                        <div class="row">
+
+                        </div>
+                </div>
+
+                <div class="panel-body table-responsive">
+                    <table class="table-condensed table-hover w-full">
+                        <thead>
+                            <th>
+                                {{'Trans_DenNgay' | translate}}
+                            </th>
+                            <!--th>
+                                Bên chuyển
+                            </th>
+                            <th>
+                                Bên nhận
+                            </th-->
+                            <th>
+                                {{'Trans_MaThamChieu' | translate}}<!-- Mã tham chiếu -->
+                            </th>
+                            <th>
+                                {{'Trans_LoaiGiaoDich' | translate}}<!-- Loại giao dịch -->
+                            </th>
+                            <th class="text-right">
+                                {{'Trans_SoDuDauKy' | translate}}<!-- Số dư đầu kỳ -->
+                            </th>
+                            <th class="text-right">
+                               {{'Trans_SoTien' | translate}} <!-- Số tiền -->
+                            </th>
+                            <th>
+                               {{'Trans_GhiChu' | translate}} <!-- Ghi chú -->
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" class="bg-info">{{'Trans_SoDuHienTai' | translate}}<!-- Số dư hiện tại: --> <!-- {{userInfo.balance || '0' | vnNumber}}{{ViewHomeCurrency}} -->
+                                    <convert-currency home-currency="userInfo.balance"></convert-currency>
+                                    <!-- <span ng-if="convert_currency(userInfo.balance)">
+						               ({{convert_currency(userInfo.balance) || '' | number:4 }} {{viewCurrency}})
+						            </span> -->
+                                </td>
+                            </tr>
+                            <tr  ng-repeat="item in list_data">
+                                <td>
+                                    {{item_stt + $index+1}}<br />
+                                    <i class="fa fa-clock-o"></i> {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                </td>
+
+                                <!--td>
+                                    {{user[item.from_user_id]['fullname']}}<br />
+                                    {{user[item.from_user_id]['email']}}<br />
+                                    {{user[item.from_user_id]['phone']}}
+                                </td>
+
+                                <td>
+                                    {{user[item.to_user_id]['fullname']}}<br />
+                                    {{user[item.to_user_id]['email']}}<br />
+                                    {{user[item.to_user_id]['phone']}}
+                                </td-->
+
+                                <td>
+                                    {{item.refer_code}}
+                                </td>
+
+                                <td>
+                                    <span ng-if="userInfo.id == item.from_user_id">{{'Trans_GhiNo' | translate}}<!-- Ghi nợ --> </span>
+                                    <span ng-if="userInfo.id != item.from_user_id">{{'Trans_GhiCo' | translate}}<!-- Ghi có --> </span>
+                                </td>
+
+                                <td class="text-right">
+                                    <!-- {{item.balance_before|vnNumber}}{{ViewHomeCurrency}} -->
+                                    <convert-currency home-currency="item.balance_before"></convert-currency>
+                                    <!-- <span ng-if="convert_currency(item.balance_before)">
+						               ({{convert_currency(item.balance_before) || '' | number:4 }} {{viewCurrency}})
+						            </span> -->
+                                </td>
+
+                                <td class="text-right">
+                                    <span ng-if="userInfo.id == item.from_user_id"> - </span>
+                                    <span ng-if="userInfo.id != item.from_user_id"> + </span>
+                                    <!-- {{item.money|vnNumber}} {{ViewHomeCurrency}} -->
+                                    <convert-currency home-currency="item.money"></convert-currency>
+                                    <!-- <span ng-if="convert_currency(item.money)">
+						               ({{convert_currency(item.money) || '' | number:4 }} {{viewCurrency}})
+						            </span> -->
+                                </td>
+                                <td>
+                                    {{item.note}}
+                                </td>
+                            </tr>
+                            <tr ng-if="!list_data.length && !waiting">
+                                <td colspan="6" class="text-center">{{'ERR_search_null' | translate}}<!-- Không có dữ liệu --></td>
+                            </tr>
+                            <tr ng-if="waiting">
+                                <td colspan="6" class="text-center">
+                                    <i class="text-3x fa fa-spinner fa-spin"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-3 wrapper-md pull-left">
+                            <strong><!-- Tổng số -->{{'ORDERL_tongso' | translate}}</strong> : <i class="text-danger">{{totalItems || '0'}}</i>{{'Trans_GiaoDich' | translate}}<!--  giao dịch -->
+                        </div>
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

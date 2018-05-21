@@ -1,0 +1,74 @@
+<style>
+  .login-gg{
+    background-color: #DD4B39 !important;
+    margin-top: 10px !important;
+    color: white;
+    font-weight: bold;
+    border: none;
+  }
+</style>
+<div class="container col-md-4 col-md-offset-4" ng-controller="SigninFormController" ng-init="app.settings.container = false;">
+  <a href class="navbar-brand block m-t" >
+  <img ng-if="keyLang =='vi'" ng-src="{{site.login.logo}}" alt="{{app.name}}" style="max-height: 100px"/>
+  <img ng-if="keyLang!='vi'" ng-src="{{site.login.logo_en}}" alt="{{app.name}}" style="max-height: 100px;margin-left: 50px;"/></a>
+  <div class="m-b-lg">
+    <div class="wrapper text-center">
+      <strong>{{keyLang=='vi' ? site.login.title : site.login.title_en}}<!-- Hệ thống quản lý đơn hàng Shipchung.vn dành cho người bán --></strong>
+    </div>
+    <form name="form" class="form-validation">
+      <div class="text-danger wrapper text-center" ng-show="authError">
+          {{authError}}
+      </div>
+      <div class="list-group list-group-sm">
+        <div class="list-group-item">
+          <input type="email" placeholder="Email" class="form-control no-border" ng-model="user.email" required autofocus>
+        </div>
+        <div class="list-group-item">
+           <input type="password" placeholder="{{'login.pass' | translate}}" class="form-control no-border" ng-model="user.password" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-lg btn-success btn-block r-2x" ng-click="login(user)" ng-disabled="form.$invalid || onProgress" >
+      {{'login.login' | translate}}<!-- Đăng nhập ngay --> <span ng-show="onProgress"><i class="fa fa-spin fa-spinner"></i>
+      </button>
+     <div class="text-center m-t m-b-xs"><a>{{'login.or' | translate}}</a></div>
+      
+    <a ng-click="loginFbJs()" ng-disabled="loginFBProcesing" class="btn btn-lg btn-primary btn-block r-2x" style="background:#4c69ba"><i class="fa fa-spin fa-spinner" ng-if="loginFBProcesing"></i> <i class="fa fa-fw fa-facebook"></i>
+    {{'login.fb' | translate}}<!-- Đăng nhập qua facebook --></a>
+    
+    <button g-login type="button" class="btn-lg login-gg  btn-block r-2x ng-binding" ng-disabled="loginGgProcesing">
+      <i class="fa fa-spin fa-spinner" ng-if="loginGgProcesing"></i> 
+      <i class="fa fa-fw  fa-google"></i> 
+      {{'login.gg' | translate}}
+    </button>
+
+      <div class="text-center m-t m-b-xs"><a ui-sref="access.forgotpwd">{{'login.forget' | translate}}<!-- Quên mật khẩu? --></a></div>
+      <div class="line line-dashed"></div>
+      <a ui-sref="access.signup" class="btn btn-default btn-block">{{'login.not_register' | translate}}<!-- Bạn chưa có tài khoản? --></a></p>
+      <div style="text-align: center;">
+      		<a ng-click="changeLanguage('vi')">
+      			<img class="max-height-none"  style="width: 30px; height: 20px" ng-src="img/lang_vi.png" alt="." src="img/lang_vi.png">
+      		</a>
+      		<a ng-click="changeLanguage('en')" >
+      			<img class="max-height-none" style="width: 30px; height: 20px"  ng-src="img/lang_en.png" alt="." src="img/lang_en.png"> 
+      		</a>
+      </div>
+      
+    </form>
+  </div>
+  <div class="text-center" ng-include="'tpl/blocks/page_footer.html'"></div>
+
+  <!-- <div class="wrapper-sm">
+      <div class="alert alert-warning m-b-none text-base">
+      Xin thông báo : <br />
+      Hệ thống nâng cấp từ ngày 12/02/2015,
+      trong trường hợp quý khách không đăng nhập được (thường gặp khi khách hàng sử dụng tài khoản Ngân Lượng) vui lòng làm <span ng-click="loginFbJs()">theo</span>
+          <a class="text-info" href="http://www.shipchung.vn/huong-dan-lay-lai-mat-khau-tren-shipchung-vn/" target="_blank">hướng dẫn</a>.
+  
+      <br />
+      </div>
+  </div> -->
+
+  
+
+
+</div>

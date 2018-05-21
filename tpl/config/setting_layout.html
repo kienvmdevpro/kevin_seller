@@ -1,0 +1,61 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" tour  tour.init()  tour.start()  on-end="onTourEnd()" storage="false" placement="right" template-url="">
+    <div class="col w-md bg-light dk b-r bg-auto">
+        <div class="wrapper b-b bg hidden-lg hidden-md">
+            <button class="btn btn-sm btn-default pull-right visible-sm visible-xs" ui-toggle-class="show" target="#setting-menu"><i class="fa fa-bars"></i></button>
+            <h3 class="font-thin m-n">{{'SET_CauHinhTaiKhoan' | translate}}<!-- Cấu hình tài khoản --></h3>
+        </div>
+        <div class="wrapper hidden-sm hidden-xs" id="setting-menu">
+            <ul class="nav nav-pills nav-stacked nav-sm">
+                <li ui-sref-active="active" >
+                    <a ui-sref="app.config.account">{{'SET_ThongTinChuTaiKhoan' | translate}}<!-- Thông tin chủ tài khoản --></a>
+
+                <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.business">{{'SET_ThongTinDoanhNghiep' | translate}}<!-- Thông tin doanh nghiệp --></a>
+                </li>
+                <li ui-sref-active="active" ng-if="userRole == 0">
+                    <a ui-sref="app.config.linked">{{'SET_CauHinhLienKetTheThanhToan' | translate}}<!--Cấu hình thanh toán--></a>
+                </li> 
+                <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.user">{{'SET_CauHinhNhanVien' | translate}}<!-- Cấu hình nhân viên --></a>
+                </li>
+                <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.inventory">{{'SET_CauHinhKhoHang' | translate}}</a>
+                </li>
+                <li ui-sref-active="active"  ng-if="userRole == 0">
+                    <a ui-sref="app.config.accounting">{{'SET_CauHinhThanhToan' | translate}}
+                        <!-- <br><span>({{'SET_CauHinhThanhToanOld' | translate}})</span> -->
+                    </a>
+                </li>
+                <!-- Cấu hình phiếu in đơn hàng -->
+				<!-- <li ui-sref-active="active" ng-if="(userFulfillment) && ([0,1].indexOf(userRole) >=0)" >
+                    <a ui-sref="app.config.print">{{'SET_CauHinhPhieuIn' | translate}}</a>
+                </li> -->
+                <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.stock">{{'SET_cauhinhinhphiluukho' | translate }}</a>
+                </li>
+                <!--li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.courier">{{'SET_CauHinhHangVC' | translate}}<!-- Cấu hình hãng vận chuyển ></a>
+                </li>
+
+                <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.shipping">{{'SET_CauHinhTinhPhiVC' | translate}}<Cấu hình phí vận chuyển></a>
+                </li-->
+                <li ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.key">Api Key</a>
+                </li>
+                <li style="display:none" ui-sref-active="active" ng-if="[0,1].indexOf(userRole) >=0">
+                    <a ui-sref="app.config.sync_order">{{'SET_cauhinhdongbodonhang' | translate}}</a>
+                </li>
+                
+                <!--li ui-sref-active="active">
+                    <a ui-sref="app.config.user">Phân quyền</a>
+                </li-->
+            </ul>
+        </div>
+    </div>
+    <div class="col">
+        <div class="app-content-body fade-in-up" ui-view >
+
+        </div>
+    </div>
+</div>

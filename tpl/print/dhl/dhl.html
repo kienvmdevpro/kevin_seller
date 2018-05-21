@@ -1,0 +1,346 @@
+<style type="text/css">
+html{
+background-color: #bec2c3 !important;}
+    .pleft {
+             float:left;
+         }
+         .pright {
+             float:right;
+         }         
+         .mainPrints {   
+             max-height: 14.85cm;   
+             margin: 0 10px;     
+             background: white; 
+         }
+         .page {
+            width: 21cm;
+            max-height: 29.7cm;
+            margin: 0 auto; 
+            background-color: #FFF;
+            color: #000;
+         }
+         @page {
+             margin: 0;
+         }
+         .logo_cod_new {
+                height: 60px;
+                max-width: 200px;
+                position: absolute;
+                right: 0;
+                top: 0; 
+        }
+        body{
+                font-size: 13px ;
+               
+            }
+        .watermark{
+            position: relative;
+        }
+         @media print {
+            .print_td2 ,.print_td, .print_td3,.print_dichvu{
+                font-size: 12px;
+            }
+            body{
+                font-size: 12px ;
+            }
+             .page {
+                 margin: 10px;
+                 border: initial;
+                 border-radius: initial;
+                 width: initial;
+                 min-height: initial;
+                 box-shadow: initial;
+                 background: initial;
+                 page-break-after: always;
+             }
+             .logo_cod_new {
+                height: 60px;
+                max-width: 200px;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+            .settings {
+               display: none !important;
+            }
+            #livechat-compact-container{
+                display: none !important;
+            }
+            
+         }
+         .Print_title {
+             border-bottom: 5px solid #d97014;
+             margin-top: 20px;
+             width: 460px;
+         }
+             .Print_title span {
+                 float: right;
+             }
+        .barcodetitle, .barCode_Code {
+             padding:5px;
+         }
+         .barcodetitle {
+             margin-left: 283px;
+         }
+         .pcclear {
+             clear: both;
+             border:0;
+             margin:0;
+             padding:0;
+         }
+         .print_td {
+             height: 120px;
+             max-height: 200px;
+             width: 50%;
+             padding: 5px;
+             line-height:20px;
+             font-size: 13px;
+             border:solid 1px #999;
+         }
+         .print_td2{   
+             width: 50%;            
+             line-height:14px;
+             font-size: 13px;     
+             height: 90px;     
+             border-right: #999 solid 1px;
+             text-align: center;
+         }
+         .print_td3 {   
+             width: 50%;            
+             line-height:14px;
+             font-size: 13px;     
+             height: 90px; 
+             text-align: center; 
+         }
+         .print_codetype {
+            width: 41%;
+      line-height: 20px;
+      font-size: 13px;
+      border-right: #999 solid 1px;
+         }
+         .print_dichvu {
+            width: 49%;
+      line-height: 17px;
+      font-size: 13px;
+            padding-left: 5px;
+         }
+         table.print_table{
+            border-spacing: 2px !important;
+            border-collapse: separate !important;
+         }
+
+	#print{font-family: sans-serif;margin: 20px;}
+</style>
+<!-- ng-repeat="item in data" -->
+<div  class="page" ng-controller="PrintOrderDHLController"  ng-init="app.settings.headerFixed = false;app.settings.color = true"> 
+<div >
+<div class="portrait" id="print">
+	<div class="row">
+		<div class="col-xs-7">
+		<img alt="Shipchung Printers"src="img/courier/dhl_black.png"  style="height: 40px; margin-top:20px">
+		</div>
+		<div class="col-xs-5 " >
+		<h5 style="margin-top: 35px;">{{'dhl_BienNhanGuiHang' | translate}}</h5>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<!-- Gui tu,gui den -->
+	<div class="row">
+		<div class="col-xs-6">
+   			<h5>{{'dhl_GuiTu' | translate}} </h5>
+       		<p ng-if="dataInvoice.from.name!= '.....'"> {{dataInvoice.from.name}}</p>
+       		<label >{{'dhl_tax' | translate}}: </label><span>{{dataInvoice.from.tax}}</span><br>
+       		<label> {{'dhl_IEtax' | translate }}:</label><span>{{dataInvoice.from.tax}}</span>
+       		<p ng-if="dataInvoice.director!='.....'"> {{dataInvoice.from.director}}</p>
+       		<p> {{dataInvoice.from.address}}</p>
+       		<p> {{dataInvoice.from.wardDistrict}}</p>
+       		<p> {{dataInvoice.from.city}}</p>
+       		<p> {{dataInvoice.from.country}}</p>
+       		<label> <strong>{{'dhl_SoDienThoaiCoDinh' | translate }}:</strong></label><span>{{dataInvoice.from.phone}}</span>
+		</div>
+		<div class="col-xs-6">
+   			<h5>{{'dhl_GuiDen' | translate}} </h5>
+       		<p ng-if="dataInvoice.from.name!= '.....'"> {{dataInvoice.to.name}}</p>
+       		<p ng-if="dataInvoice.director!='.....'"> {{dataInvoice.to.director}}</p>
+       		<p> {{dataInvoice.to.address}}</p>
+       		<p> {{dataInvoice.to.wardDistrict}}</p>
+       		<p> {{dataInvoice.to.city}}</p>
+       		<p> {{dataInvoice.to.country}}</p>
+       		<label> <strong>{{'dhl_SoDienThoaiCoDinh' | translate }}:</strong></label><span>{{dataInvoice.to.phone}}</span>
+		</div>
+	</div>
+	<!-- Gui tu,gui den -->
+	<!-- chi tiet lo hang -->
+	<div class="row" style="margin-top:20px">
+		<div class="col-xs-6">
+   			<h5>{{'dhl_ChiTietLoHang' | translate}} </h5>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_NgayGuiHang' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.fields_info.date_approve}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_SoKHongVanDon' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.fields_info.tracking_code_2}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_SoXNHang' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span></span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_KieuDichVu' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span></span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_LoaiBaoBi' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span></span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_TongTrongLuong' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.detail.total_gross_weight}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_TrongLuongTheoTheTich' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.detail.total_weight_by_volume}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_TrongLuongTinhCuoc' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.detail.total_net_weight}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_CuocPhiUocTinh' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.detail.fee_tranport}}</span>
+       			</div>
+   			</div>
+		</div>
+		<div class="col-xs-6">
+   			<h5>{{'dhl_ThongTinQuocTe' | translate}} </h5>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_GiaKhaiBao' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.detail.total_price}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_ThuePhiNhapKhau' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.detail.tax}}</span>
+       			</div>
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-12">
+       				<br>
+       			</div>
+       			
+   			</div>
+   			<div class="row">
+   				<div class="col-xs-12">
+       				<label>{{'dhl_ThongTinPhatHangVaDichVu' | translate }} </label>
+       			</div>
+       			<div class="col-xs-12">
+       				<span>{{dataInvoice.detail.dhl_ThongTinPhatHangVaDichVu}}</span>
+       			</div>
+   			</div>
+		</div>
+	</div>
+	<!-- chi tiet lo hang -->
+	<!-- tinh  cuoc -->
+	<div class="row" style="margin-top:20px">
+		<div class="col-xs-12">
+			<h5>{{'dhl_ThongTinTinhCuoc' | translate}} </h5>
+		</div>
+		<div class="col-xs-12">
+			<div class="row">
+   				<div class="col-xs-5">
+       				<label>{{'dhl_TinhCuocVao' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.SC.Pay}}</span>
+       			</div>
+       		</div>	
+ 		</div>
+ 		<div class="col-xs-12">
+ 			<div class="row">
+   				<div class="col-xs-2">
+       				<label>{{'dhl_SoTaiKhoan' | translate }} </label>
+       			</div>
+       			<div class="col-xs-7">
+       				<span>{{dataInvoice.CourierAccount.courier_account_number}}</span>
+       			</div>
+       		</div>	
+ 		</div>
+	</div>
+	<!-- tinh  cuoc -->
+	<!-- Thông tin tham chiếu -->
+	<div class="row" style="margin-top:20px">
+		<div class="col-xs-12">
+			<h5>{{'dhl_ThongTinThamChieu' | translate}} </h5>
+		</div>
+		
+	</div>
+	<!-- Thông tin tham chiếu -->
+	<!-- Mô tả hàng hóa -->
+	<div class="row" style="margin-top:20px;margin-bottom:20px">
+		<div class="col-xs-12" >
+			<h5>{{'dhl_MoTaHangHoa' | translate}} </h5>
+		</div>
+		<div class="col-xs-12">
+			<div ng-repeat="item in dataInvoice.product">
+			<span ng-if="item.sku">{{item.sku}} - </span><span>{{item.name}}({{item.qty }})</span>
+		</div>
+ 		</div>
+	</div>
+	<!-- Mô tả hàng hóa -->
+	<div class="settings panel panel-default">
+        <button class="btn bg-orange btn_print no-shadow pos-abt hidden-print" onClick="window.print();"><i class="fa fa-print"></i> In vận đơn</button>
+        <a class="btn bg-default btn_type no-shadow pos-abt print_type hidden-print" ui-sref="print({code:$stateParams.code})" ><i class="fa fa-gears"></i> In theo A4</a>
+    </div>
+	<div style="display: none; position: fixed; top: 0px; left: 0px; z-index: 60000;">
+		<img style="display: block; position: absolute;">
+		<div style="display: block; background-color: rgba(0, 0, 0, 0.34902); position: absolute;"></div>
+		<canvas width="120" height="60" style="position: absolute; cursor: crosshair; padding: 0px; margin: 0px;"></canvas>
+		<canvas style="position: fixed; top: 20px; right: 20px;"></canvas>
+	</div>
+</div>		
+</div>
+</div>

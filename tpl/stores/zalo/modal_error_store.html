@@ -1,0 +1,15 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="install_app()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'Zalo_Intergrate' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+               {{message}}<span ng-if="errorCode==-201">Tạo store Zalo&nbsp;<a class="text-info" href="https://oa.zalo.me/manage/oa?option=create" target="_blank">tại đây</a></span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">Cancel</button>
+    </div>
+</form>

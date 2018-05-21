@@ -1,0 +1,82 @@
+<div ng-controller="ProblemCtrl">
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col b-l">
+            <div class="wrapper-sm">
+                <div class="wrapper-md">
+                    <span class="m-n h3 title-page col-md-3"><i class="fa fa-star text-primary"></i> {{'Problem_donhangchoxuly' | translate}}<!-- Đơn hàng chờ xử lý --></span>
+                    <div class="col-md-2 text-center pull-right">
+                        <a href="" class="block padder-xs-lr panel bg-warning item">
+                            <span class="text-white font-thin block ng-binding">{{total_group[4][0] || '0'}}</span>
+                            <span class="text-muted text-xs">{{'Problem_vuotcanchoxuly' | translate}}</span>
+                        </a>
+                    </div>
+
+                    <div class="col-md-2 text-center pull-right">
+                        <a href="" class="block padder-xs-lr panel bg-success item">
+                            <span class="text-white font-thin block ng-binding">{{total_group[3][0] || '0'}}</span>
+                            <span class="text-muted text-xs">{{'Problem_laythatbaichoxuly' | translate}}<!-- Lấy thất bại - chờ xử lý --></span>
+                        </a>
+                    </div>
+
+                    <div class="col-md-2 text-center pull-right">
+                        <a href="" class="block padder-xs-lr panel bg-info item">
+                            <span class="text-white font-thin block ng-binding">{{total_group[2][0] || '0'}}</span>
+                            <span class="text-muted text-xs">{{'Problem_choxnchuyenhoanchoxuly' | translate}} <!-- Chờ XN hoàn - chờ xử lý --></span>
+                        </a>
+                    </div>
+
+                    <div class="col-md-2 text-center pull-right">
+                        <a href="" class="block padder-xs-lr panel bg-primary item">
+                            <span class="text-white font-thin block ng-binding">{{total_group[1][0] || '0'}}</span>
+                            <span class="text-muted text-xs">{{'Problem_giaothatbaichoxuly' | translate}}<!-- Giao thất bại - chờ xử lý --></span>
+                        </a>
+                    </div>
+
+                    <div class="clearfix">&nbsp;</div>
+
+                    <form class="form-validation" role="form" ng-submit="setPage(frm.option, search, 1);" name="frmSearch">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group controls">
+                                    <input type="text" class="form-control" placeholder="{{'Problem_timkiemmavandon' | translate}}"
+                                           ng-model="search"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group controls">
+                                    <select class="form-control m-b" ng-model="frm.option" ng-options="key as value for (key , value) in list_option">
+                                        <option value="">{{'Problem_THcanxuly' | translate}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <button type="submit" class="btn btn-info pull-right" ng-disabled="frmSearch.$invalid"><i class="fa fa-search"></i> {{'Btt_search' | translate}}<!-- Tìm kiếm --></button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="checkbox">
+                                    <label class="i-checks padder-md padder-xs" ng-repeat="(key,value) in list_status_process">
+                                        <input type="checkbox"
+                                               ng-model="check"
+                                               ng-checked="[0,1].indexOf(1*key) != -1"
+                                               ng-change="toggleSelection(key)" /><i></i>
+                                        {{value || 'Trạng thái'}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="wrapper-sm padder col-md-12">
+                    <div ng-include="'tpl/problem/widget_center.html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

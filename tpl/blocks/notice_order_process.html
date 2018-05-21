@@ -1,0 +1,40 @@
+<div    class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4 hide" 
+        style="text-align: center;
+               float: left;
+               position: absolute;"
+        ng-if="_OrderProcess.total > 0">
+
+    <label for="" class="alert alert-warning order-process-warning">
+        <a 
+            class="order-process-notice" 
+            tooltip-placement="bottom" 
+            tooltip-html-unsafe="{{(_OrderProcess.data['total_over_weight'] || 0) +' đơn hàng vượt cân <br /> '+ (_OrderProcess.data['total_group'][41] || 0) +' đơn hàng phát không thành công<br /> '+ (_OrderProcess.data['total_group'][20] || 0) +' đơn hàng chờ xác nhận chuyển hoàn <br />' + (_OrderProcess.data['total_group'][15] || 0)  +' đơn hàng lấy không thành công '}}" 
+            ui-sref="order.problem" 
+            ui-sref-opts="{reload: true}" 
+            style="color:rgb(255, 97, 97);">
+            <i class="fa fa-exclamation-triangle"></i> <!-- Bạn có {{_OrderProcess.total}} đơn hàng cần xử lý !  -->
+            {{'Problem_Banco_donhangcanxuly' | translate:{param:_OrderProcess.total} }}
+            <strong>{{'Problem_clickvaoday' | translate}}</strong> {{'Problem_dexuly' | translate}}
+        </a>
+    </label>
+</div>
+
+<div    class="col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4" 
+        style="text-align: center;
+               float: left;
+               position: absolute;"
+        ng-if="_countOrderStatus && _countOrderStatus[12] > 0">
+        
+    <label for="" class="alert alert-info order-process-warning">
+        <a 
+            class="order-process-notice text-info" 
+            tooltip-placement="bottom" 
+            target="_blank"
+            href="https://www.shipchung.vn/huong-dan-tao-van-don-tren-shipchung/">
+            <i class="fa fa-exclamation-triangle"></i> 
+            <!-- Bạn cần duyệt vận đơn để Shipchung đến lấy hàng kịp thời, bạn có thể xem hướng dẫn duyệt đơn tại đây. -->
+            {{'Problem_bancanduyetvandon' | translate:{isShipchung : isShipchung}  }}
+        </a>
+
+    </label>
+</div>

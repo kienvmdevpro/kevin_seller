@@ -1,0 +1,130 @@
+﻿         .pleft {
+             float:left;
+         }
+         .pright {
+             float:right;
+         }         
+         .mainPrints {   
+             max-height: 14.85cm;   
+             margin: 0 10px;     
+             background: white; 
+         }
+         .page {
+            width: 21cm;
+            max-height: 29.7cm;
+            margin: 0 auto; 
+            background-color: #FFF;
+            color: #000;
+         }
+         @page {
+             margin: 0;
+         }
+         .logo_cod_new {
+                height: 60px;
+                max-width: 200px;
+                position: absolute;
+                right: 0;
+                top: 0;
+        }
+        body{
+                font-size: 13px ;
+                background-color: #FFF;
+            }
+        .watermark{
+            position: relative;
+        }
+         @media print {
+            .print_td2 ,.print_td, .print_td3,.print_dichvu{
+                font-size: 12px;
+            }
+            body{
+                font-size: 12px ;
+            }
+             .page {
+                 margin: 10px;
+                 border: initial;
+                 border-radius: initial;
+                 width: initial;
+                 min-height: initial;
+                 box-shadow: initial;
+                 background: initial;
+                 page-break-after: always;
+             }
+             .logo_cod_new {
+                height: 60px;
+                max-width: 200px;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+            .settings {
+               display: none !important;
+            }
+            #livechat-compact-container{
+                display: none !important;
+            }
+            
+         }
+         .Print_title {
+             border-bottom: 5px solid #d97014;
+             margin-top: 20px;
+             width: 460px;
+         }
+             .Print_title span {
+                 float: right;
+             }
+        .barcodetitle, .barCode_Code {
+             padding:5px;
+         }
+         .barcodetitle {
+             margin-left: 283px;
+         }
+         .pcclear {
+             clear: both;
+             border:0;
+             margin:0;
+             padding:0;
+         }
+         .print_td {
+             height: 120px;
+             max-height: 200px;
+             width: 50%;
+             padding: 5px;
+             line-height:20px;
+             font-size: 12px;
+             border:solid 1px #999;
+         }
+         .print_td2{   
+             width: 50%;            
+             line-height:14px;
+             font-size: 12px;     
+             height: 90px;     
+             border-right: #999 solid 1px;
+             text-align: center;
+         }
+         .print_td3 {   
+             width: 50%;            
+             line-height:14px;
+             font-size: 12px;     
+             height: 90px; 
+             text-align: center; 
+         }
+         .print_codetype {
+            width: 41%;
+			line-height: 20px;
+			font-size: 12px;
+			border-right: #999 solid 1px;
+         }
+         .print_dichvu {
+            width: 49%;
+			line-height: 17px;
+			font-size: 12px;
+            padding-left: 5px;
+         }
+         table.print_table{
+            border-spacing: 2px !important;
+            border-collapse: separate !important;
+         }
+
+
+       

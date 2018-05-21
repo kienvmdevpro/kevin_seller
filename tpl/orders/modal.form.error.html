@@ -1,0 +1,23 @@
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img ng-src="img/sc_logo.jpg" />
+              <h4>{{keyLang=='vi' ? site.login.title : site.login.title_en}}</h4>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-body wrapper-md">
+      <div class="row">
+        <div class="col-md-12">
+            <!-- Số dư tài khoản của quý khách không đủ để duyệt đơn hàng này. -->
+            {{'ORERC_SoDuTaiKhoanQuyKhachKhongDu' | translate}} <a target="_blank" href="http://www.shipchung.vn/giai-thich-du-trong-tai-khoan-khach-hang-sau-doi-soat/" title="{{'ORERC_GiaiThichVeSoDuTaiKhoan' | translate}}"><i style="color:#23b7e5">({{'ORERC_GiaiThichVeSoDuTaiKhoan' | translate}})</i></a> <br/>
+            <strong>{{'ORERC_SoDuKhaDung' | translate}}<!-- Số dư khả dụng --></strong> : {{data.money_total || '0' | vnNumber}}{{viewCurrency}}<br />
+            <strong>{{'ORERC_SoDuYeuCau' | translate}}<!-- Số dư yêu cầu --></strong> : {{data.fee || '0' | vnNumber}}{{viewCurrency}}<br />
+           <!--  Quý khách vui lòng  -->{{'ORERC_QuyKhacVuiLong' | translate}}<a class="btn btn-info r-2x" href="http://seller.shipchung.vn/#/cashin">{{'nav_user_naptien' | translate}}
+           {{'ORERC_DeDuyetDonHang' | translate}}</a> <!-- để thực hiện duyệt đơn hàng. --><br/>
+        </div>
+      </div>
+    </div>
+

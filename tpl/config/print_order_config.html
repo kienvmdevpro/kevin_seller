@@ -1,0 +1,133 @@
+<div ng-controller="PrintSettingController" ng-init="search.proceed();">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n" translate>SETPRI_h1</h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white">
+            <div class="panel panel-default">
+                <form name="frmUser" ng-submit="save()" role="form" class="form-horizontal form-validation">
+                <div class="panel-heading font-bold" translate>SETPRI_label_info</div>
+                <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label" translate>SETPRI_label_name <boxme-input-required /></label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+                                <input ng-model="search.user.FullName" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label" translate>SETPRI_label_phone</label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+								<input ng-model="search.user.Phone" type="text" class="form-control" required ng-change="checkphonevalidate()">
+								<p ng-if="check_phone_print" class="label label-warning " translate>SETPRI_label_phoneERR</p>
+                            </div>
+                        </div>
+						<div class="form-group">
+							<label class="col-sm-3 col-md-3 col-lg-2 control-label" translate>SETPRI_label_city</label>
+							
+							<div class="ccol-sm-6 col-md-6 col-lg-5">
+								<input ng-model="search.user.City_name" type="text" class="form-control" required>
+							<!-- <select tabindex="5" required ui-select2 ng-model="province" class="form-control"
+									data-placeholder="Tỉnh thành" ng-change="changedFromProvince(province)"
+									ng-options="province as province.Name for (key, province) in listProvices" >
+									<option value="">Chọn tỉnh thành</option>
+								</select>-->
+								
+							</div> 
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 col-md-3 col-lg-2 control-label" translate>SETPRI_label_district</label>
+							<div class="col-sm-6 col-md-6 col-lg-5">
+								<input ng-model="search.user.District_name" type="text" class="form-control" required>
+								<!-- <select tabindex="6" required ui-select2  ng-model="district" class="form-control"
+								  data-placeholder="Quận huyện" ng-change="changedFromDistricts(district)"
+								  ng-options="value as value.Name for (key, value) in fromDistricts">
+								  <option >Chọn quận huyện</option>
+							  </select> -->
+							  
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 col-md-3 col-lg-2 control-label" translate>SETPRI_label_address</label>
+							<div class="col-sm-6 col-md-6 col-lg-5">
+							<textarea ng-model="search.user.Address" placeholder="{{'SETPRI_SoNhaNgoHemDuong' | translate}}" class="form-control" rows="3"></textarea>
+							</div>
+						</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label" translate >SETPRI_label_status</label>
+                            <div class="col-sm-6 col-md-6 col-lg-5">
+								<select tabindex="6" required ui-select2  ng-model="search.user.Active" class="form-control"
+								  data-placeholder="Trạng thái" >
+								  <option value="" translate>SETPRI_label_change_stt</option>
+								  <option value="1" translate>SETPRI_label_change_sttOn</option>
+								  <option value="0" translate>SETPRI_label_change_sttOff</option>
+							  </select>
+                            </div>
+							</div>
+						</div>	
+                        <div class="form-group">
+                            <div class="col-sm-6 col-md-6 col-lg-5 col-sm-offset-3 col-md-offset-3 col-lg-offset-2">
+                                <button ng-disabled="frmUser.$invalid" type="submit" class="btn btn-success" translate>Btt_update</button>
+                            </div>
+                        </div>
+                </div>
+                </form>
+            </div>
+            
+            <div class="wrapper b-b bg-white">
+            <div class="panel panel-default">
+                <form name="frmUser" ng-submit="save()" role="form" class="form-horizontal form-validation">
+                <div class="panel-heading font-bold" translate>SETPRI_label_info_PO</div>
+                <div class="panel-body">
+                  <div role="alert" class="alert ng-isolate-scope alert-warning alert-dismissable alert-warning" close="closeAlert($index)" type="warning">
+				    <div>
+				    	<span class="ng-binding ng-scope">
+				    		<span class="font-bold ng-scope" translate="">{{'SETPRI_PO_LuuY' | translate}}</span><br>
+				    		{{'SETPRI_PO_SCChoPhepKHDungMau' | translate :{isShipchung : isShipchung} }}<br>
+				    		 {{'SETPRI_PO_ChoPhepSuaThongTin' | translate}}<!-- 1. Cho phép tự sửa thông trước khi in --><br>
+				    		 {{'LuuLaiThongTinSuaLanTruoc' | translate}}<!-- 2. Lưu lại thông tin sửa chửa lần trước --><br> <br>
+				    		<!-- 1. Để thay đổi cách tính phí bạn cần thanh toán các khoản phí phát sinh trước đó và đảm bảo số dư hiện tại dương.<br/> -->
+				    		<!-- 2. Khi chuyển đổi bạn sẽ không được áp dụng miễn phí dùng thử 30 ngày đầu tiên khi sử dụng hình thức tính phí mới này. Chính sách này chỉ áp dụng với các khách hàng dùng mới. -->
+				    	</span>
+				    	<a  ui-sref="invoice-mau" class="btn btn-success ng-scope" translate>SERPRI_PO_View</a>
+			    	</div>
+				</div>
+				</div>	
+                      
+                </div>
+                </form>
+            </div>
+    </div>
+    <!--/ Content-->
+</div>
+<!--
+<script type="text/ng-template" id="thong_bao_setting_print.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-11 pull-left no-padder" style="text-align: center;">
+                    <h4 class="modal-title" translate>SETPRI_h3</h4>
+               	</div>
+               	<button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+          	 </div>
+        </div>
+   	</div>
+	<div class="modal-body wrapper-md text-base">
+		<div style="border-bottom: 1px solid #dee5e7;margin-bottom:10px;">
+		<p translate>SETPRI_lable_pop</p>
+		<p translate>SETPRI_lable_popP</p>
+		<p translate>SETPRI_lable_popP1</p>
+		<p translate>SETPRI_lable_popP2</p>
+		<p translate>SETPRI_lable_popP3</p>
+		<p translate>SETPRI_lable_popP4</p>
+		<p translate>SETPRI_lable_popP5</p>
+		<p translate>SETPRI_lable_popIn</p>
+		<p translate>SETPRI_lable_popSup</p>
+		</div>
+		<div class="">
+            <button ng-click="cancel()" class="btn btn-success" translate>SETPRI_btt_viewed</button>
+        </div>
+	</div>
+-->
+</script>

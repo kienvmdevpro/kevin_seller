@@ -1,0 +1,305 @@
+
+<!-- <div class="page" ng-controller="InventControllerMau" ng-init="app.settings.headerFixed = false">  -->
+<div class="page" ng-controller="InventController" ng-init="app.settings.headerFixed = false"> 
+    <div class="mainPrints" style="width: 21cm;max-height: 38.85cm;"  >
+    <link href="/css/RedboxPrint.css" type="text/css" rel="stylesheet"> 
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>Invoice BoxMe</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <style>
+          @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
+          body, h1, h2, h3, h4, h5, h6{
+          font-family: "message-box", serif;
+          }
+        </style>
+      </head>
+      <style type="text/css">
+        .invoice-box {
+            /* border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); */
+            color: #555;
+            font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+            font-size: 12px;
+            line-height: 20px;
+            margin: 15px;
+            max-width: 800px;
+        }
+        .ems-center tr td ,.ems-center thead th {
+            text-align: center;
+        }
+        .ems-left{
+            text-align: left !important;
+        }
+        .panel-default{
+            border: none;
+        }
+        @media print {
+            .invoice-box .container-flus {
+                margin-right:35px !important;
+            }
+        }
+
+        
+        
+        body{
+        background-color: transparent;}
+      </style>
+      <body>
+      <div class="invoice-box">
+        <div class="container-flus">
+          <div class="row" style="margin-left:1px;margin-right:1px ">
+            <div class="col-xs-4 col-xs-offset-4 text-center">
+              <h2><p editable-text="invoice.title"
+                      style="font-weight: bold;"	
+                      class="top-name">{{invoice.title}}</p><!-- <strong editable-text="invoice.title"> </strong> -->
+              </h2>
+            </div>
+            
+          </div>
+
+          <div class="row" style="margin-left:1px;margin-right:1px" style="margin-left:1px;margin-right:1px">
+            <div class="col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-body" style="padding:0">
+                  <table class="ems-center table table-bordered" style="margin-bottom:0">
+                    <thead>
+                        <tr>
+                            <th width="50%">
+                            <p editable-text="invoice.t_shipper"
+                                style="display: inline;">{{invoice.t_shipper}}
+                            </p>
+                            </th>
+                        <th width="50%">
+                            <p editable-text="invoice.t_consignee"
+                                    style="display: inline;">{{invoice.t_consignee}}</p>
+                        </th>
+                     </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>
+                             <p editable-text="dataInvoice.t_shipper"
+                                  style="display: inline;">{{dataInvoice.t_shipper}}
+                               </p>
+                        </td>
+
+                        <td>
+                            <p editable-text="dataInvoice.t_consignee"
+                               style="display: inline;">{{dataInvoice.t_consignee}}</p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                            <p editable-text="invoice.t_airwaybill"
+                                  style="display: inline;">{{invoice.t_airwaybill}}
+                               </p>
+                        </td>
+                        <td>
+                            <p editable-text="invoice.t_total_weight"
+                               style="display: inline;">{{invoice.t_total_weight}}</p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>
+                            <p editable-text="dataInvoice.t_airwaybill"
+                                  style="display: inline;">{{dataInvoice.t_airwaybill}}
+                               </p>
+                        </td>
+                        <td>
+                            <p editable-text="dataInvoice.t_total_weight"
+                               style="display: inline;">{{dataInvoice.t_total_weight}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                            <td>
+                                <p editable-text="dataInvoice.t_HVC"
+                                      style="display: inline;">{{dataInvoice.t_HVC}}
+                                   </p>
+                            </td>
+                            <td>
+                                <p editable-text="invoice.t_HVC"
+                                   style="display: inline;">{{invoice.t_HVC}}</p>
+                            </td>
+                          </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          <!-- / end client details section -->
+          <div class="row" style="margin-left:1px;margin-right:1px;">
+            <div class="col-xs-12">
+              <table class="ems-center table table-bordered" >
+                <thead>
+                  <tr>
+                    <th>
+                            
+                    <p editable-text="invoice.t_descript_pro"
+                    style="display: inline;">{{invoice.t_descript_pro}}</p><br>
+                    <p editable-text="invoice.t_descript_pro_vi"
+                    style="display: inline;">{{invoice.t_descript_pro_vi}}</p>
+                      
+                    </th>
+                    <th>
+                        <p editable-text="invoice.t_harmonied_code"
+                        style="display: inline;">{{invoice.t_harmonied_code}}</p><br>
+                        <p editable-text="invoice.t_harmonied_code_vi"
+                        style="display: inline;">{{invoice.t_harmonied_code_vi}}</p>
+                    </th>
+                    <th>
+                        <p editable-text="invoice.t_country_of_origin"
+                        style="display: inline;">{{invoice.t_country_of_origin}}</p><br>
+                        <p editable-text="invoice.t_country_of_origin_vi"
+                        style="display: inline;">{{invoice.t_country_of_origin_vi}}</p>
+                    </th>
+                    <th>
+                            <p editable-text="invoice.t_Quantity"
+                            style="display: inline;">{{invoice.t_Quantity}}</p><br>
+                            <p editable-text="invoice.t_Quantity_vi"
+                            style="display: inline;">{{invoice.t_Quantity_vi}}</p>
+                    </th>
+                    <th>
+                            <p editable-text="invoice.t_unit_value"
+                            style="display: inline;">{{invoice.t_unit_value}}</p><br>
+                            <p editable-text="invoice.t_unit_value_vi"
+                            style="display: inline;">{{invoice.t_unit_value_vi}}</p>
+                    </th>
+                    <th>
+                            <p editable-text="invoice.t_total_value"
+                            style="display: inline;">{{invoice.t_total_value}}</p><br>
+                            <p editable-text="invoice.t_total_value_vi"
+                            style="display: inline;">{{invoice.t_total_value_vi}}</p>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="item in dataInvoice.oder_item">
+                    <td>
+                        <p editable-text="item.sku"
+                              style="display: inline;">{{item.sku}}
+                           </p>
+                       </td>
+                    <td>
+                        <p editable-text="item.name"
+                              style="display: inline;">{{item.name}}
+                           </p>
+                     </td>
+                    <td class="text-right">
+                        <p editable-text="item.quatity" e-type="number"
+                              style="display: inline;">{{item.quatity}}
+                           </p>
+                    </td>
+                    <td class="text-right">
+                        <p editable-text="item.price" e-type="number"
+                              style="display: inline;">{{item.price | vnNumber}}
+                           </p>
+                    </td>
+                    <td class="text-right">
+                        <p style="display: inline;">{{item.quatity * item.price  | vnNumber}}
+                           </p>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-right" rowspan="2" colspan="2">
+                    </td>
+                    <td class="text-right" colspan="3">
+                        <p editable-text="invoice.t_total_value_order"
+                            style="display: inline;">{{invoice.t_total_value_order}}</p>
+                    </td>
+                    <td>
+                        <p editable-text="dataInvoice.t_total_value_order"
+                            style="display: inline;">{{dataInvoice.t_total_value_order}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                        <td class="text-right" colspan="3">
+                        <p editable-text="invoice.t_currency"
+                                style="display: inline;">{{invoice.t_currency}}</p>
+                        </td>
+                        <td>
+                            <p editable-text="dataInvoice.t_currency"
+                                style="display: inline;">{{dataInvoice.t_currency}}</p>
+                        </td>
+                 </tr>
+
+                 <tr>
+                        <td class="ems-left" colspan="6">
+                                <p  editable-text="invoice.t_name_address_Manufature"
+                                style="display: inline;">{{invoice.t_name_address_Manufature}}</p>
+                        </td>
+                 </tr>
+                 <tr >
+                        <td style="height:34px" class="ems-left" colspan="6"></td>
+                 </tr>
+                 <tr>
+                        <td class="ems-left" colspan="6">
+                                <p  editable-text="invoice.t_reason_gift"
+                                style="display: inline;">{{invoice.t_reason_gift}}</p>
+                        </td>
+                 </tr>
+                 <tr >
+                        <td style="height:34px" class="ems-left" colspan="6"></td>
+                 </tr>
+
+                 <tr>
+                        <td class="ems-left" colspan="6">
+                                <p  editable-text="invoice.t_declare"
+                                style="display: inline;">{{invoice.t_declare}}</p>
+                        </td>
+                 </tr>
+
+                 <tr>
+                        <td class="ems-left" colspan="6">
+                                <p  editable-text="invoice.t_declare_vi"
+                                style="display: inline;">{{invoice.t_declare_vi}}</p>
+                        </td>
+                 </tr>
+
+                 <tr>
+                        <td class="ems-left" colspan="2">
+                                <p  editable-text="invoice.t_signature"
+                                style="display: inline;">{{invoice.t_signature}}</p>
+                        </td>
+                        <td class="ems-left" colspan="4">
+                        </td>
+                 </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="row" style="margin-left:1px;margin-right:1px;height:100px">
+                <div class="col-xs-12">
+                </div>
+            </div>
+
+        
+          
+        </div>
+      </div>
+
+
+
+      <!-- page 2 -->
+
+      </body>
+    </html>
+    <div style="right: -165px" class="settings panel-default">
+      <button onclick="window.print();" class="btn no-shadow pos-abt hidden-print"><i class="fa fa-print"></i> In hóa đơn</button>
+    </div>
+    <div style="right: -165px;top: 165px;" class="settings  panel-default">
+      <button  ng-click="save(invoice,dataInvoice)" style="background-color: #27c24c !important;border-color: #27c24c !important;color: #ffffff !important;min-width: 110px;" class="btn  no-shadow pos-abt hidden-print"> Lưu lại</button>
+    </div>
+    </div>
+    </div>

@@ -1,0 +1,42 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="install_app()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'Api_Themmoistore' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <span ng-if="waitting_add_store" style="position: absolute;top:50%;left:45%;z-index:1000">
+                <i style="font-size:45px" class="fa-2x fa fa-spinner fa-spin"></i>
+            </span>
+            <div class="col-md-6">
+                <input type="text" placeholder="Store Name *" name="frm.store_name" ng-model="frm.store_name" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Store URL *" name="frm.store_url" ng-model="frm.store_url" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <p style="color: red" ng-bind="message_err"></p>
+                <label style="font-weight: bold;">{{'Example' | translate}}:</label>
+                <p>https://shopname.etsy.com</p>
+            </div>
+            <div class="col-md-6">
+                <label style="font-weight: bold;">Etsy Description :</label>
+                <ul>
+                    <li>{{'Api_Store_Description1_Etsy' | translate}}.</li>
+                    <li>{{'Api_Store_Description2' | translate}}.</li>
+                    <li>
+                        {{'Api_Store_Description3' | translate}}:
+                        <ul>
+                            <li>{{'Api_Store_Description3.1' | translate}}</li>
+                            <li>{{'Api_Store_Description3.2' | translate}}</li>
+                            <li>{{'Api_Store_Description3.3' | translate}}</li>
+                            <li>{{'Api_Store_Description3.4' | translate}}</li>
+                        </ul>
+                    </li>
+                    <li>{{'Api_Store_Description4' | translate}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+        <button type="submit" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    </div>
+</form>

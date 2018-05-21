@@ -1,0 +1,65 @@
+<div ng-controller="ManagementCtrl">
+
+
+    <div class="col-sm-12">
+        <select ng-model="tabId" ng-init="tabId = 'ALL'" class="form-control tab_select_type" ng-change="change_tab(tabId, search, 1)" style="margin-top:20px;">
+            <option value="{{status.code}}" ng-repeat="status in list_status">&nbsp;{{status.content}}&nbsp;({{(total_group[status.code] > 0) ? total_group[status.code]: 0}})
+            </option>
+        </select> 
+        <tabset class="tab-inside m-t m-b-sm tab_type">
+            <tab ng-repeat="status in list_status" ng-click="change_tab(status.code,search,1)">
+                <tab-heading>&nbsp;{{status.content}}&nbsp;
+                    <small ng-if="total_group[status.code]">({{total_group[status.code]}})</small>
+                    <small ng-if="!total_group[status.code]">(0)</small>
+                </tab-heading>
+            </tab>
+        </tabset>
+    </div>
+    
+    <div class="col-md-4 l-h-m">
+        <form role="form" ng-submit="change_tab(status, search, 1)" name="frmSearch">
+            <div class="input-group m-b-sm m-r-sm">
+              <input class="form-control" ng-model="search" placeholder="{{'TICM_mavandon_tieude'| translate}}" />
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">{{'Btt_search' | translate}}</button>
+              </span>
+            </div>
+        </form>
+            
+        <div ng-if="!list_data_request.length && show_wating">
+            <center>
+                <i class="text-3x fa fa-spinner fa-spin"></i>
+            </center>
+        </div>
+            
+    <!--Content-->
+        <form class="form-horizontal">
+            <div class="panel panel-info m-r-sm m-b-sm pointer" ng-repeat="val in list_data_request" ng-class="{'b-l-m' : detail.id == val.id, 'badge-empty' : log_view[val.id] != 0}" ng-click="gotoTicket(val.id)">
+                <div class="panel-body padder-xs">
+                    <div class="form-group m-b-none">
+                        <div class="col-sm-10">
+                            <strong>#{{val.id}} - {{val.title | limitTo : 40}}</strong><br />
+                            <span ng-show="val.refer"><i class="fa fa-code-fork"></i> <a class="text-info" ng-repeat="v in val.refer">{{v.code}}<i ng-if="!$last">, </i></a><br /></span>
+                            <span ng-if="val.time_before" class="m-b-none" tooltip-placement="top" tooltip="{{val.time_create * 1000 | date:'HH:mm:ss dd-MM-yyyy'}}">
+                            <i class="glyphicon glyphicon-time"></i>{{'TICM_Thoigiantao' | translate }} {{val.time_before}} {{'TICM_Truoc' | translate}}</span> <br/>
+                            <span ng-if="val.time_update_before" class="m-b-none" tooltip-placement="top" tooltip="{{val.time_update * 1000 | date:'HH:mm:ss dd-MM-yyyy'}}">{{'PROA_Capnhat' | translate}}: {{val.time_update_before}} {{'TICM_Truoc' | translate}}</span>
+                        </div>
+                        <div class="col-sm-1 pull-right">
+                            <span class="label pull-right" ng-class="data_status[val.status].bg">{{data_status[val.status].name}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <div class="text-right text-center-xs pull-left" ng-if="list_data_request">                
+            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="change_tab(status,search,currentPage)"></pagination>
+        </div>
+
+    <!--/ Content-->
+    </div>
+
+    <div ui-view class="fade-in-up">
+    </div>
+    
+</div>

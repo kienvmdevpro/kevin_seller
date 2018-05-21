@@ -1,0 +1,213 @@
+<div class="app-content" ng-controller="DetailCtrl">
+    <div ui-butterbar></div>
+    <a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside" ></a>
+    <div class="app-content-body fade-in-up">
+        <div class="hbox hbox-auto-xs hbox-auto-sm">
+            <div class="col">
+                <div class="fade-in-up" ui-view >
+                    <div>
+                        <div class="hbox hbox-auto-xs hbox-auto-sm">
+                            
+                            <div class="col">
+                                
+                                <div class="tab-container col-lg-8 col-lg-offset-1">
+                                    
+                                    <div ng-show="wating" class="text-center m-t-xxl"> <i class="text-3x fa fa-spinner fa-spin"></i></div>
+                                    <div class="alert alert-danger text-center text-md padder-tb m-t-xxl" ng-show="!data && !wating">Mã vận đơn&nbsp; <strong>{{code}}</strong> &nbsp;không tồn tại !</strong></div>
+                                    <div class="tab-content tab-fake padder-xs" ng-show="data && !wating">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                               
+                                                        <a ng-click="changeLanguage('vi')">
+                                                            <img class="max-height-none"  style="width: 30px; height: 20px" ng-src="img/lang_vi.png" alt="." src="img/lang_vi.png">
+                                                        </a>
+                                                        <a ng-click="changeLanguage('en')" >
+                                                            <img class="max-height-none" style="width: 30px; height: 20px"  ng-src="img/lang_en.png" alt="." src="img/lang_en.png"> 
+                                                        </a>
+                                               
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-9">
+                                                <h3>{{data.tracking_code || 'Vận đơn'}} - {{data.service || 'Dịch vụ'}}</h3>
+                                            </div>
+
+                                            <div class="col-lg-3 text-right">
+                                                <img  style="max-width: 110px;" ng-if="data.courier.prefix" ng-src="img/brands/{{data.courier.prefix}}.jpg" alt=" Logo HVC"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="status-process clear row padder">
+                                            <div class="journey">
+                                                <span class="status-title ">
+                                                    <!-- Vận đơn tạo -->{{'ORDERC_Vandontao' | translate}}
+                                                </span>
+                                                <span class="status-time">
+                                                    {{ data.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                </span>
+                                                                </div>
+
+                                                                <div class="journey" ng-if="data.time_accept > 0">
+                                                <span class="status-title ">
+                                                    <!-- Vận đơn duyệt -->{{'ORDERC_duyetdon' | translate}}
+                                                </span>
+                                                <span class="status-time">
+                                                    {{ data.time_accept*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                </span>
+                                                                </div>
+
+                                                                <div class="journey"
+                                                                     ng-repeat="item in data.order_status"
+                                                                     ng-if="$last"
+                                                                     ng-class="{'status-current': $first}"
+                                                                        >
+                                                <span class="status-title ">
+                                                    {{list_status[item.status] || 'Trạng thái'}}
+                                                </span>
+                                                <span class="status-time">
+                                                    {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                </span>
+                                                                </div>
+
+                                                                <div class="journey"
+                                                                     ng-if="data.order_status.length > 3"
+                                                                        >
+                                                <span class="status-title">
+                                                  &nbsp;
+                                                </span>
+                                                <span class="status-time">
+                                                    ......
+                                                </span>
+                                                                </div>
+
+                                                                <div class="journey status-current"
+                                                                     ng-repeat="item in data.order_status"
+                                                                     ng-if="$first && data.order_status.length > 1"
+                                                                        >
+                                                <span class="status-title ">
+                                                    {{list_status[item.status] || 'Trạng thái'}}
+                                                </span>
+                                                <span class="status-time">
+                                                    {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="well m-t-lg bg-light lt">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <strong><!-- Người nhận: -->{{'ORDERC_nguoinhan' | translate}}</strong>
+                                                    <h4>{{data.to_name}}</h4>
+                                                    <p>
+                                                        <!-- Địa chỉ : -->{{'OBG_DiaChi' | translate}}: {{data.to_order_address.address || 'Địa chỉ'}} &nbsp; {{data.to_ward}} &nbsp; <span ng-if="data.to_order_address.country_id == 237">{{data.to_province || 'Quận / Huyện'}} &nbsp; {{data.to_city || 'Tỉnh / Thành Phố'}}</span><br />
+                                                        <!-- Phone:{{'OBG_SoDienThoai' | translate}}: {{data.to_phone}}<br /> -->
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="alert alert-info text-center text-md padder-tb" style="overflow:hidden;">
+                                                        <!-- Trạng thái hiện tại -->{{'ORDERC_trangthai' | translate}} : <strong>{{list_status_new[data.status] || 'Trạng thái'}}</strong>
+                                                        <p ng-if="data.verify_id == 0 && data.status == 52 && checkTimeDoiSoat(data.time_success) > 0">Sẽ được đối soát vào {{(checkTimeDoiSoat(data.time_success))*1000 | date:"dd-MM-yyyy HH:mm"}}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 table-responsive">
+                                                    <table class="table table-striped bg-white">
+                                                        <thead>
+                                                        <th><!-- Thời gian -->{{'ORDERL_thoigian' | translate}}</th>
+                                                        <th><!-- Trạng thái  -->{{'ORDERC_trangthai' | translate}}</th>
+                                                        <th><!-- Địa điểm -->{{'ORDERC_diadiem' | translate}}</th>
+                                                        <th><!-- Ghi chú -->{{'ORDERL_GhiChu' | translate}}</th>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng-repeat="item in data.order_status">
+                                                            <td>
+                                                                {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                            </td>
+                                                            <td>
+                                                                {{list_status_new[item.status]}}
+                                                            </td>
+                                                            <td>
+                                                                {{item.city_name}}
+                                                            </td>
+                                                            <td>
+                                                                {{item.note}}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr ng-if="data.time_accept > 0">
+                                                            <td>
+                                                                {{ data.time_accept*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                            </td>
+                                                            <td>
+                                                                <!-- Duyệt vận đơn -->{{'ORDERC_duyetdon' | translate}}
+                                                            </td>
+                                                            <td>
+                                                                {{data.from_order_address.city.city_name}}
+                                                            </td>
+                                                            <td>
+                                                               <!--  Duyệt vận đơn -->{{'ORDERC_duyetdon' | translate}}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                {{ data.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                                                            </td>
+                                                            <td>
+                                                                <!-- Vận đơn tạo --> {{'ORDERC_Vandontao' | translate}}
+                                                            </td>
+                                                            <td>
+                                                                {{data.from_order_address.city.city_name}}
+                                                            </td>
+                                                            <td>
+                                                                <!-- Tạo vận đơn -->{{'ORDERC_Vandontao' | translate}}
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div><!--abc-->
+
+                                            <h4><!-- Lịch sử chăm sóc đơn hàng -->{{'TICM_Lichsutraodoiyeucaunay' | translate}}</h4>
+                                            <div class="row">
+                                                <div class="col-md-12 table-responsive">
+                                                    <table class="table table-striped bg-white">
+                                                        <tr>
+                                                            <th><!-- Thời gian -->{{'ORDERL_thoigian' | translate}}</th>
+                                                            <th><!-- Trạng thái -->{{'ORDERC_trangthai' | translate}}</th>
+                                                            <th><!-- Nội dung -->{{'TICM_Noidung' | translate}}</th>    
+                                                        </tr>
+                                                        <tbody ng-repeat="(key, status) in list_group " ng-if="displayGroup(key)">
+                                                            <tr>
+                                                                <th colspan="20">{{status}}</th>
+                                                            </tr>
+                                                            <tr ng-repeat="item in pipe_journey" ng-if="getGroupByPipe(item.pipe_status) == key">
+                                                                <td>{{item.time_create *1000 | date:"dd-MM-yyyy  HH:mm"}}</td>
+                                                                <td>{{pipe_status[item.pipe_status]}}</td>
+                                                                <td>{{item.note}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="settings panel panel-default">
+        <button class="btn btn-rounded  btn_printbtn-lg btn-icon btn-default" ng-click="changeLanguage('vi')">aa
+            <img class="max-height-none"  style="width: 30px; height: 20px" ng-src="img/lang_vi.png" alt="." src="img/lang_vi.png">
+        </button>
+        <button class="btn btn-rounded btn_print btn-lg btn-icon btn-default" ng-click="changeLanguage('en')">
+            <img class="max-height-none" style="width: 30px; height: 20px"  ng-src="img/lang_en.png" alt="." src="img/lang_en.png">
+        </button>
+     </div>-->
+</div>

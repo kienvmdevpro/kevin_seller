@@ -1,0 +1,70 @@
+	<div class="bg-light b-b" ng-if="flow.current==1" style="padding-top: 20px;margin-left: 10px;margin-right: 10px;">
+
+	</div>
+	<style>
+	.tabShipment .tab-container.tab-inside .tab-content { padding: 15px !important;}
+	.li_product {
+	    height: auto;
+	    max-height: 200px;
+	    overflow-x: hidden;
+	    width: 93%;
+	    margin-left:0;
+		border: 2px solid #dee5e7;
+	 	position: absolute;
+	    z-index: 999;
+	     background-color: #fff;
+	}
+	.li_product > li{
+		 list-style: none;
+		 margin-left: -40px;
+	}
+	.active_li_product {
+		background-color:#428bca !important;
+	}
+	/* .active_li_product {
+		background-color:#428bca !important;
+	} */
+	.shitment_prduct > a{
+	    clear: both;
+	    color: #333;
+	    display: block;
+	    font-weight: 400;
+	    line-height: 1.42857;
+	    padding: 3px 20px;
+	    white-space: nowrap;
+	}
+	.table_products, .table_products > tbody > tr > td, .table_products > tbody > tr > th, .table_products > tfoot > tr > td, .table_products > tfoot > tr > th, .table_products > thead > tr > td, .table_products > thead > tr > th {
+	    border-top: none;
+	    border-left: none;
+	    border-right: none;
+	}
+	</style>
+	<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="search.proceed();search.getCourier()">
+		<div class="col wrapper-sm">
+			<div class="clearfix m-b">
+				<!-- Nav tabs -->
+				<tabset class="tabShipment">
+					<tab active="flow.current==1" disabled="true">
+						<tab-heading style="padding:10px;" translate>SHIPC_tab1</tab-heading>
+						<div ng-if="flow.current==1" data-ng-include=" 'tpl/shipment/request.html' "></div>
+					</tab>
+
+					<tab active="flow.current==2" disabled="true">
+						<tab-heading style="padding:10px;" translate>SHIPC_tab2</tab-heading>
+						<div ng-if="flow.current==2"  data-ng-include=" 'tpl/shipment/create_shipment.html' "></div>
+					</tab>
+					<tab active="flow.current==3" disabled="true">
+						<tab-heading style="padding:10px;" translate>SHIPC_tab3</tab-heading>
+						<div ng-if="flow.current==3"  data-ng-include=" 'tpl/shipment/labeling.html' "></div>
+					</tab>
+					<tab active="flow.current==4" disabled="true">
+						<tab-heading style="padding:10px;" translate>SHIPC_tab4</tab-heading>
+						<div ng-if="flow.current==4"  data-ng-include=" 'tpl/shipment/prepare_shipment.html' "></div>
+					</tab>
+				</tabset>
+				<!--/ Nav tabs-->
+			</div>
+		</div>
+	</div>
+	
+</div>

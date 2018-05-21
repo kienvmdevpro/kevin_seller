@@ -1,0 +1,381 @@
+<div class="page" ng-controller="InventController" ng-init="app.settings.headerFixed = false"> 
+<div class="mainPrints" style="width: 21cm;max-height: 38.85cm;"  >
+<link href="/css/RedboxPrint.css" type="text/css" rel="stylesheet"> 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Invoice BoxMe</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+      @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
+      body, h1, h2, h3, h4, h5, h6{
+      font-family: "message-box", serif;
+      }
+    </style>
+  </head>
+  <style type="text/css">
+    .invoice-box {
+        border: 1px solid #eee;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        color: #555;
+        font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+        font-size: 12px;
+        line-height: 20px;
+        margin: auto;
+        max-width: 800px;
+    }
+   .mainPrints {
+  	 margin: 0px !important;
+   }
+    body{
+    background-color: transparent;}
+	.sender .table-bordered > tbody > tr > td {
+	border: 2px solid;
+	}
+	.sender .table-bordered > tbody > tr > td >h3{
+		margin-top: 5px !important;
+	}
+  </style>
+   
+  <body>
+  <div class="invoice-box">
+    <div class="container-flus">
+      <div class="row" style="margin-left:1px;margin-right:15px;margin-top:15px;">
+		<div class="col-xs-12 sender">
+		<table class="table table-bordered" style="margin-bottom:0px;">
+			<tbody class="animated" >
+			<tr>
+				<td style="width:50%">
+					<h3><p editable-text="invoice.from.title"
+							style="font-weight: bold;"	
+							class="top-name">{{invoice.from.title}}:</p><!-- <strong editable-text="invoice.title"> </strong> -->
+					 </h3>
+					<p editable-text="dataInvoice.from.name"
+						 >{{dataInvoice.from.name}}</p>
+					<p editable-text="dataInvoice.from.director"
+						 >{{dataInvoice.from.director}}</p>
+					<p editable-text="dataInvoice.from.address"
+						 >{{dataInvoice.from.address}}</p>
+					<p editable-text="dataInvoice.from.wardDistrict"
+						 >{{dataInvoice.from.wardDistrict}}</p>	 
+					<p editable-text="dataInvoice.from.city"
+						 >{{dataInvoice.from.city}}</p> 
+					<div class="row">
+						<div class="col-xs-4">
+							<label editable-text="invoice.to.phone"
+							 >{{invoice.to.phone}}: </label>
+							<span editable-text="dataInvoice.to.phone">{{dataInvoice.to.phone}}</span>
+						</div>
+						<div class="col-xs-4">
+							<label editable-text="invoice.to.fax"
+							 >{{invoice.to.fax}}: </label>
+							<span editable-text="dataInvoice.sender.fax">{{dataInvoice.to.fax}}</span>
+						</div>
+						<div class="col-xs-4">
+							<label editable-text="invoice.to.tax"
+							 >{{invoice.to.tax}}: </label>
+							<span editable-text="dataInvoice.sender.tax">{{dataInvoice.to.tax}}</span>	
+						</div>
+					</div>		 
+				</td>
+				
+				<td style="width:40%">
+					<h3 style="font-weight: bold; text-align: center;">Commercial Invoice</3>
+				</td>
+				
+			</tr>
+			<tr>
+				<td style="width:50%" rowspan="3">
+					<h3><p editable-text="invoice.to.title"
+							style="font-weight: bold;"	
+							class="top-name">{{invoice.to.title}}:</p><!-- <strong editable-text="invoice.title"> </strong> -->
+					 </h3>
+					<p editable-text="dataInvoice.to.name"
+						 >{{dataInvoice.to.name}}</p>
+					<p editable-text="dataInvoice.to.director"
+						 >{{dataInvoice.to.director}}</p>
+					<p editable-text="dataInvoice.to.address"
+						 >{{dataInvoice.to.address}}</p>
+					<p editable-text="dataInvoice.to.wardDistrict"
+						 >{{dataInvoice.to.wardDistrict}}</p>	 
+					<p editable-text="dataInvoice.to.city"
+						 >{{dataInvoice.to.city}}</p>
+					<div class="row">
+						<div class="col-xs-4">
+							<label editable-text="invoice.from.phone"
+							 >{{invoice.to.phone}}: </label>
+							<span editable-text="dataInvoice.to.phone">{{dataInvoice.from.phone}}</span>
+						</div>
+						<div class="col-xs-4">
+							<label editable-text="invoice.from.fax"
+							 >{{invoice.to.fax}}: </label>
+							<span editable-text="dataInvoice.sender.fax">{{dataInvoice.from.fax}}</span>
+						</div>
+						<div class="col-xs-4">
+							<label editable-text="invoice.from.tax"
+							 >{{invoice.to.tax}}: </label>
+							<span editable-text="dataInvoice.sender.tax">{{dataInvoice.from.tax}}</span>	
+						</div>
+					</div>	 
+						   
+				</td>
+				<td style="width:40%">
+					<div class="row">
+							<div class="col-xs-6">
+								<label editable-text="invoice.fields_info.date_approve">{{invoice.fields_info.date_approve}}: </label>
+							</div>
+							<div class="col-xs-6">
+								<span editable-text="dataInvoice.fields_info.date_approve">{{dataInvoice.fields_info.date_approve}}</span>
+							</div>	
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:40%">
+					<label editable-text="invoice.fields_info.invoice_number">{{invoice.fields_info.invoice_number}}: </label>
+					<span editable-text="dataInvoice.fields_info.invoice_number">{{dataInvoice.fields_info.invoice_number}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:40%">
+					<label editable-text="invoice.fields_info.shipment_reference">{{invoice.fields_info.shipment_reference}}: </label>
+					<span editable-text="dataInvoice.fields_info.shipment_reference">{{dataInvoice.fields_info.shipment_reference}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:50%">
+					<label editable-text="invoice.fields_info.export_id">{{invoice.fields_info.export_id}}: </label>
+					<span editable-text="dataInvoice.fields_info.export_id">{{dataInvoice.fields_info.export_id}}</span>
+				</td>
+				<td style="width:40%">
+					<label editable-text="invoice.fields_info.export_code">{{invoice.fields_info.export_code}}: </label>
+					<span editable-text="dataInvoice.export_code">{{dataInvoice.export_code}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:50%" rowspan="2">
+				</td>
+				<td style="width:40%;height:80px" >
+					<label editable-text="invoice.fields_info.note">{{invoice.fields_info.note}}: </label>
+					<span editable-text="dataInvoice.fields_info.note">{{dataInvoice.fields_info.note}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:40%">
+					<label editable-text="invoice.fields_info.tracking_code_2">{{invoice.fields_info.tracking_code_2}}: </label>
+					<span editable-text="dataInvoice.fields_info.tracking_code_2">{{dataInvoice.fields_info.tracking_code_2}}</span>
+				</td>
+			</tr>
+			
+			</tbody>
+		</table>
+		<style>
+		.tb-one > td {
+			border-top: 0px !important;
+		}
+		</style>
+		<table class="table table-bordered">
+			<tbody class="animated" >
+				<tr class="tb-one" style="border-top:0px;">
+					<td >
+						<label editable-text="invoice.product.name">{{invoice.product.name}} </label>
+					</td>
+					<td style="width:11%">
+						<label editable-text="invoice.product.qty">{{invoice.product.qty}} </label>
+					</td >
+					<td style="width:11%">
+						<label editable-text="invoice.product.sku">{{invoice.product.sku}} </label>
+					</td>
+					<td style="width:11%">
+						<label editable-text="invoice.product.price">{{invoice.product.price}}</label>
+					</td>
+					<td style="width:11%">
+						<label editable-text="invoice.product.total_price">{{invoice.product.total_price}} </label>
+					</td>
+					<td style="width:11%">
+						<label editable-text="invoice.product.weight">{{invoice.product.weight}}</label>
+					</td>
+					<td style="width:11%">
+						<label editable-text="invoice.product.total_weight">{{invoice.product.total_weight}} </label>
+					</td>
+					<td style="width:11%">
+						<label editable-text="invoice.product.contry">{{invoice.product.contry}}</label>
+					</td>
+				</tr>
+				<tr ng-repeat="item in dataInvoice.product">
+					<td >
+						<p editable-text="item.name">{{item.name}} </p>
+					</td>
+					<td style="width:11%">
+						<p editable-text="item.qty">{{item.qty}} </p>
+					</td >
+					<td style="width:11%">
+						<p editable-text="item.sku">{{item.sku}} </p>
+					</td>
+					<td style="width:11%">
+						<p editable-text="item.price">{{item.price}} </p>
+					</td>
+					<td style="width:11%">
+						<p >{{item.price * item.qty}}</p>
+					</td>
+					<td style="width:11%">
+						<p editable-text="item.weight">{{item.weight}} </p>
+					</td>
+					<td style="width:11%">
+						<p >{{item.weight * item.qty}} </p>
+					</td>
+					<td style="width:11%">
+						<p editable-text="item.contry">{{item.contry}} </p>
+					</td>
+					
+				</tr>
+			</tbody>
+		</table>
+		</div>
+      </div>
+      <div class="row" style="margin-left:1px;margin-right:1px" style="margin-left:1px;margin-right:1px">
+        	<div class="col-xs-6">
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.fields_info.oder_product_total_order">{{invoice.fields_info.oder_product_total_order}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  editable-text="dataInvoice.data_order_total_price"
+          				 >{{dataInvoice.data_order_total_price}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.product_line">{{invoice.detail.product_line}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  
+          				 >{{dataInvoice.product.length}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.vat">{{invoice.detail.vat}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span editable-text="dataInvoice.detail.vat"
+          				 >{{dataInvoice.product_line.vat}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.hamr_code">{{invoice.detail.hamr_code}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span editable-text="dataInvoice.detail.hamr_code" 
+          				 >{{dataInvoice.detail.hamr_code}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.invoice_type">{{invoice.detail.invoice_type}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  editable-text="dataInvoice.detail.invoice_type"
+          				 >{{dataInvoice.detail.invoice_type}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.reason_export">{{invoice.detail.reason_export}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  editable-text="dataInvoice.detail.reason_export"
+          				 >{{dataInvoice.detail.reason_export}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.other_charges">{{invoice.detail.other_charges}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  editable-text="dataInvoice.detail.other_charges"
+          				 >{{dataInvoice.detail.other_charges}}</span>
+        			</div>
+        		</div>
+        		
+             </div>
+             <!-- Right -->
+             <div class="col-xs-6">
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.total_net_weight">{{invoice.detail.total_net_weight}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span editable-text="dataInvoice.detail.total_net_weight"
+          				 >{{dataInvoice.detail.total_net_weight}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.total_gross_weight">{{invoice.detail.total_gross_weight}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  
+          				 >{{dataInvoice.detail.total_gross_weight}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.currency_code">{{invoice.detail.currency_code}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span editable-text="dataInvoice.detail.currency_code"
+          				 >{{dataInvoice.detail.currency_code}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.terms_payment">{{invoice.detail.terms_payment}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span editable-text="dataInvoice.detail.terms_payment" 
+          				 >{{dataInvoice.detail.terms_payment}}</span>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-xs-5">
+        				<label editable-text="invoice.detail.terms_trade">{{invoice.detail.terms_trade}} </label>
+        			</div>
+        			<div class="col-xs-7">
+        				<span  editable-text="dataInvoice.detail.terms_trade"
+          				 >{{dataInvoice.detail.terms_trade}}</span>
+        			</div>
+        		</div>
+        		
+        		
+             </div>
+      </div>
+      <div class="row" style="margin-left:1px;margin-right:1px">
+        <div class="col-xs-12">
+          <p  editable-text="dataInvoice.detail.commitment">{{dataInvoice.detail.commitment}}</p>
+			<label editable-text="invoice.detail.signarure">{{invoice.detail.signarure}}:</label>
+			<span  editable-text="dataInvoice.detail.signarure"
+          				 >{{dataInvoice.detail.signarure}}</span>
+        </div>
+      </div>
+      <div class="row" style="margin-left:1px;margin-right:1px">
+        <div class="col-xs-12">
+          <p  editable-text="dataInvoice.detail.copy_right">{{dataInvoice.detail.copy_right}}</p>
+			
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
+<div style="right: -165px" class="settings panel-default">
+  <button onclick="window.print();" class="btn no-shadow pos-abt hidden-print"><i class="fa fa-print"></i> In hóa don</button>
+</div>
+<div style="right: -165px;top: 165px;" class="settings  panel-default">
+  <button  ng-click="save(invoice,dataInvoice)" style="background-color: #27c24c !important;border-color: #27c24c !important;color: #ffffff !important;min-width: 110px;" class="btn  no-shadow pos-abt hidden-print"> 
+  Luu lại</button>
+</div>
+</div>
+</div>

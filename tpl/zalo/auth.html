@@ -1,0 +1,31 @@
+<div class="col" ng-controller="AuthZalo">
+    <div class="wrapper-md bg-light">
+        <span class="m-n h2 title-page">
+            <i class="fa fa-refresh text-info"></i> Tích hợp Zalo
+            <!-- Quản lý vận đơn -->
+        </span>
+    </div>
+    <div class="panel-heading">
+        <div style="padding-left:15px" class="hbox hbox-auto-xs hbox-auto-sm text-center">
+            <div style="background:#fff;padding-top:15px;padding-bottom:15px" class="clearfix">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="ava" style="border-bottom: 3px solid #d97014;padding-bottom:15px;margin-bottom:15px">
+                        <img ng-if ="userInfo.avatar" src="img/logo-doitac/zalo.png" style="width:60px; margin-top:10px;margin-right:20px"/>
+                        <img ng-if ="userInfo.avatar" ng-src="{{userInfo.avatar}}" alt="{{userInfo.fullname}}'s Avatar" style="border-radius: 50%;width:60px;margin-top:10px;"/>
+                    </div>
+                    <p><span style="color:#008fe5">Zalo</span> muốn truy xuất các thông tin sau từ tài khoản của bạn</p>
+                    <div class="footer">
+                        <button class="btn btn-success" type="button" ng-click="accept()">Cho phép
+                            <!-- Tạo đơn hàng -->
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">Từ chối
+                            <!-- Tạo đơn hàng -->
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,506 @@
+<div class="row" ng-controller="OrderDetail" >
+    <div class="row text-center" ng-if="waiting && !order.length">
+        <i class="text-3x fa fa-spinner fa-spin"></i>
+    </div> 
+    <div class="padder" ng-if="!waiting && show_detail && windowWith < 768">
+        <button class="btn btn-primary btn-sm" ng-click="backToList()"><i class="fa fa-fw fa-angle-left text"></i>{{'Btt_quaylai' | translate}}</button> 
+        <div class="clearfix"></div> <br>
+    </div>
+	
+    <div ng-if="data" ng-animate="{enter: 'enter', leave: 'leave'}" class="fade-in-up ">
+        <div class="col-lg-12">
+            <h3 class="font-thin pull-left m-t-none m-r-md">{{'ORDERC_Donhang' | translate}} <strong><a ui-sref="detail({code:code})" target="_blank">{{code}}</a> - {{list_courier[data.courier_id].name}}</strong></h3>
+            <div class="col-lg-12">
+                <div class="btn-group m-b-sm">
+                    <button ng-if="data.status == 20 && data.order_detail.sc_pbh == 0" type="button" class="btn btn-success btn-sm" ng-disabled="waiting_status" ng-click="buyProtect(false, true, 'protect')" ><i class="fa fa-shield" ng-if="!waiting_status"></i><i class="fa fa-spinner fa-spin fa-fw margin-bottom" ng-if="waiting_status"></i> {{'ORDERC_MuaBaoHiem' | translate }}</button>
+
+                    <button type="submit" ng-disabled="copyProcessing" class="btn btn-default btn-sm" ng-click="copyOrder(data)"><i class="fa fa-copy" ng-if="!copyProcessing"></i> <i ng-if="copyProcessing" class="fa fa-spinner fa-spin fa-fw margin-bottom"></i> {{'ORDERL_SaoChep' | translate}}</button>
+
+                    <button ng-if="data.status == 120" class="btn btn-info btn-sm" ng-disabled="waiting_status" ng-click="change(data.status, 21, 'status', '', coupon_code)"><i class="fa fa-times"></i> {{'ORDERC_duyetLaidon' | translate}}</button>
+                    
+                    <button ng-if="data.status == 20" class="btn btn-danger btn-sm" ng-disabled="waiting_status" ng-click="confirm_cancel()"><i class="fa fa-times"></i> {{'Btt_cancel' | translate}}<!-- Hủy đơn --></button>
+
+                    <button ng-if="[30,31,35,120, 102].indexOf(data.status) != -1" class="btn btn-danger btn-sm" ng-disabled="waiting_status" ng-click="confirm_report_cancel(data.status)"><i class="fa fa-bell-o"></i> {{'ORDERC_Baohuy' | translate}}<!-- Báo hủy --></button>
+
+                    <!-- <button ng-if="list_status[data.status] == 41" class="btn btn-warning btn-sm" ng-click="confirm_delivery()"><i class="fa fa-retweet"></i> Yêu cầu giao lại</button> -->
+
+                     <button ng-if="list_status[data.status] == 20" class="btn btn-warning btn-sm" ng-click="confirm_return()"><i class="fa fa-retweet"></i> {{'ORDERC_Xacnhanchuyenhoan' | translate}} </button>
+                      <!--
+                    <button ng-if="list_status[data.status] == 18" class="btn btn-warning btn-sm" ng-click="confirm_delivery()"><i class="fa fa-retweet"></i> Yêu cầu giao lại</button> -->
+
+                     <!-- <button ng-if="list_status[data.status] == 15" class="btn btn-warning btn-sm" ng-click="confirm_pickup()"><i class="fa fa-retweet"></i> Yêu cầu lấy lại</button> -->
+
+
+
+                    <button ng-if="data.status != 20" class="btn btn-info btn-sm" ng-click="open_popup('', code)"><i class="fa fa-plus"></i> {{'ORDERC_Guiyeucau' | translate}}</button>
+                </div>
+				<a	style="height: 30px !important" class="btn bg-orange btn-sm  pull-right"
+                    ui-sref="print_new({code:code})" target="_blank">
+                    <i class="fa fa-print"></i> {{'ORDERC_Invandon' | translate}}  <!-- <span ng-if="windowWith > 360 "> In vận đơn</span> -->
+                </a>
+                   <a style="height: 30px !important;padding: 5px 9px 0px 9px;margin: 0;" class="btn bg-info btn-sm  pull-right m-r-md"
+                      ui-sref="invoice({order:code,type:1})" target="_blank">
+                      <i class="fa fa-print"></i> {{'ORDERC_InPO' | translate}}  <!-- <span ng-if="windowWith > 360 "> In vận đơn</span> -->
+                   </a>
+                
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="alert alert-success" role="alert" ng-if="data.status == 20 && data.order_detail.sc_pbh == 0 && data.courier_id == 8 && data.total_amount > 3000000">
+                <strong>{{'Btt_note' | translate}}</strong> : <!-- Đơn hàng của quý khách có giá trị cao hoặc vận chuyển đến vùng xa, để đảm bảo an toàn cũng như quyền lợi khi xảy ra sự cố quý khách có thể mua bảo hiểm cho đơn hàng này ! -->
+                {{'ORDERC_donhangcuaquykhachcogiatri' | translate}}
+            </div>
+
+            <!-- <div class="alert alert-success" role="alert" ng-if="thongbao_noithanh">
+                <strong>{{'Btt_note' | translate}}</strong> : {{'ORDERC_detietkiemchiphi' | translate}}Để tiết kiệm chi phí bạn nên chuyển sang dịch vụ chuyển phát tiết kiệm giao qua ngày trước khi duyệt do chúng tôi chưa hỗ trợ lấy hàng và giao hàng cùng ngày với đơn hàng duyệt sau 10:00 giờ sáng.
+            </div> -->
+
+        </div>
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    <div class="row">
+                    <div class="col-lg-4"  style="padding-top: 5px;font-size: 18px;">
+                    	<i class="fa fa-inbox"></i> {{'ORDERC_thongtindonhang' | translate}}<!-- Thông tin đơn hàng -->
+                    </div>
+                     <div class="col-lg-8 ">
+                     <div class="row">
+                     <div class="input-group m-b-sm pull-right" style="margin-right:10px" ng-show="data.status == 20">
+		                    <input style="min-width: 97px;max-width:120px;float: right;font-size: 10px;" placeholder="{{'ORDERC_MaKhuyenMaiNeuCo' | translate}}" ng-model="coupon_code" class="form-control ng-pristine ng-valid">
+		                    <span class="input-group-btn">
+		                        <button ng-click="change(data.status, 21, 'status', '', coupon_code)" type="button" class="btn btn-info"><i class="fa fa-check"></i> 
+		                        {{'ORDERC_duyetdon' | translate}} ({{'ORDERC_thuho' | translate}}: <convert-currency home-currency="data.order_detail.money_collect"></convert-currency>)
+		                        </button>
+		                    </span>
+	                    </div>
+                     </div>
+	                    
+	                </div>
+                    
+                    </div>
+                </div>
+
+                <div class="banel-ds text-center" ng-if="data.verify_id > 0">
+                    <img class="max-height-none" ng-src="img/doi-soat-ok.png" alt="."/><br />
+                    <span ng-if="data.status != 66 && (data.order_detail.money_collect - data.order_detail.sc_pvc - data.order_detail.sc_cod + data.order_detail.sc_discount_pvc  + data.order_detail.sc_discount_cod - data.order_detail.sc_pvk - data.order_detail.sc_pbh) > 0">{{'ORDERC_Bannhanduoc' | translate}}<!-- Bạn nhận được --> <strong>
+                    {{(data.order_detail.money_collect - data.order_detail.sc_pvc - data.order_detail.sc_cod + data.order_detail.sc_discount_pvc  + data.order_detail.sc_discount_cod - data.order_detail.sc_pvk - data.order_detail.sc_pbh) | vnNumber}}
+                    </strong> đ</span>
+                    <span ng-if="data.status != 66 && (data.order_detail.money_collect - data.order_detail.sc_pvc - data.order_detail.sc_cod + data.order_detail.sc_discount_pvc  + data.order_detail.sc_discount_cod - data.order_detail.sc_pvk - data.order_detail.sc_pbh) < 0">>{{'ORDERC_Banphaitra' | translate}}<!-- Bạn phải trả --> <strong>
+                        {{(data.order_detail.money_collect - data.order_detail.sc_pvc - data.order_detail.sc_cod + data.order_detail.sc_discount_pvc  + data.order_detail.sc_discount_cod - data.order_detail.sc_pvk - data.order_detail.sc_pbh) | vnNumber}}
+                    </strong> đ</span>
+                </div>
+
+                <div class="list-group no-radius alt">
+                    <span class="list-group-item">{{'ORDERC_Ngaytao' | translate}} {{ data.time_create*1000|date:"dd-MM-yyyy  HH:mm"}} <span  ng-if="data.time_accept > 0 ">, {{'ORDERL_NgayDuyet' | translate}}<!-- Ngày duyệt: --> {{data.time_accept*1000|date:"dd-MM-yyyy  HH:mm"}}</span></span>
+                    
+                    <span class="list-group-item">{{'ORDERL_DichVu' | translate}}<!-- Dịch vụ : --> 
+						<a href="javascript:;" ng-if="data.status == 20  && data.service_id != 8" editable-select="data.service_id" 
+							e-ng-options="state.id as state.name for state in list_service | exists: state" 
+							onbeforesave="change(data.service_id, $data, 'service_id')">
+                            {{service[data.service_id]|| 'Dịch vụ'}} <i class="fa fa-edit"></i>
+                        </a>
+						<!--<a href="javascript:;" ng-if="data.status == 20 && keyLang == 'en' && data.service_id != 8" editable-select="data.service_id" 
+							e-ng-options="state.id as state.name for state in list_service_en | exists: state" 
+							onbeforesave="change(data.service_id, $data, 'service_id')">
+                            {{keyLang == 'vi' ? service[data.service_id] : service_en[data.service_id] || 'Dịch vụ'}} <i class="fa fa-edit"></i>
+                        </a>-->
+                        <span ng-if="data.status != 20"> 
+                            {{ service[data.service_id] || 'Dịch vụ'}}
+                        </span> - {{data.order_detail.money_collect > 0 ? 'ORDERL_ThuHo' : '' |translate}} {{dataorder_detail.sc_pbh > 0 ? 'ORDERL_BaoHiem' : '' | translate}}</span>
+
+                    <!-- edit inventory -->
+                    <span class="list-group-item">{{'ORDERL_KhoHang' | translate}}<!-- Kho hàng: -->
+                        <a href="javascript:;" ng-if="data.status == 20 && data.domain != 'boxme.vn'" editable-select="data.from_address_id" e-ng-options="state.id as state.address + ' ' + state.ward.ward_name + '-' + state.district.district_name + '-' + state.city.city_name for state in list_inventory | exists: state" onbeforesave="change(data.from_address_id, $data, 'from_address_id')">
+                            <span ng-show="list_inventory[data.from_address_id]">
+                                {{list_inventory[1*data.from_address_id].address}}
+                                <span ng-if="list_inventory[1*data.from_address_id].ward.ward_name">
+                                    {{' '+list_inventory[1*data.from_address_id].ward.ward_name}}
+                                </span>,
+                                {{list_inventory[1*data.from_address_id].district.district_name}},
+                                {{list_inventory[1*data.from_address_id].city.city_name}}
+                            </span>
+                            <span ng-show="!list_inventory[data.from_address_id]">{{data.from_address}},
+                                {{' '+Ward[data.from_ward_id]}}, {{District[data.from_district_id]}}, {{City[data.from_city_id]}}</span>
+                                <!--<span ng-if="data.ward.ward_name">{{' '+data.ward.ward_name}}</span>, {{data.district.district_name}}, {{data.city.city_name}} </span>-->
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        
+                        
+                        <span ng-if="data.status != 20 || data.domain == 'boxme.vn'">
+                            {{data.from_address}}<span ng-if="Ward[data.from_ward_id]">{{' '+Ward[data.from_ward_id]}}</span>,
+                            {{District[data.from_district_id]}}, {{City[data.from_city_id]}}
+                        </span>
+                    </span>
+                    <!-- end -->
+                    
+
+                    <span class="list-group-item" ng-if="data.order_code">{{'ORDERC_Madonhang' | translate}}<!-- Mã đơn hàng:  -->
+                        <a href="javascript:;" ng-if="data.status == 20" editable-text="data.order_code"  onbeforesave="change(data.order_code, $data, 'order_code')">
+                        {{data.order_code}} <i class="fa fa-edit"></i>
+                        </a>
+                        <span ng-if="data.status != 20">
+                            {{data.to_name | limitTo : 35}}
+                        </span>
+                        
+
+
+                    </span>
+
+                    <!-- edit  service -->
+                    <span class="list-group-item">
+                        {{'ORDERC_Mavandon' | translate}}: <a ui-sref="detail({code:code})" target="_blank"><strong>{{code}}</strong></a> 
+                        &nbsp;&nbsp;
+                        <i ng-class="{'fa-eye': data.checking == 1, 'fa-eye-slash': data.checking == 2}" class="fa"></i> &nbsp;
+                        <a href="javascript:;" ng-if="data.status == 20" editable-select="data.checking" e-ng-options="state.id as state.name for state in list_checking | exists: state" onbeforesave="change(data.checking, $data, 'checking')">
+                            {{checking[data.checking]}} <i class="fa fa-edit"></i>
+                        </a>
+                        <span ng-if="data.status != 20" >
+                            {{checking[data.checking]}}
+                        </span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<img ng-if="data.order_tracking" ng-class="app.settingLogo ? 'hidden-folded-open' : ''" ng-src="img/courier/{{data.order_tracking.courier_tracking_id}}.jpg" alt="HVC" style="height: 25px;">
+			
+					<!-- {{order_tracking.courier_tracking_id}} ng-if="order_tracking" <a ng-if="order.GlobalCourierTracking && (order.GlobalCourierCode=='Sf')" class="link-c" target="_blank" href="{{order.GlobalCourierUrl}}">&nbsp;{{ order.GlobalCourierTracking }} - {{order.GlobalCourierName}}</a> 
+					ng-if="order.GlobalCourierTracking &&  (order.GlobalCourierCode !='Sf' && order.GlobalCourierCode=='Ems' )" -->
+					<a  ng-if="data.order_tracking" class="link-c" target="_blank" href="{{data.order_tracking.url}}{{data.order_tracking.courier_tracking_code}}">&nbsp;
+					{{data.order_tracking.courier_tracking_code}} - {{data.order_tracking.name}}</a>
+                        
+                    </span>
+                    <!-- end -->
+
+                    <span class="list-group-item">{{'ORDERC_Trangthai' | translate}} <span class="label {{list_color[list_status[data.status]]}} text-base">{{data.meta_status.name}}</span>
+                        <span ng-if="data.verify_id == 0 && data.status == 52 && data.time_success > 0">( {{'ORDERC_Seduocdoisoatvao' | translate}} {{(checkTimeDoiSoat(data.time_success))*1000 | date:"dd-MM-yyyy"}} )</span>
+
+                    </span>
+                    <span class="list-group-item" ng-if="data.estimate_delivery > 0">
+                        {{'ORDERC_Thoigiangiaohangtrungbinh' | translate}}<!-- Thời gian giao hàng trung bình : -->
+                            <span ng-if="data.estimate_delivery > 24">
+                                {{(data.estimate_delivery/24) | number:0 }} {{'ORDERC_Tinhtuthoigianlayhangdautien' | translate}}<!-- (ngày) - Tính từ thời gian lấy thành công đến lần phát hàng đầu tiên -->
+                            </span>
+                            <span ng-if="!(data.estimate_delivery > 24)">
+                                {{data.estimate_delivery || '0' }} {{'ORDERC_gio' | translate}}
+                            </span>
+                    </span>
+                </div>
+            </div>
+        </div> <!-- / col -->
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold"><i class="fa fa-user"></i> {{'ORDERC_nguoinhan' | translate }}<!-- Người nhận( khách hàng) --></div>
+                <div class="list-group no-radius alt">
+
+                    <!-- edit  recipient -->
+                    <span class="list-group-item">
+                        <i class="fa fa-user"></i> :
+                        <a href="javascript:;" ng-if="data.status == 20" editable-text="data.to_name" onbeforesave="change(data.to_name, $data, 'to_name')">{{data.to_name}} <i class="fa fa-edit"></i></a>
+                        <span ng-if="data.status != 20">
+                            {{data.to_name}}
+                        </span>
+                    </span>
+
+                    <span class="list-group-item">
+                      <i class="fa fa-home"></i> :
+                        <a ng-click="open_edit()">{{data.to_order_address.address}}<span ng-if="Ward[data.to_order_address.ward_id]">{{' '+Ward[data.to_order_address.ward_id]}}</span>,
+                            {{District[data.to_order_address.province_id]}}, {{City[data.to_order_address.city_id]}} <i ng-if="data.status == 20"  class="fa fa-edit"></i></a>
+                    </span>
+
+                    <span class="list-group-item"><i class="fa fa-phone"></i> :
+                        <a href="javascript:;" ng-if="data.status == 20" editable-tel="data.to_phone" e-pattern="([0-9]{9,11})(\W)?([0-9]{9,11})?" e-title="x(9-13) ( x(9-11)-x(9-11) )" onbeforesave="change(data.to_phone, $data, 'to_phone')">{{data.to_phone | phone}} <i class="fa fa-edit"></i></a>
+                        <span ng-if="data.status != 20">
+                            {{data.to_phone | phone}}
+                        </span>
+                    </span>
+					<span class="list-group-item" ng-if="data.to_order_address.country_id != 237">
+						<i class="fa fa-globe"></i> :
+                        <span>
+                           {{Country[data.to_order_address.country_id]}} , Zipcode:{{data.to_order_address.zip_code}}
+                        </span>
+                    </span>
+                   <!--  <span class="list-group-item"><i class="fa fa-envelope-o"></i> :
+                        <a href="javascript:;" ng-if="data.status == 20" editable-email="data.to_email" onbeforesave="change(data.to_email, $data, 'to_email')">{{data.to_email | limitTo : 35}} <i class="fa fa-edit"></i></a>
+                        <span ng-if="data.status != 20">
+                            {{data.to_email | limitTo : 35}}
+                        </span>
+                    </span> -->
+                    <!-- end -->
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold"><i class="fa fa-gift"></i> {{'ORDERC_ChiTietsanpham' | translate }}  <!-- Sản phẩm --></div>
+                <div class="list-group no-radius alt">
+
+                    <!-- edit  order -->
+                    <span class="list-group-item"><i class="fa fa-shopping-cart"></i> :
+                        <a href="javascript:;" ng-if="data.status == 20" editable-text="data.product_name" onbeforesave="change(data.product_name, $data, 'item_name')">
+                            {{data.product_name}} <i class="fa fa-edit"></i>
+                        </a>
+                        <span ng-if="data.status != 20">
+                            {{data.product_name}}
+                        </span>
+                    </span>
+
+                    <span class="list-group-item"><i class="fa fa-info"></i> :
+                        <span  ng-if="data.status == 20 && data.domain != 'boxme.vn'">
+                            <a href="javascript:;" editable-number="data.total_quantity" e-min="1" e-max="500" onbeforesave="change(data.total_quantity, $data, 'total_quantity')">
+                                {{data.total_quantity || '0' | number}} <i class="fa fa-edit"></i>
+                            </a>{{'ORDERC_cai_chiec' | translate}}
+                        </span>
+                        <span ng-if="data.status != 20 || data.domain == 'boxme.vn'">
+                            {{data.total_quantity || '0' | number}} {{'ORDERC_cai_chiec' | translate}}<!-- (cái/chiếc) -->
+                        </span>
+                    </span>
+
+                    <span class="list-group-item"><i class="fa fa-won"></i> :
+                        <span  ng-if="data.status == 20 && data.domain != 'boxme.vn'">
+                            <a href="javascript:;" editable-number="data.total_weight" e-min="1" e-max="10000000" onbeforesave="change(data.total_weight, $data, 'total_weight')">
+                                {{data.total_weight || '0' | number}} <i class="fa fa-edit"></i>
+                            </a>gram
+                        </span>
+                        <span ng-if="data.status != 20 || data.domain == 'boxme.vn'">
+                            {{data.total_weight || '0' | number}} gram
+                        </span>
+                    </span>
+					
+                    <span class="list-group-item"><i class="fa fa-tags"></i> :
+                    	<convert-currency home-currency="data.total_amount"></convert-currency>
+                        <!-- <span>
+                            {{data.total_amount || '0' | vnNumber}} {{ViewHomeCurrency}}
+                        </span>
+                        <span ng-if="convert-currency(data.total_amount)">({{convert_currency(data.total_amount) || '' | number:4 }} {{viewCurrency}})</span> -->
+                    </span> 
+                    <!-- end -->
+
+                </div>
+            </div>
+        </div>
+        <!--ng-if="userInfo.fulfillment ="-->
+        <div class="col-lg-12" ng-if="userInfo.fulfillment == 1">
+            <h4>{{'ORDERC_ChiTietsanpham' | translate}}</h4>
+            <table class="table">
+                <tr>
+                    <th>#</th>
+                    <th>SKU</th>
+                    <th><!-- Tên sản phẩm -->{{'OBG_TenSanPham' | translate}}</th>
+                   <!--  <th>Tên sản phẩm{{'ORDERC_ChiTietsanphamGiaBan' | translate}}</th> -->
+                    <th width="100px" class="text-right">{{'OBG_SoLuong' | translate}}<!-- Số lượng --></th>
+                </tr>
+                <tr ng-repeat="item in data.order_items track by $index">
+                    <td>{{$index+1}}</td>
+                    <td>{{item.bsin}}</td>
+                    <td>{{item.product_name}}</td>
+                    <!-- <td>{{item.product_name}}</td> -->
+                    <td>{{item.quantity}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-12">
+            <h4>{{'ORDERC_phi_tienthuho' | translate}}<!-- Phí & Tiền thu hộ --></h4>
+            <table class="table table-bordered b-t b-light">
+                <tbody>
+                    <tr>
+                        <td class="text-left">{{'ORDERC_phivanchuyen' | translate}}<!-- Phí vận chuyển --></td>
+                        <td class="text-right"><!-- {{data.order_detail.sc_pvc || '0' |vnNumber}} đ -->
+                       	 <convert-currency home-currency="data.order_detail.sc_pvc"></convert-currency>
+                        </td>
+                    </tr>
+                    <!--tr ng-if="data.order_detail.sc_discount_pvc > 0">
+                        <td class="text-left">Shipchung miễn phí vận chuyển</td>
+                        <td class="text-right">{{data.order_detail.sc_discount_pvc || '0' |vnNumber}} đ</td>
+                    </tr-->
+                    <tr ng-if="data.status != 66 && data.order_detail.sc_cod > 0">
+                        <td class="text-left">{{'ORDERC_phithuho' | translate}}</td>
+                        <td class="text-right"><!-- {{data.order_detail.sc_cod || '0' |vnNumber}} {{ViewHomeCurrency}} -->
+                         <convert-currency home-currency="data.order_detail.sc_cod"></convert-currency>
+                        </td>
+                    </tr>
+                    <!-- <tr ng-if="data.status != 66 && data.order_detail.sc_discount_cod > 0">
+                        <td class="text-left">Shipchung miễn phí thu hộ(CoD)</td>
+                        <td class="text-right">{{data.order_detail.sc_discount_cod || '0' |vnNumber}} đ</td>
+                    </tr> -->
+                    <tr ng-if="data.status != 66 && data.order_detail.sc_pbh > 0">
+                        <td class="text-left">{{'ORDERC_phibaohiem' | translate}}<!-- Phí bảo hiểm --></td>
+                        <td class="text-right"><!-- {{data.order_detail.sc_pbh || '0' |vnNumber}} {{ViewHomeCurrency}} -->
+                        <convert-currency home-currency="data.order_detail.sc_pbh"></convert-currency>
+                       </td>
+                    </tr>
+                    <tr ng-if="data.order_detail.sc_pvk > 0">
+                        <td class="text-left">{{'ORDERC_phivuotcan' | translate}}<!-- Phí vượt cân --></td>
+                        <td class="text-right"><!-- {{data.order_detail.sc_pvk || '0' |vnNumber}} {{ViewHomeCurrency}} -->
+                        <convert-currency home-currency="data.order_detail.sc_pvk"></convert-currency>
+                        </td>
+                    </tr>
+                    <tr ng-if="data.order_detail.sc_pch > 0">
+                        <td class="text-left">{{'ORDERC_phichuyenhoan' | translate}}</td>
+                        <td class="text-right">
+                       <!--  {{data.order_detail.sc_pch || '0' |vnNumber}} {{ViewHomeCurrency}} -->
+                        <convert-currency home-currency="data.order_detail.sc_pch"></convert-currency>
+                        </td>
+                    </tr>
+                    <tr ng-if="data.status != 66">
+                        <td class="text-left">{{'ORDERC_tongtienthuho' | translate}}<!-- Tổng tiền thu hộ (người nhận trả) --></td>
+                        <td class="text-right">
+                            <!-- edit money collect -->
+                            <span ng-if="data.status == 20">
+                                <a href="javascript:;" editable-number="data.order_detail.money_collect" e-min="0" e-max="10000000000" onbeforesave="change(data.order_detail.money_collect, $data, 'money_collect')">
+                                    <!-- {{data.order_detail.money_collect || '0' | vnNumber}}{{ViewHomeCurrency}}  -->
+                                    <convert-currency home-currency="data.order_detail.money_collect"></convert-currency><i class="fa fa-edit"></i>
+                                </a>
+                            
+                                <!--  -->
+                            </span>
+                            <span ng-if="data.status != 20">
+                            <!-- {{data.order_detail.money_collect || '0' | vnNumber}}{{ViewHomeCurrency}} -->
+                             <convert-currency home-currency="data.order_detail.money_collect"></convert-currency>
+                            <!-- <span ng-if="convert_currency(data.order_detail.money_collect)">({{convert_currency(data.order_detail.money_collect) || '0' | number:4 }} {{viewCurrency}})</span> -->
+                            </span>
+                            <!-- end -->
+                        </td>
+                    </tr>
+						
+                    <tr ng-if="data.order_detail.sc_discount_cod > 0 || data.order_detail.sc_discount_pvc > 0">
+
+                        <td class="text-left">{{'ORDERC_shipchungmienphinguoigui' | translate:{isShipchung : isShipchung} }}<!-- Shipchung miễn phí cho người gửi --></td>
+                        <td class="text-right" ng-if="data.status != 66"><!-- {{data.order_detail.sc_discount_pvc + data.order_detail.sc_discount_cod  || '0' |vnNumber}} đ -->
+                        <convert-currency home-currency="data.order_detail.sc_discount_pvc + data.order_detail.sc_discount_cod"></convert-currency>
+                        </td>
+                        <td class="text-right" ng-if="data.status == 66"><!-- {{data.order_detail.sc_discount_pvc  || '0' |vnNumber}} đ -->
+                        <convert-currency home-currency="data.order_detail.sc_discount_pvc"></convert-currency>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div> 
+
+        <div class="col-lg-12" ng-if="data.order_fulfillment">
+            <h4>{{'ORDERC_phi_fulfilment' | translate}}<!-- Phí Fulfilment --></h4>
+            <table class="table table-bordered b-t b-light">
+                <tbody>
+                    <tr>
+                        <td class="text-left">{{'ORDERC_philk' | translate}}<!-- Phí lưu kho --></td>
+                        <td class="text-right"><!-- {{data.order_fulfillment.sc_plk || '0' |vnNumber}} đ -->
+                         <convert-currency home-currency="data.order_fulfillment.sc_plk - data.order_fulfillment.sc_discount_plk"></convert-currency>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">{{'ORDERC_phidg' | translate}}<!-- Phí đóng gói --></td>
+                        <td class="text-right"><!-- {{data.order_fulfillment.sc_pdg || '0' |vnNumber}} đ -->
+                         <convert-currency home-currency="data.order_fulfillment.sc_pdg - data.order_fulfillment.sc_discount_pdg"></convert-currency>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">{{'ORDERC_phixl' | translate}}<!-- Phí xử lý --></td>
+                        <td class="text-right"><!-- {{data.order_fulfillment.sc_pxl || '0' |vnNumber}} đ -->
+                         <convert-currency home-currency="data.order_fulfillment.sc_pxl - data.order_fulfillment.sc_discount_pxl"></convert-currency>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div> 
+        <!-- / col -->
+        <div class="col-lg-12 col-md-12 col-sm-12" ng-if="data.order_item.description || data.status == 20">
+            <h4>{{'ORDERC_ghichuchokhachhang' | translate}}<!-- Ghi chú cho khách hàng --></h4>
+            <div class="form-group">
+                <a href="javascript:;" ng-if="data.status == 20" e-style="width:90%" editable-textarea="data.order_item.description" onbeforesave="change(data.order_item.description, $data, 'description')" e-rows="3" e-cols="80">
+                    <pre>{{ data.order_item.description}} <i class="fa fa-edit"></i></pre>
+                </a>
+                <span ng-if="data.status != 20" class="w-full" >{{ data.order_item.description}}</span>
+            </div>
+        </div> <!-- / col --> 
+        
+        <div class="col-lg-12 col-md-12 col-sm-12" >
+            <h4>{{'ORDERC_buucucphathang_noiphat' | translate}}<!-- Bưu cục phát hàng(nơi phát) --></h4>
+            <div class="well m-t bg-light lt">
+                <div class="row" >
+                    <div class="col-xs-6" ng-if="post_office[data.id]">
+                      <strong> {{list_courier[post_office[data.id].courier_id].name}} - {{post_office[data.id].name}}</strong>
+                      
+                      <p>
+                        <i class="fa fa-phone"></i> {{post_office[data.id].phone}}<br>
+                        <i class="fa fa-home"></i> {{post_office[data.id].address}}<br>
+                        <i class="fa fa-globe"></i> <a href="http://www.google.com/maps/place/{{post_office[data.id].lat}},{{post_office[data.id].lng}}" target="_blank"><span class="text-info">(bản đồ)</span></a><br>
+                      </p>
+                    </div>
+                    <div class="col-xs-6" ng-if="!post_office[data.id]">
+                      <p>{{'ORDERC_donhangchuacothongtinbuucuc' | translate}}<!-- Đơn hàng chưa có thông tin bưu cục phát hàng. --></p>
+                    </div>
+                    
+                </div>
+                </div>
+        </div> <!-- / col -->
+
+        <div class="col-lg-12 col-md-12 col-sm-12 text-center table-responsive">
+            <h4>{{'ORDERC_Lichtrinhdonhang' | translate}}<!-- Lịch trình đơn hàng --></h4>
+
+
+            <table class="table table-striped bg-white">
+                <thead>
+                <th class="text-center" width="85px">{{'ORDERC_thoigian' | translate}}</th>
+                <th class="text-center" width="225px">{{'ORDERC_trangthai' | translate}}<!-- Trạng thái --></th>
+                <th class="text-center" width="200px">{{'ORDERC_diadiem' | translate}}<!-- Địa điểm --></th>
+                <th class="text-center">{{'ORDERL_GhiChu' | translate}}<!-- Ghi chú --></th>
+                </thead>
+                <tbody>
+
+                <tr ng-repeat="item in data.order_status">
+                    <td>
+                        {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                    </td>
+                    <td>
+                        {{item.meta_status.name}}
+                    </td>
+                    <td>
+                        {{item.city_name}}
+                    </td>
+                    <td>
+                        {{item.note}}
+                    </td>
+                </tr>
+
+                <tr ng-if="data.time_accept > 0">
+                    <td>
+                        {{ data.time_accept*1000|date:"dd-MM-yyyy  HH:mm"}}
+                    </td>
+                    <td>
+                       {{'ORDERC_duyetvandon' | translate}} <!-- Duyệt vận đơn -->
+                    </td>
+                    <td>
+                        {{City[data.from_city_id]}}
+                    </td>
+                    <td>
+                       {{'ORDERC_duyetvandon' | translate}}<!--  Duyệt vận đơn -->
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        {{ data.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                    </td>
+                    <td>
+                        {{'ORDERC_Vandontao' | translate}}<!-- Vận đơn tạo -->
+                    </td>
+                    <td>
+                        {{City[data.from_city_id]}}
+                    </td>
+                    <td>
+                       {{'ORDERC_Taodontao' | translate}}<!--  Tạo vận đơn -->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script id="ModalError.html" type="text/ng-template">
+        <div ng-include="'tpl/orders/modal.form.error.html'"></div>
+    </script>
+    <script id="ModalEdit.html" type="text/ng-template">
+        <div ng-include="'tpl/orders/modal.form.edit.html'"></div>
+    </script>
+    <script id="ModalCopy.html" type="text/ng-template">
+        <div ng-include="'tpl/orders/modal.form.copy.html'"></div>
+    </script>
+</div>  <!-- / Row -->

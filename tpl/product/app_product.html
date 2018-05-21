@@ -1,0 +1,73 @@
+    <style>
+      .col-sm-36    {
+        width:36% !important;
+        float: left;
+        min-height: 1px;
+        position:relative;
+      }
+      .col-sm-46    {
+        width:46% !important;
+        float: left;
+        min-height: 1px;
+        position:relative;
+      }
+    </style>
+  <!-- navbar -->
+  <div data-ng-include=" 'tpl/blocks/header_order.html' " class="app-header navbar">
+  </div>
+  <!-- / navbar -->
+
+  <!-- menu -->
+  <div data-ng-include=" 'tpl/blocks/aside.html' " class="app-aside hidden-xs {{app.settings.asideColor}}">
+  </div>
+  <!-- / menu -->
+
+  <!-- content -->
+  <div class="app-content">
+    <div ui-butterbar></div>
+    <a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside" ></a>
+    <div class="app-content-body fade-in-up">
+        <div class="hbox hbox-auto-xs hbox-auto-sm">
+            <div class="col">
+
+                <div class="fade-in-up" ui-view >
+			<script type="text/ng-template" id="thongbaotest.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-11 pull-left no-padder" style="text-align: center;">
+                    <h4 class="modal-title">Thông báo</h4>
+               	</div>
+               	<button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+          	 </div>
+        </div>
+   	</div>
+	<div class="modal-body wrapper-md text-base">
+		<div style="border-bottom: 1px solid #dee5e7;margin-bottom:10px;">
+		<p>Bạn chưa đăng kí dịch vụ fulfillment</p>
+		<p>Liên hệ với chúng tôi ngay để xử dụng ngay với nhiều tiện ích:</p>
+		<p>-Sử dụng kho hàng boxme/shipchung trên toàn quốc</p>
+		<p>- Tạo ngay đơn hàng từ sản phẩm trong kho</p>
+		<p> Mọi góp ý cho BoxMe.vn, quý khách vui lòng gưi về email hotro@boxme.vn.</p>
+		</div>
+	
+	<button class="btn btn-success" ng-click="cancel()">Tôi đã hiểu</button>
+	
+	</div>
+	</script>
+                </div>
+            </div>
+        </div>
+    </div>    
+  </div>
+  <!-- /content -->
+
+<script id="PopupCreate.html" type="text/ng-template">
+    <div ng-include="'tpl/ticket/modal.create.ticket.html'"></div>
+</script>
+  <!-- footer -->
+  <div class="app-footer wrapper b-t bg-light">
+    <span class="pull-right"><a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span>
+    &copy;  {{keyLang == 'vi' ? site.titleFooter : site.titleFooter_en}}
+  </div>
+  <!-- / footer -->

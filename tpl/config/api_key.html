@@ -1,0 +1,281 @@
+<div ng-controller="ApiKeyCtrl" tour-step order="17" content="Cấu hình Api Key" placement="top" on-next="onTourEnd()">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b" tour-step order="18" content="Phân quyền và quản lý tài khoản con" placement="top">
+        <div class="row">
+            <div class="col-lg-5 padder-lg">
+             <h2 class="font-thin m-n">API KEY</h2>
+         </div>
+         <div class="col-lg-7">
+            <button class="btn btn-lg btn-success pull-right" ng-click="add_key()"><i class="fa fa-plus"></i> {{'Api_TaoKey' | translate}}<!--  Tạo Key --></button>
+        </div>
+    </div>
+    <div class="row m-t-lg m-b-lg">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label class="control-label padder text-lgx">{{'Api_GioiThieuAPI' | translate}}<!-- Giới thiệu về API --></label>
+                <div class="col-lg-12">
+                    <span>
+                        {{'Api_SCChoPhepKetNoiTrucTiep' | translate:{isShipchung : isShipchung} }}<!-- Shipchung api cho phép lập trình viên kết nối trực tiếp với hệ thống Shipchung để có thể tạo đơn hàng và lấy  các thông tin về đơn hàng của bạn -->
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / header -->
+<!--Content-->
+<div class="wrapper b-b bg-white text-center">
+    <span ng-show="!list_data.length && !wating">{{'Api_BanChuaTaoAPI' | translate}}<!-- Bạn chưa tạo Api key nào cho phép việc kết nối --></span>
+    <span ng-show="wating" class="text-center"> <i class="text-3x fa fa-spinner fa-spin"></i></span>
+    <form name="form_config_accounting" role="form" class="form-horizontal form-validation" ng-show="list_data.length && !wating">
+        <table class="table table-condensed">
+            <thead>
+                <th>
+                  {{'Api_ThoiGianTao' | translate}}  <!-- Thời gian tạo -->
+              </th>
+              <th>
+                API KEY
+            </th>
+            <th>
+                {{'Api_TuDongDuyet' | translate}}<!-- Tự động duyệt đơn -->
+            </th>
+            <th>
+                Active
+            </th>
+            <th>
+                 {{'Api_TuDongChoXem' | translate}}
+            </th>
+        </thead>
+        <tbody> 
+            <tr ng-repeat="item in list_data">
+                <td class="text-left">
+                    {{ item.time_create*1000|date:"dd-MM-yyyy  HH:mm"}}
+                </td>
+                <td class="text-left">
+                    {{item.key}}
+                </td>
+                <td class="text-left">
+                    <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                      <input type="checkbox" 
+                      ng-model="item.auto" 
+                      ng-checked="item.auto == 1"
+                      ng-true-value="1"  
+                      ng-false-value="0" 
+                      ng-change="edit_auto(item)"  
+                      />
+                      <i></i>
+                  </td>
+                <td class="text-left">
+                    <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                      <input type="checkbox" 
+                      ng-model="item.active" 
+                      ng-checked="item.active == 1"
+                      ng-true-value="1"  
+                      ng-false-value="0" 
+                      ng-change="edit_key(item)"  
+                      />
+                      <i></i>
+                  </label>
+                  <span ng-if="item.accept_zalo">(Integrate Zalo)</span>
+              </td>
+              <td class="text-left">
+                <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                  <input type="checkbox" 
+                  ng-model="item.checking" 
+                  ng-checked="item.checking == 1"
+                  ng-true-value="1"  
+                  ng-false-value="0" 
+                  ng-change="edit_check(item)"  
+                  />
+                  <i></i>
+              </label>
+          </td>
+          </tr>
+      </tbody>
+  </table>
+</form>
+</div>
+<!--/ Content-->
+<div class="wrapper"> </div>
+<div class="wrapper bg-light lter b-b" tour-step order="18" content="Phân quyền và quản lý tài khoản con" placement="top">
+    <div class="row">
+        <div class="col-lg-5 padder-lg">
+         <h2 class="font-thin m-n">Webhooks API</h2>
+         
+     </div>
+     <div class="col-lg-7">
+         <div class=" pull-right">
+            <button class="btn btn-lg btn-success pull-right" ng-click="add_api()" style="min-width:175px"><i class="fa fa-plus"></i> {{'Add_Webhooks' | translate}}</button>
+            <br>
+            
+         </div>
+         <div class="pull-right">
+           <a ng-show="list_api.length >=1 && !wating" href="http://sandbox.shipchung.vn/webhook-test/" target="_blank" style="margin-right: 10px;min-width:175px" type="button" class="btn btn-lg btn-info pull-right"> Test now</a>
+         </div>
+        
+    </div>
+</div>
+</div>
+<div class="wrapper b-b bg-white text-center">
+    <span ng-show="!list_api.length && !wating">{{'Api_BanChuaTaoAPI' | translate}}</span>
+    <span ng-show="wating" class="text-center"> <i class="text-3x fa fa-spinner fa-spin"></i></span>
+    
+    <form name="form_config_accounting" role="form" class="form-horizontal form-validation" ng-show="list_api.length && !wating">
+        <table class="table table-condensed">
+            <thead>
+                <th>
+                    Endpoint
+                </th>
+                <th>
+                    Event
+                </th>
+                <th>
+                    Active
+                </th>
+            </thead>
+            <tbody ng-repeat="value in list_api"> 
+                <tr>
+                    <td width="10%" class="text-left">
+                       <strong>{{value.link}}</strong>
+                   </td>
+                   <td></td>
+                   <td class="text-right">
+                       <strong><button ng-disabled="delete_api_waiting" ng-if="value.data" class="btn m-b-xs w-xs btn-danger btn-rounded" ng-click="delete_api(value.link)"><i class="fa-1x fa fa-spinner fa-spin" ng-if="delete_api_waiting"></i> {{'Btt_delete' | translate}}</button></strong>
+                   </td>
+                </tr>
+                <tr ng-repeat="item in value.data">
+                  <td></td>
+                  <td class="text-left">{{list_group[item.status_group]}}</td>
+                  <td class="text-left">
+                          <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                            <input type="checkbox" 
+                            ng-model="item.active" 
+                            ng-checked="item.active == 1"
+                            ng-true-value="1"  
+                            ng-false-value="0" 
+                            ng-change="edit_api(value)"  
+                            />
+                            <i></i>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+  </table>
+</form>
+</div>
+<div class="wrapper bg-light lter b-b" tour-step order="18" content="Phân quyền và quản lý tài khoản con" placement="top">
+    <div class="row">
+        <div class="col-lg-12 padder-lg">
+            <h2 class="font-thin m-n">Kho hàng mặc định khi đồng bộ đơn hàng</h2>
+        </div>
+    </div>
+</div>
+<div class="clearfix wrapper b-b bg-white text-center">
+    <form class="form-horizontal form-validation" ng-submit="ChangeConfig()" role="form">
+        <div class="col-lg-4">
+            <ui-select ng-model="config_inventory" name="inventory" ng-disabled="disabled" on-select="ChangeConfigInventory(config_inventory)" required>
+                <ui-select-match placeholder="{{'OBG_KhoHang' | translate}}">{{$select.selected.name }}</ui-select-match>
+                <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                <ui-select-choices group-by="'inventory'" repeat="value in list_inventory | filter: $select.search track by $index">
+                    <span>{{value.name + ' - ' + value.phone}}
+                        <small ng-if="value.distance" class="text-info pull-right">cách đây : {{value.distance}} km</small>
+                        <br/>
+                        <span>{{value.full_address}} </span>
+                    </span>
+                </ui-select-choices>
+            </ui-select>
+
+        </div>
+        <button type="submit" style="float:left"  class="btn btn-success">
+            {{'Btt_save' | translate}}
+        </button>&nbsp;&nbsp;
+    </form>
+</div>
+
+<div ng-include="'tpl/stores/shopify/shopify.html'"></div>
+<div ng-include="'tpl/stores/magento/magento.html'"></div>
+<div ng-include="'tpl/stores/lazada/lazada.html'"></div>
+<div ng-include="'tpl/stores/woocommerce/woocommerce.html'"></div>
+<div ng-include="'tpl/stores/etsy/etsy.html'"></div>
+<div ng-include="'tpl/stores/ebay/ebay.html'"></div>
+<div ng-include="'tpl/stores/haravan/haravan.html'"></div>
+<div ng-include="'tpl/stores/robins/robins.html'"></div>
+<div ng-include="'tpl/stores/zalo/zalo.html'"></div>
+<div ng-include="'tpl/stores/shopee/shopee.html'"></div>
+
+
+<script type="text/ng-template" id="ModalAddStore.html">
+    <div ng-include="'tpl/stores/shopify/modal_shopify_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreShopify.html">
+    <div ng-include="'tpl/stores/shopify/modal_shopify_trial_store.html'"></div>
+</script>
+
+<script type="text/ng-template" id="ModalMagentoAddStore.html">
+    <div ng-include="'tpl/stores/magento/modal_magento_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreMagento.html">
+    <div ng-include="'tpl/stores/magento/modal_magento_trial_store.html'"></div>
+</script>
+
+<script type="text/ng-template" id="ModalLazadaAddStore.html">
+    <div ng-include="'tpl/stores/lazada/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreLazada.html">
+    <div ng-include="'tpl/stores/lazada/modal_trial_store.html'"></div>
+</script>
+
+<script type="text/ng-template" id="ModalWoocommerceAddStore.html">
+    <div ng-include="'tpl/stores/woocommerce/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreWoocommerce.html">
+    <div ng-include="'tpl/stores/woocommerce/modal_trial_store.html'"></div>
+</script>
+<!-- Etsy -->
+<script type="text/ng-template" id="ModalEtsyAddStore.html">
+    <div ng-include="'tpl/stores/etsy/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreEtsy.html">
+    <div ng-include="'tpl/stores/etsy/modal_trial_store.html'"></div>
+</script>
+<!-- Ebay -->
+<script type="text/ng-template" id="ModalEbayAddStore.html">
+    <div ng-include="'tpl/stores/ebay/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreEbay.html">
+    <div ng-include="'tpl/stores/ebay/modal_trial_store.html'"></div>
+</script>
+<!-- Haravan -->
+<script type="text/ng-template" id="ModalHaravanAddStore.html">
+    <div ng-include="'tpl/stores/haravan/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreHaravan.html">
+    <div ng-include="'tpl/stores/haravan/modal_trial_store.html'"></div>
+</script>
+<!-- Robins -->
+<script type="text/ng-template" id="ModalRobinsAddStore.html">
+    <div ng-include="'tpl/stores/robins/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreRobins.html">
+    <div ng-include="'tpl/stores/robins/modal_trial_store.html'"></div>
+</script>
+<!-- Zalo -->
+<script type="text/ng-template" id="ModalZaloAddStore.html">
+    <div ng-include="'tpl/stores/zalo/modal_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreZalo.html">
+    <div ng-include="'tpl/stores/zalo/modal_trial_store.html'"></div>
+</script>
+
+<!-- Shopee -->
+<script type="text/ng-template" id="ModalShopeeAddStore.html">
+    <div ng-include="'tpl/stores/shopee/modal_shopee_add_store.html'"></div>
+</script>
+<script type="text/ng-template" id="ModalTrialStoreShopee.html">
+    <div ng-include="'tpl/stores/shopee/modal_shopee_trial_store.html'"></div>
+</script>
+
+<!-- Error Zalo -->
+<script type="text/ng-template" id="ModalZaloError.html">
+    <div ng-include="'tpl/stores/zalo/modal_error_store.html'"></div>
+</script>

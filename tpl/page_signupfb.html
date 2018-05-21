@@ -1,0 +1,75 @@
+<div class="container col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4"  ng-controller="SignupFbController" ng-init="app.settings.container = false;" ng-show="user.profile_id > 0">
+    <a href class="navbar-brand block m-t">
+     <img ng-src="{{site.login.logo}}" alt="{{app.name}}" style="max-height: 100px"/></a>
+    <!-- <img src="img/logo_to.png" alt="{{app.name}}" style="max-height: 100px"/> --></a>
+    <div class="m-b-lg">
+        <div class="wrapper text-center">
+            <strong>{{keyLang=='vi' ? site.login.title : site.login.title_en}}
+            <!-- Hệ thống quản lý đơn hàng Shipchung.vn dành cho người bán --></strong>
+        </div>
+
+        <form name="frm_register" class="form-horizontal form-validation padder">
+            <p class="text-center"><small>Quý khách vui lòng kiểm tra và cập nhật chính xác các thông tin dưới đây để bắt đầu sử dụng.</small></p>
+            <div class="text-danger wrapper text-center" ng-show="authError">
+                {{authError}}
+            </div>
+            <div class="clearfix">&nbsp;</div>
+            <div class="form-group pull-in clearfix">
+                <div class="col-sm-3">
+                    <select class="form-control" ng-model="user.identifier" required >
+                        <option value="Anh">Anh</option>
+                        <option value="Chi">Chị</option>
+                    </select>
+                </div>
+                <div class="col-sm-9 no-padder-l">
+                    <input type="text" placeholder="{{'login.namefb' | translate}}" class="form-control" ng-model="user.fullname"  required />
+                </div>
+            </div>
+
+            <div class="form-group padder">
+                <input type="text" placeholder="{{'login.sdt' | translate }} (*)" class="form-control" ng-minlength="9" ng-maxlength="12" ng-model="user.phone" required >
+            </div>
+
+            <div class="form-group padder">
+                <input type="email" placeholder="{{'login.emailfb' | translate }}" class="form-control" ng-maxlength="100" ng-model="user.email" required>
+            </div>
+
+            <div class="form-group padder">
+                <input type="password" name="password" placeholder="{{'login.pass' | translate }} (*)" ng-minlength="6" class="form-control " ng-model="user.password" ng-maxlength="100" required />
+            </div>
+
+            <div class="form-group padder">
+                <input class="form-control" ng-maxlength="200" ng-model="user.address" details="autocomplete_details"  google-autocomplete placeholder="{{'login.addressInvent' | translate}}(*)"  required>
+            </div>
+
+            <div class="form-group padder">
+                <district-from-google-place ng-model="user.location" default-district="user.location.district_id" details="autocomplete_details" placeholder="{{'login.address' | translate}}"></district-from-google-place required>
+            </div>
+
+            <div class="form-group padder">
+                <select
+                        boxme-ward-by-district
+                        district-id="user.location.district_id"
+                        ward-id    = "user.location.ward_id"
+                        default-label="Khu vực (phường xã)"
+                        ng-model="user.location.ward_id"
+                        required
+                        class="form-control">
+                </select>
+            </div>
+
+            <div class="checkbox" ng-init="agree = true">
+                <label class="i-checks">
+                    <input type="checkbox" ng-model="agree" required><i></i>  {{'login.Yes' | translate:{isShipchung : isShipchung} }}<!-- Tôi đồng ý với chính sách dịch vụ của Shipchung.vn -->
+                </label>
+            </div>
+
+            <div class="form-group padder m-t">
+                <button type="submit" class="btn btn-lg btn-success r-2x btn-block" ng-click="signup(user)" ng-disabled='frm_register.$invalid || !agree'>{{'Btt_update' | translate}}<!-- Cập nhật --></button>
+            </div>
+
+
+        </form>
+    </div>
+    <div class="text-center" ng-include="'tpl/blocks/page_footer.html'"></div>
+</div>

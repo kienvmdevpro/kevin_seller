@@ -1,0 +1,290 @@
+<div ng-controller="BillCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2"><i class="fa fa-file-text text-info"></i> {{'Bill_HoaDon' | translate}}<!-- Hóa đơn --></span>
+    </div>
+    
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form class="form-validation" role="form" name="frmSearch">
+                        <div class="row m-b-sm">
+
+                            <div class="col-lg-3">
+                                <input type="number" class="form-control" placeholder="{{'Bill_MaHoaDon' | translate}}"
+                                       ng-model="search"
+                                        />
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control" placeholder="{{'Bill_TuNgay' | translate}}"
+                                       ng-model="time_start"
+                                       datepicker-popup="dd-MM-yyyy"
+                                       is-open="time_start_open"
+                                       datepicker-options="dateOptions"
+                                       ng-required="true"
+                                       close-text="Close"
+                                       ng-click="time_start_open = true"
+                                        />
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" class="form-control" placeholder="{{'Bill_DenNgay' | translate}}"
+                                       datepicker-popup="dd-MM-yyyy"
+                                       is-open="time_end_open"
+                                       datepicker-options="dateOptions"
+                                       date-disabled="disabled(date, mode)"
+                                       close-text="Close"
+                                       ng-model="time_end"
+                                       ng-click="time_end_open = true"
+                                        />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <button class="btn btn-info" ng-disabled="frmSearch.$invalid" ng-click="setPage()" type="button"><i class="glyphicon glyphicon-search"></i> {{'Btt_search' | translate}}<!-- Tìm kiếm --></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table-condensed table-hover w-full">
+                            <thead>
+                                <th>
+                                    #
+                                </th>
+                                <th class="text-center">
+                                    {{'Bill_MaHoaDon' | translate}} <!-- Mã hóa đơn -->
+                                </th>
+                                <th class="text-center">
+                                   {{'Bill_DonThanhCong' | translate}}<!--  Đơn thành công -->
+                                </th>
+                                <th class="text-center">
+                                   {{'Bill_DonChuyenHoan' | translate}}<!--  Đơn Chuyển hoàn -->
+                                </th>
+                                <th class="text-center">
+                                   {{'Bill_DonTon' | translate}}<!--  Đơn Tồn -->
+                                </th>
+                                <th class="text-right">
+                                   {{'Bill_TongPhi' | translate}}<!--  Tổng phí -->
+                                </th>
+                                <th class="text-right">{{'Bill_TongThuHo' | translate}}<!-- Tổng thu hộ --></th>
+                                <th width="5%"></th>
+                            </thead>
+                            <tbody ng-repeat="item in list_data">
+                                <tr class="pointer" ng-class="{'success': item.show}" ng-click="show_detail(item)">
+                                    <td class="text-center">
+                                        {{item_stt + $index + 1}}
+                                    </td>
+                                    <td class="text-center">
+                                        #{{item.id}}<br />
+                                        <!-- Tháng -->{{'Bill_Thang' | translate}} {{item.month}}/{{item.year}}
+                                    </td>
+                                    <td class="text-center">
+                                        {{item.total_success + item.total_lsuccess}}
+                                    </td>
+                                    <td class="text-center">
+                                        {{item.total_return + item.total_lreturn}}
+                                    </td>
+                                    <td class="text-center">
+                                        {{item.total_backlog}}
+                                    </td>
+                                    <td class="text-right">
+                                        <!-- {{sum_fee(item) | vnNumber}}{{ViewHomeCurrency}} -->
+                                        <convert-currency home-currency="sum_fee(item)"></convert-currency>
+	                                    <!-- <span ng-if="convert_currency(sum_fee(item))">
+							               ({{convert_currency(sum_fee(item)) || '' | number:4 }} {{viewCurrency}})
+							            </span> -->
+                                    </td>
+                                    <td class="text-right">
+                                        <!-- {{item.total_money_collect + item.total_lmoney_collect | vnNumber}}{{ViewHomeCurrency}} -->
+	                                    <convert-currency home-currency="item.total_money_collect + item.total_lmoney_collect"></convert-currency>
+	                                    <!-- <span ng-if="convert_currency(item.total_money_collect + item.total_lmoney_collect)">
+							               ({{convert_currency(item.total_money_collect + item.total_lmoney_collect) || '' | number:4 }} {{viewCurrency}})
+							            </span> -->
+                                    </td>
+                                    <td>
+                                        <div class="btn-group dropdown" dropdown>
+                                            <button class="btn btn-success btn-sm dropdown-toggle" dropdown-toggle type="button" data-toggle="dropdown" >{{'Bill_HanhDong' | translate}}<!-- Hành động --> <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a      
+                                                            ng-href="{{link_excel}}order-invoice/exportexcel?id={{item.id}}&cmd=export&access_token={{userInfo.token}}"
+                                                            target="_blank"
+                                                            >
+                                                        <i class="fa fa-file-excel-o"></i>
+                                                       {{'Btt_excel' | translate}} <!-- Xuất Excel -->
+                                                    </a>
+                                                </li>
+                                                <li> <a
+                                                        ui-sref="print_invoice({id: item.id})"
+                                                        target="_blank"
+                                                        >
+                                                    <i class="fa fa-print"></i>
+                                                    {{'Bill_In'| translate}}<!-- In -->
+                                                </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-show="item.show">
+                                    <td colspan="8">
+                                        <table class="table table-condensed">
+                                            <tbody>
+                                                <!--tr>
+
+                                                    <td class="text-left"><strong>Tổng số tiền cần thanh toán</strong> : {{sum_fee(item) | vnNumber}}đ</td>
+                                                    <td colspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left"><strong>Tổng tiền thu hộ</strong> : {{item.total_money_collect + item.total_lmoney_collect | vnNumber}}đ</td>
+                                                    <td colspan="2"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">&nbsp;</td>
+                                                </tr-->
+
+                                                <tr>
+                                                    <td><strong>{{'Bill_TongPhiVanChuyen' | translate}}<!-- Tổng phí vận chuyển --></strong></td>
+                                                    <td class="text-right"><!-- {{item.total_sc_pvc + item.total_lsc_pvc | vnNumber}}{{ViewHomeCurrency}} -->
+					                                    <convert-currency home-currency="item.total_sc_pvc + item.total_lsc_pvc"></convert-currency>
+					                                    <!-- <span ng-if="convert_currency(item.total_sc_pvc + item.total_lsc_pvc)">
+											               ({{convert_currency(item.total_sc_pvc + item.total_lsc_pvc) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+                                                    </td>
+                                                    <td class="text-right"><strong>{{'Bill_TongChiPhiPhatSinh' | translate}}<!-- Tổng chi phí phát sinh --></strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{'Bill_TongCod' | translate}}<!-- Tổng phí CoD --></strong></td>
+                                                    <td class="text-right"><!-- {{item.total_sc_cod + item.total_lsc_cod | vnNumber}}{{ViewHomeCurrency}} -->
+					                                    <convert-currency home-currency="item.total_sc_cod + item.total_lsc_cod"></convert-currency>
+					                                    <!-- <span ng-if="convert_currency(item.total_sc_cod + item.total_lsc_cod)">
+											               ({{convert_currency(item.total_sc_cod + item.total_lsc_cod) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+										            </td>
+                                                    <td class="text-right"><!-- {{sum_fee(item) | vnNumber}}{{ViewHomeCurrency}} -->
+                                                    	<convert-currency home-currency="sum_fee(item)"></convert-currency>
+					                                    <!-- <span ng-if="convert_currency(sum_fee(item))">
+											               ({{convert_currency(sum_fee(item)) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+										            </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{'Bill_TongPhiBH' | translate}}<!-- Tổng phí bảo hiểm --></strong></td>
+                                                    <td class="text-right"><!-- {{item.total_sc_pbh + item.total_lsc_pbh | vnNumber}}{{ViewHomeCurrency}} -->
+					                                    <convert-currency home-currency="item.total_sc_pbh + item.total_lsc_pbh"></convert-currency>
+					                                    <!-- <span ng-if="convert_currency(item.total_sc_pbh + item.total_lsc_pbh)">
+											               ({{convert_currency(item.total_sc_pbh + item.total_lsc_pbh) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+										            </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{'Bill_TongPhiVK' | translate}}<!-- Tổng phí vượt cân --></strong></td>
+                                                    <td class="text-right"><!-- {{item.total_sc_pvk + item.total_lsc_pvk | vnNumber}}{{ViewHomeCurrency}} -->
+                                                    	<convert-currency home-currency="item.total_sc_pvk + item.total_lsc_pvk"></convert-currency>
+					                                   <!--  <span ng-if="convert_currency(item.total_sc_pvk + item.total_lsc_pvk)">
+											               ({{convert_currency(item.total_sc_pvk + item.total_lsc_pvk) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+										            </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{'Bill_TongPhiChuyenHoan' | translate}}<!-- Tổng phí chuyển hoàn --></strong></td>
+                                                    <td class="text-right"><!-- {{item.total_sc_pch + item.total_lsc_pch | vnNumber}}{{ViewHomeCurrency}} -->
+                                                    	<convert-currency home-currency="item.total_sc_pch + item.total_lsc_pch"></convert-currency>
+					                                    <!-- <span ng-if="convert_currency(item.total_sc_pch + item.total_lsc_pch)">
+											               ({{convert_currency(item.total_sc_pch + item.total_lsc_pch) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+										            </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{'Bill_TongTienThuHo' | translate}}<!-- Tổng tiền thu hộ --></strong></td>
+                                                    <td class="text-right"><!-- {{item.total_money_collect + item.total_lmoney_collect | vnNumber}}{{ViewHomeCurrency}} -->
+                                                    	<convert-currency home-currency="item.total_money_collect + item.total_lmoney_collect"></convert-currency>
+					                                    <!-- <span ng-if="convert_currency(item.total_money_collect + item.total_lmoney_collect)">
+											               ({{convert_currency(item.total_money_collect + item.total_lmoney_collect) || '' | number:4 }} {{viewCurrency}})
+											            </span> -->
+										            </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">&nbsp;</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td colspan="3">{{'Bill_ThongKeVDTrongKy' | translate}}<!-- Thống kê vận đơn trong kỳ : --><br />
+                                                       {{'Bill_ThoiGianLayHang' | translate}} <!-- Thời gian lấy hàng -->:  00:00:00 {{'Bill_Ngay' | translate}} 1/{{item.month}}/{{item.year}} -> 23:59:59  {{'Bill_Ngay' | translate}} 31/{{item.month}}/{{item.year}}<br />
+                                                       {{'Bill_ThoiGianThanhCong' | translate}}<!--  Thời gian thành công  -->:  00:00:00  {{'Bill_Ngay' | translate}} 1/{{item.month}}/{{item.year}} -> 23:59:59  {{'Bill_Ngay' | translate}} 14/{{item.month == 12 ? 1 : item.month + 1}}/{{item.month == 12 ? item.year +1 : item.year}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> {{'Bill_ChuyenHoanThanhCong' | translate}}<!-- Chuyển thành công trong kỳ --></td>
+                                                    <td class="text-right">{{item.total_success}} {{'Bill_VanDon' | translate}}<!-- vận đơn --></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{'Bill_ChuyenHoan' | translate}}<!-- Chuyển hoàn --></td>
+                                                    <td class="text-right">{{item.total_return}} {{'Bill_VanDon' | translate}} <!-- vận đơn --></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{'Bill_TonChuyenSangKyTiep' | translate}} <!-- Tồn chuyển sang kỳ tiếp theo (còn lại) --></td>
+                                                    <td class="text-right">{{item.total_return}} {{'Bill_VanDon' | translate}} <!-- vận đơn --></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">{{'Bill_ThongKeVanDonTonKyTruoc' | translate}}<!-- Thống kê vận đơn tồn kỳ trước : --><br />
+                                                        <!-- Thời gian lấy hàng -->{{'Bill_ThoiGianLayHang' | translate}}  :  00:00:00  1/{{item.month}}/{{item.year}}<br />
+                                                        <!-- Thời gian thành công -->{{'Bill_ThoiGianThanhCong' | translate}} :  00:00:00  1/{{item.month}}/{{item.year}} -> 23:59:59  14/{{item.month == 12 ? 1 : item.month + 1}}/{{item.month == 12 ? item.year +1 : item.year}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td> {{'Bill_ChuyenHoanThanhCong' | translate}}<!-- Chuyển thành công trong kỳ --></td>
+                                                    <td class="text-right">{{item.total_lsuccess}}  {{'Bill_VanDon' | translate}}<!-- vận đơn --></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{'Bill_ChuyenHoan' | translate}}<!-- Chuyển hoàn --></td>
+                                                    <td class="text-right">{{item.total_lreturn}} {{'Bill_VanDon' | translate}} <!-- vận đơn --></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="!list_data.length && !waiting">
+                                <td colspan="8" class="text-center">{{'ERR_search_null' | translate}}<!-- Không có dữ liệu --></td>
+                            </tbody>
+                            <tbody ng-if="waiting">
+                                <td colspan="8" class="text-center">
+                                    <i class="text-3x fa fa-spinner fa-spin"></i>
+                                </td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

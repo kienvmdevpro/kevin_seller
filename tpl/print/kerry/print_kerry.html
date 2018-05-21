@@ -1,0 +1,478 @@
+<script>
+$(document).ready(function(){
+    $("link[rel='stylesheet']").remove();
+}); 
+</script>
+<style>
+		.bg-orange {
+		    background-color: #ffa931;
+		    color: #fff;
+		}
+		.btn {
+		    border-radius: 2px;
+		    font-weight: 500;
+		}
+	.settings > .btn_print, .settings > .btn_type {
+	    border-color: #dee5e7;
+	    border-right-width: 0;
+	    right: 0px;
+	    padding: 10px 15px;
+	    position: absolute;
+	}
+	.settings > .btn_print {
+	    border-color: #dee5e7;
+	    border-right-width: 0;
+	    right: 0px;
+	    padding: 10px 15px;
+	    position: absolute;
+	    top: 10px;
+	}
+		
+		 @media print {
+			 @page {
+			    margin: 0;
+			    size: portrait;
+			 }
+			 .settings > .btn_print {
+			 display:None;
+			 }
+		 }
+        .portrait {
+        padding: 10px ;
+        margin: 3px 3px ;
+        width: 8.264in ;
+        height: 5.3in ;
+        font: 0.9em Arial, Helvetica, sans-serif ;
+        }
+
+        .title {
+        width: 0.22in ;
+        height: 0.194in ;
+        text-align: center ;
+        background-color: #ec6c00 ;
+        font-weight: bold ;
+        font-size: 0.8em ;
+        color: #fff ;
+        }
+
+        hr {
+        width: 100% ;
+        height: 0.5px ;
+        border-top: 1px solid #000 ;
+        }
+
+        td {
+        font-size: 11px ;
+        font-family: Arial, Helvetica, sans-serif ;
+        margin: 4px 0px ;
+        }
+		td {
+        font-size: 11px;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 4px 0px;
+        }
+        .m-checkbox {
+        display: block ;
+        padding: 7px ;
+        width: 20px ;
+        height: 20px ;
+        text-align: center ;
+        font-weight: bold ;
+        border: 1px solid #000 ;
+        line-height: 24px ;
+        }
+
+        .table-bordered {
+        border-collapse: collapse ;
+        }
+
+        .table-bordered tr td {
+        border: 1px solid #333 ;
+        }
+
+        #goods-metadata tr td {
+        padding: 3px 2px ;
+        }
+
+        .label {
+        font-weight: normal ;
+        }
+
+        .block-center, .block-center-input, .block-center-input-black {
+        padding: 5px 5px ;
+        border: 1px solid #ddd ;
+        text-align: center ;
+        margin: 2px 0px ;
+        }
+
+        .block-center-input {
+        border: 1px solid #999 ;
+        color: #eee ;
+        padding: 4px 2px ;
+        }
+
+        .block-center-input {
+        color: #000 ;
+        }
+
+        .content {
+        }
+/* @font-face { font-family:'Code 128'; src: url('tpl/print/kerry/font/Code128.woff2') format('woff2'),url('tpl/print/kerry/font/Code128.woff') format('woff'),url('tpl/print/kerry/font/Code128.ttf') format('truetype'); }
+ */ @font-face { font-family:'Code 128';  src: url('tpl/print/kerry/font/WebCode128H3.eot');
+        src: url('tpl/print/kerry/font/WebCode128H3.otf') format('opentype'), url('tpl/print/kerry/font/WebCode128H3.woff') format('woff'); }
+        h11 {
+        font-family: 'Code 128' 
+        }
+        .barcodeVal {
+        font-weight: normal ;
+        font-style: normal ;
+        line-height: normal ;
+        font-family: 'Code 128', sans-serif ;
+        font-size: 32px ;
+        }
+
+        /* required */
+        .barcodeVal {
+        white-space: pre ;
+        }
+        #qrcode {
+       width:160px ;
+        height:160px;
+        margin-top:15px;
+        }
+    </style>
+    <script src="tpl/print/kerry/BillShipchung_files/barcode.js"></script>
+    <script src="tpl/print/kerry/BillShipchung_files/code128auto.js"></script>
+    <script src="tpl/print/kerry/BillShipchung_files/app-code128auto.js"></script>
+    <script src="tpl/print/kerry/BillShipchung_files/qrcode.js"></script>
+    <script src="tpl/print/kerry/BillShipchung_files/qrcode.min.js"></script>
+<div  class="page" ng-controller="PrintOrderKerryController"  ng-init="app.settings.headerFixed = false;app.settings.color = true"> 
+<div ng-repeat="item in data">
+<div class="portrait" id="print">
+	
+	<div style="float: left; width: 280px;">
+	    <table style="width:290px;">
+	        <tbody><tr>
+	            <td class="title">1</td>
+	            <td><hr></td>
+	        </tr>
+	        <tr>
+	            <td colspan="2">
+	                <table ng-if="!label_config[item.from_user_id]">
+		                    <tbody><tr>
+		                        <td colspan="2">
+		                        	<span class="label">Người gửi:</span>
+		                        	{{inventory[item.from_address_id] ? inventory[item.from_address_id].user_name : user[item.from_user_id]['fullname']}}
+		                        </td>
+		                    </tr>
+		                    <tr><td colspan="2"><span class="label">Địa chỉ:</span> 
+		                   			{{item.from_address}} {{ward[item.from_ward_id] || ' '}}
+		                    	</td>                  
+		                    </tr>
+		                    <tr>
+			                    <td align="center" class="block-center" width="145"><div style="padding: 3px;">
+			                    	<strong>{{city[item.from_city_id] || ' '}}</strong></div>
+			                    </td>                      
+			                    <td align="center" class="block-center" width="145"><div style="padding: 3px;">
+				                    <strong>{{province[item.from_district_id] || ' '}}</strong>
+				                    </div>
+			                    </td>                  
+			                 </tr>
+		                    <tr><td colspan="2"><span class="label">Điện thoại:</span> 
+		                    	<strong>{{inventory[item.from_address_id] ? inventory[item.from_address_id].phone : user[item.from_user_id]['phone']}}</strong>
+		                    </td>                  </tr>
+		                </tbody>
+	                </table>
+	                <table ng-if="label_config[item.from_user_id]">
+		                    <tbody><tr>
+		                        <td colspan="2">
+		                        	<span class="label">Người gửi:</span>
+		                        	{{label_config[item.from_user_id].brand_name}}
+		                        </td>
+		                    </tr>
+		                    <tr><td colspan="2"><span class="label">Địa chỉ:</span> 
+		                   			{{item.from_address}} {{ward[item.from_ward_id] || ' '}}
+		                    	</td>                  
+		                    </tr>
+		                    <tr>
+			                    <td align="center" class="block-center" width="145"><div style="padding: 3px;">
+			                    	<strong>{{city[item.from_city_id] || ' '}}</strong></div>
+			                    </td>                      
+			                    <td align="center" class="block-center" width="145"><div style="padding: 3px;">
+				                    <strong>{{province[item.from_district_id] || ' '}}</strong>
+				                    </div>
+			                    </td>                  
+			                 </tr>
+		                    <tr><td colspan="2"><span class="label">Điện thoại:</span> 
+		                    	<strong>{{label_config[item.from_user_id].phone}}</strong>
+		                    </td>                  </tr>
+		                </tbody>
+	                </table>
+	            </td>
+	        </tr>
+	    </tbody>
+		</table>
+		<table style="width:290px;">
+			<tbody><tr>
+				<td class="title">2</td>
+				<td><hr></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<table>
+						<tbody><tr>
+							<td colspan="2"><span class="label">Người nhận:</span> {{item.to_name}}</td>
+						</tr>
+						<tr>
+							<td colspan="2"><span class="label">Địa chỉ:</span>
+							{{item.to_order_address.address}} {{ward[item.to_order_address.ward_id] || ' '}}
+							 </td> 
+						 </tr>
+						<tr>
+							<td align="center" class="block-center" width="145"><p>
+								<strong>{{city[item.to_order_address.city_id] || ' '}}</strong></p>
+							</td>
+							<td align="center" class="block-center" width="145"><p>
+								<strong>{{province[item.to_order_address.province_id] || ' '}}</strong></p>
+							</td>                  
+						</tr>
+						<tr>
+							<td colspan="2"><span class="label">Điện thoại:</span> <strong>{{item.to_phone}}</strong></td>
+						</tr>
+					</tbody></table>
+				</td>
+			</tr>
+		</tbody>
+		</table>
+		<table style="width:290px;">     
+			<tbody>
+				<tr>          
+					<td class="title">3</td><td><hr></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table>
+							<tbody>
+								<tr>
+									<td colspan="2"><span class="label">Nội dung hàng hóa:</span>
+										Thư từ<input style="width: 20px;" type="checkbox" >
+										Hàng hóa<input style="width: 20px;" type="checkbox" value="a" checked="checked">					
+									</td>
+								</tr>                  
+								<tr>
+									<td colspan="2">
+									{{item.product_name}}<br>{{item.order_item.description}}</span><br>
+									<strong ng-if="item.checking == 1">CHO NGƯỜI NHẬN XEM (COI) HÀNG &nbsp;</strong>
+                                      <strong ng-if="item.checking == 2">KHÔNG CHO NGƯỜI NHẬN XEM (COI) HÀNG &nbsp;</strong>
+                                      <strong ng-if="item.fragile == 1">HÀNG DỄ VỠ, CHẤT LỎNG &nbsp;</strong>
+									<!-- <br><br><br> -->
+									</td>                  
+								</tr>
+	
+								<tr>
+									<td align="center" class="block-center-input" style=""><p>Giá SP/Prices :{{item.total_amount || '0' | vnNumber}}đ </p></td>                      
+									<td align="center" class="block-center-input" style="color: #999;"><p><!-- Số VĐ thu hộ / gửi hoàn --></p></td>
+								</tr>                  
+								<tr>
+									<td align="center">Chuyển hoàn <input type="checkbox"> Hủy <input type="checkbox"></td>                      
+									<td align="left" class="block-center-input-black">
+										<span class="label"><b>Thu hộ:</b> </span>
+										<span style="text-align:right;"><strong>{{item.order_detail.money_collect || '0' | vnNumber}}đ</strong></span>
+									</td>                  
+								</tr>
+								<tr> 
+									<td colspan="2" align="center"><br>
+										<p style="font-size:12px;">Cân hàng và đếm kỹ trước khi ký nhận báo ngay cho người gửi khi sai/thiếu hàng</p>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>      
+			</tr>
+			</tbody>
+		</table>
+	
+	</div>
+	<div style="float: left; width: 245px;margin-left:7px;">
+	    <table>
+	        <tbody>
+				<tr>
+					<td colspan="2">
+						<table>
+							<tbody><tr>
+								<td colspan="2" align="center">
+								<!-- src="tpl/print/kerry/BillShipchung_files/logo_black.png" -->
+								<img ng-src="{{item.img_courier ? item.img_courier :'img/logosc.png'}}"   width="220" alt="logo"></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center">
+								<!-- <label class="barcodeVal" style="font-size:20px;padding-top:5px;line-height: 12px;"> -->
+								<img src="data:image/png;base64,{{barcode[item.tracking_code]}}" /><!-- </label> -->
+								<h2 style="font-size: 20px;margin-top: 0;">{{item.tracking_code}}</h2>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center" style="font-size: 1em;">kerryexpress.com.vn <br></td>
+							</tr>
+						</tbody></table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table style="width: 245px;">
+			<tbody>
+				<tr>
+					<td class="title">4</td>
+					<td><hr></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table class="table-bordered" id="goods-metadata" style="width: 245px;">
+							<tbody>
+							<tr>
+								<td align="center" width="33%">Số kiện: <br><br> <b><!-- 1K --></b></td>
+								<td align="center" width="33%">Khối lượng: <br><br> <b>{{item.total_weight || '0' | vnNumber}}(g)</b></td>
+								<td align="center" width="33%">K.lượng qđ<br><br><p><b></b></p></td>
+							</tr>              
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="block-center" style="font-size:0.9em; font-weight: bold; line-height: 18px;">Giao hàng gặp sự cố liên hệ <br>CS: <!-- 01668545454 --></td>
+				</tr>
+			</tbody>
+		</table>
+		<table style="width: 250px;">
+			<tbody>
+			<tr>
+				<td class="title">5</td>
+				<td><hr></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					Thời gian KE(VN) giao hàng: trước 17h ngày nhận hàng <br>
+					Khách hẹn giao lại ngày:.................................<br><br>
+					Giao hàng lần 1 không thành công vì:<br><br>........................................................................<br><br>
+					Giao hàng lần 2 không thành công vì:<br><br>........................................................................<br>
+					Khách hủy đơn không nhận <input type="checkbox"><br>
+					<b>HTTT: Người gửi TTS</b><br>
+					Phát hàng đúng tên người nhận ghi trên vận đơn
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div style="float: left; width: 245px; ">
+	    <table style="width: 250px;">
+	        <tbody>
+				<tr>
+					<td class="title">6</td>
+					<td><hr></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table>
+							<tbody><tr>
+								<td><input type="checkbox" disabled ng-model="item.service_id"  ng-checked="item.service_id == 2" ng-false-value="2" ng-true-value="1" > CPN         			</td>
+								<td><input type="checkbox" disabled ng-model="item.service_id"  ng-checked="item.service_id == 1" ng-false-value="2" ng-true-value="1"> Đường bộ      				</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" disabled>  Hỏa tốc         			</td>
+								<td><input type="checkbox" disabled> 48h      				</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" disabled> Giá rẻ						</td>
+								<td><input type="checkbox" disabled>  Xe nguyên chuyến						</td>
+							</tr>
+						</tbody></table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table style="width: 250px;">
+			<tbody>
+				<tr>
+					<td class="title">7</td>
+					<td><hr></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table style="250px;">
+							<tbody><tr>
+								<td align="center" width="250">Ngày giờ gửi:<p style="margin-bottom: 0px;"> 
+								{{item.time_create * 1000 | date:'dd/MM/yyyy'}}</p>
+								<p> Họ tên, chữ kí người gửi</p><br><br></td>
+							</tr>
+							<tr>
+								<td align="center" width="250" style="line-height: 18px;"><hr>Ngày giờ nhận:<p style="margin-bottom: 0px;"> .......h.......   ......... / ......... / ..........</p><p>Họ tên, chữ kí người nhận</p><br></td>
+							</tr>
+						</tbody></table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table style="width: 250px;">
+			<tbody>
+				<tr>
+					<td class="title">8</td>
+					<td><hr></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<table style="250px;">
+							<tbody><tr>
+								<td align="center" width="250" style="padding: 0px;">
+									Nhân viên trả hàng<br><br><hr>
+									Nhân viên nhận hàng<br><br><hr>
+									Mã khách hàng <p style="font-size: 1.2em;"><b>&nbsp;<!-- 1234567 --></b></p><hr>
+									Số tham chiếu <p style="font-size: 1.2em;"><b>&nbsp;<!-- 123458 --></b></p>
+								</td>
+							</tr>
+						</tbody></table>
+					</td>
+				</tr>
+	
+			</tbody>
+		</table>
+	
+	 </div>
+	
+	<div style="margin-right:15px">
+		<p style="text-align: center;font-weight: bold; ">Lưu ý cho NVGN khi giao hàng SHIPCHUNG <!-- (mã KH: 5018669) --></p>
+	    <p>1. Gọi điện thoại hẹn giờ trước khi đi giao (trước khi ra khỏi bưu cục)</p>
+	    <p>2. Tại điểm giao hàng:</p>
+	    <p style="padding:10px;">* Trong phần nội dung hàng hóa của vận đơn Kerry có ghi chú rõ hai loại hàng để nhân viên giao
+	        hàng phân biệt khi giao cho KH: <br>
+	     + Đơn hàng không xem ( coi ) hàng: khách phải thanh toán tiền trước khi xem hàng
+	        - NVGN thu đủ số tiền thu hộ trên vận đơn trước khi giao hàng cho khách, tuyệt đối không
+	        cho KH mở hàng ra xem trước khi thu tiền và giải thích với KH: “Đây là quy định của
+	        SHIPCHUNG, anh chị nộp tiền trước, sau đó nhận hàng, nếu không ưng ý với món hàng đã
+	        mua, anh chị vui lòng liên hệ với người bán để được hỗ trợ đổi hoặc trả lại sản phẩm”.<br>
+	        + Đơn hàng được xem ( coi ) hàng: cho khách hàng kiểm tra trước khi thu tiền thu hộ ( nếu
+	        có ).<br>
+	        - Khi mở thùng/kiện/gói hàng của SHIPCHUNG, NVGN phải đồng kiểm với người nhận: thông
+	        tin trên vận đơn, hóa đơn (nếu có) và hàng thực tế phải khớp với nhau. Trong trường hợp có
+	        bất cứ sự sai khác nào, NVGN ghi rõ sự sai khác trên vận đơn KTTC và bàn giao điều độ cập
+	        nhật hệ thống để báo SHIPCHUNG.<br>
+	        * Trong trường hợp mất, thiếu, bể vỡ hoặc bất thường khác: Lập biên bản có chữ ký của người
+	        nhận ngay tại thời điểm đồng kiểm với người nhận và bàn giao cho điều độ.<br>
+	        * Nếu KH từ chối nhận hàng sau khi mở hàng ra kiểm tra: NVGN phải thu hồi hàng hóa kèm hóa
+	        đơn chứng từ (nếu có) và mang hàng về bàn giao điều độ, cập nhật lý do cụ thể trên hệ thống.<br>
+	        * Với KH hẹn đến bưu cục nhận hàng: Phải báo cho KH thời gian giữ hàng tối đa 5 ngày làm việc và
+	        thông báo địa chỉ, điện thoại, giờ làm việc của bưu cục để KH đến nhận.</p>
+	</div>
+	<div class="settings panel panel-default">
+        <button class="btn bg-orange btn_print no-shadow pos-abt hidden-print" onClick="window.print();"><i class="fa fa-print"></i> In vận đơn</button>
+        <a class="btn bg-default btn_type no-shadow pos-abt print_type hidden-print" ui-sref="print({code:$stateParams.code})" ><i class="fa fa-gears"></i> In theo A4</a>
+    </div>
+	<div style="display: none; position: fixed; top: 0px; left: 0px; z-index: 60000;">
+		<img style="display: block; position: absolute;">
+		<div style="display: block; background-color: rgba(0, 0, 0, 0.34902); position: absolute;"></div>
+		<canvas width="120" height="60" style="position: absolute; cursor: crosshair; padding: 0px; margin: 0px;"></canvas>
+		<canvas style="position: fixed; top: 20px; right: 20px;"></canvas>
+	</div>
+</div>		
+</div>
+</div>

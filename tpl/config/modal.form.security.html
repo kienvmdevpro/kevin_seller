@@ -1,0 +1,29 @@
+
+    
+    <div class="modal-body wrapper-md">
+      <div class="row">
+          <div class="col-md-12 text-left">
+              <h4 class="m-b-none"><!-- Mã xác nhận qua số điện thoại : -->
+              {{'VER_MaXacNhanQuaSDT' | translate}}</h4>
+              <small><!-- Chúng tôi vừa gửi một tin nhắn văn bản có một mã xác minh tới  -->
+              {{'VER_ChungToiVuaGuiSDTToi' | translate}}<strong>{{phone}}</strong></small>
+          </div>
+
+          <div class="col-sm-6 col-md-6 col-lg-5 m-t-sm">
+              <input ng-model="code"
+                     name="code"
+                     type="text"
+                     class="form-control"
+                     placeholder="{{'VER_NhapMa' | translate}}"
+                     autofocus
+              />
+          </div>
+          <div class="col-lg-1 text-lg no-padder-l" style="margin-top: 13px;">
+              <a class="text-info" tooltip="{{'VER_GuiLai' | translate}}" ng-click="re_send_opt()"><i class="fa fa-refresh"></i></a>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-lg-12 pull-right m-t-sm">
+              <a class="btn r-2x btn-success" ng-disabled="code.length != 6 || waiting" ng-click="run(code)">{{'Problem_XacNhan' | translate}}</a>
+          </div>
+      </div>
+    </div>

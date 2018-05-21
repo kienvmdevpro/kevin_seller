@@ -1,0 +1,103 @@
+<div ng-controller="ConfigCourierCtrl">
+
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n">{{'Courier_CauHinhHVC' | translate }}<!-- Cấu hình hãng vận chuyển --></h3>
+    </div>
+
+    <div class="wrapper b-b bg-white">
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold" >{{'Courier_CauHinhHVC' | translate }}<!-- Cấu hình hãng vận chuyển --></div>
+            <div class="alert alert-info m-b-none text-base">
+                {{'Courier_ApDungDeUuTienHVC' | translate }}<!-- Cấu hình này được áp dụng để lựa chọn ưu tiên hãng vận chuyển khu vực. -->
+            </div>
+            <div class="panel-body table-responsive">
+                <table class="table-condensed w-full table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center v-middle"></th>
+                        <th class="text-center v-middle">{{'Courier_MucDoUuTien' | translate }}<!-- Mức độ ưu tiên --></th>
+                        <th class="text-center v-middle" ng-repeat="item in type_config">{{item.name}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(key, item) in list_courier | orderObjectBy : key" ng-show="item.id != 7">
+                        <td class="v-middle">
+                            <i class="fa fa-truck"></i> {{item.name}}
+                            <!-- br />
+                            <div ng-init="x = 3" class="top text-left text-md pointer w-full">
+                                <rating
+                                    ng-model="priority[item.id]"
+                                    max="5"
+                                    state-on="'fa fa-star text-warning'"
+                                    state-off="'fa fa-star-o text-primary'"
+                                    ng-click="change_priority(item.id, priority[item.id])"
+                                ></rating>
+                            </div -->
+                        </td>
+                        <td class="v-middle">
+                            <select
+                                 class="form-control"
+                                 ng-model="priority[item.id]"
+                                 ng-change="change_priority(item.id, priority[item.id])"
+                                 >
+                                 <option value="">--{{'Courier_MucDoUuTien' | translate}}<!--  Mức độ ưu tiên --> --</option>
+                                <option ng-repeat="types in type_select" value="{{types.value}}">  {{keyLang=='vi' ? types.text: types.text_en}}</option>
+                            </select>
+                        </td>
+                        <td class="text-center v-middle" ng-repeat="it in type_config">
+                            <label class="i-checks i-checks-sm">
+                                <input ng-model="config_courier[item.id][it.id]"
+                                       ng-true-value="1"
+                                       ng-false-value="0"
+                                       ng-checked="config_courier[item.id][it.id] == 1"
+                                       ng-change="save(item.id,it.id,config_courier[item.id][it.id])"
+                                       ng-disabled  = "priority[item.id] == 0"
+                                       type="checkbox"/>
+                                <i></i>
+                            </label>
+                        </td>
+                    </option>
+                    </tbody>
+                </table>
+            </div>
+        </div> <!--/ Panel-->
+
+        <!--div class="panel panel-default">
+            <div class="panel-heading font-bold" >
+                Cấu hình giá trị hàng hóa
+            </div>
+            <div class="alert alert-info m-b-none text-base">
+                Cấu hình này được áp dụng để lựa chọn hãng vận chuyển theo giá trị hàng hóa.
+            </div>
+
+            <div class="panel-body table-responsive">
+                <table class="table-condensed w-full table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center v-middle"></th>
+                        <th class="text-center v-middle" ng-repeat="item in type_config">{{item.name}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key, item) in list_courier | orderObjectBy : key" ng-show="item.id != 7">
+                            <td class="v-middle">
+                                <i class="fa fa-truck"></i> {{item.name}}
+                            </td>
+
+                            <td class="text-center v-middle" ng-repeat="it in type_config">
+                                <a href="javascript:;" class="text-info" e-style="width:100px" tooltip="Giá trị hàng nhỏ nhất" editable-number="courier_ranger[item.id][it.id]['min']" e-min="0" e-max="100000000" onbeforesave="change(item.id, it.id, $data, 'min')">
+                                    {{courier_ranger[item.id][it.id]['min'] || '0' | number}}
+                                </a>
+                                 <i class="fa fa-arrows-h"></i>
+                                <a href="javascript:;" class="text-info" e-style="width:100px" tooltip="Giá trị hàng lớn nhất" editable-number="courier_ranger[item.id][it.id]['max']" e-min="1" e-max="100000000" onbeforesave="change(item.id, it.id, $data, 'max')">
+                                    {{courier_ranger[item.id][it.id]['max'] || '0' | number}}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div-->
+    </div>
+
+</div>

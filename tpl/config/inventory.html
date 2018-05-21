@@ -1,0 +1,234 @@
+<div ng-controller="ConfigInventoryCtrl" tour-step order="7" content="Cấu hình kho hàng để chúng tôi có thể đến lấy hàng nhanh nhất" placement="top">
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n inline" translate>SETWH_label_boxme</h3>
+        <p>{{'SETWHBM_note' | translate}}</p>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white">
+        <div class="text-center" ng-hide="warehouses.length">
+            <i class="fa-2x fa fa-spinner fa-spin"></i>
+        </div>
+        <div class="panel panel-default" ng-if="userFulfillment">
+            <form name="formAddEditInventory{{$index}}" ng-submit="updatewarehouse()" role="form" class="form-horizontal form-validation" >
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-12 col-md-12 col-lg-12 " translate>SETWH_label_boxme_1</label>
+                    </div>
+                    <div class="row">
+                    	<div class="col-md-2"></div>
+                    	<div class="col-md-10">
+                    		<div class="row">
+                    			<div class="col-md-6" class="form-group" ng-repeat="warehouse in warehouses">
+			                        <div>
+			                            <label class="i-checks">
+			                                <input type="checkbox" name="boxme" ng-checked="warehouse.Checked" ng-disabled="warehouse.Checked" ng-click="toggleSelection(warehouse)"><i></i> {{warehouse.Name}}
+			                            	
+			                            </label><span ng-if="warehouse.IdInevent">  (#{{warehouse.IdInevent}})</span>
+			                        </div>
+			                    </div>
+                    		</div>
+                    	</div>
+	                    
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3 col-md-3 col-lg-2 control-label"></div>
+                        <div class="col-sm-9 col-md-9 col-lg-4">
+                            <button ng-click="saveInventoryBM(warehouses)" class="btn btn-success" translate>Btt_update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div> <!-- / Panel -->
+    </div>
+    <!--/ Content-->
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b" tour-step order="10" content="Cấu hình thanh toán" placement="bottom">
+        <h3 class="font-thin m-n inline">{{'INVT_CauHinhKhoHang' | translate}}<!-- Cấu hình kho hàng --></h3>
+        <button type="button"
+                ng-click="addInventory()"
+                class="btn btn-info btn-addon pull-right m-t-n-xs"
+                tour-step order="8" 
+                content="Thêm một kho mới" 
+                placement="left"
+                >
+            <i class="fa fa-plus"></i> {{'INVT_ThemKho' | translate }}<!-- Thêm kho -->
+        </button>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white">
+        <div class="text-center" ng-hide="list_warehouse.length">
+            <i class="fa-2x fa fa-spinner fa-spin"></i>
+        </div>
+        <div class="panel panel-default" ng-repeat="inventory in list_warehouse">
+            <form name="formAddEditInventory{{$index}}"
+                  ng-if="inventory.delete   != 1"
+                  ng-submit="saveInventory(inventory,$index)" role="form"
+                  class="form-horizontal form-validation" >
+                <div class="panel-heading font-bold">
+                    {{ !inventory.name ? 'Kho hàng ' + ($index + 1) : "#" + inventory.id + " - " + inventory.name}}
+                    <button
+                        class="btn btn-danger pull-right btn-xs"
+                        ng-if="inventory.id && !inventory.warehouse_code"
+                        ng-click="removeInventory(inventory,$index)"
+                        type="button">{{'INVT_XoaKho' | translate}}<!-- Xóa Kho --></button>
+                </div>
+                <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"
+                           tour-step order="9"
+                           content="{{'INVT_ThongTinKho' | translate}}"
+                           on-next="onTourEnd()"
+                           placement="left"
+                    >
+                        {{'INVT_TenKhoHang' | translate}} <!-- Tên kho hàng -->
+                    </label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <input type="text" ng-focus="angular.isUndefined(inventory.id)"
+                               ng-model="inventory.name" class="form-control" 
+                               required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_NguoiLienHeGiaoHang' | translate}}<!-- Người liên hệ giao hàng --></label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <input type="text"
+                               ng-model="inventory.user_name"
+                               class="form-control"
+                               required />
+                        <small><i>{{'INVT_DayLaTenNguoiGui' | translate}}<!-- Đây là tên người gửi khi in đơn hàng, bạn có thể đặt theo “[Họ tên] - Kho [Tên quận] -->”</i></small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_SDT' | translate}} <!-- Số điện thoại --></label>
+                    
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        
+                    <tags-input 
+                        
+                        on-tag-added="addingPhone(inventory, $$hashKey)"
+                        on-tag-removed="addingPhone(inventory, $$hashKey)"
+                        min-length="8"
+                        max-length="14"
+                        max-tags="2"
+                        allowed-tags-pattern="^[0-9]+$"
+                        ng-model="inventory.phone" 
+                        placeholder="09xxxxxxxx" 
+                        required >
+                    </tags-input>
+                    <small class="label label-warning" ng-if="phoneIsWrong[inventory.$$hashKey]">{{'INVT_HinhNhuBanNhapSaiSDT' | translate}}<!-- Hình như bạn nhập sai số điện thoại, vui lòng kiểm tra lại ?. --></small>
+
+                        <!-- <input type="text"
+                               ng-model="inventory.phone"
+                               class="form-control"
+                               ng-pattern="/^0[1-9][\d]{6,13}$/"
+                               required /> -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_TrangThai' | translate}}<!-- Trạng thái --></label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <select ng-model="inventory.active" class="form-control">
+                            <option value="0">{{'INVT_NgungSuDung' | translate}}<!-- Ngừng sử dụng --></option>
+                            <option value="1">{{'INVT_DangSuDung' | translate}}<!-- Đang sử dụng --></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_TinhTP' | translate}}<!-- Tỉnh/Thành Phố --></label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <select  ng-if="!inventory.id || inventory.check == 1"
+                                 class="form-control"
+                                 ng-model="inventory.city_id"
+                                 ng-options="province.id as province.city_name for province in list_city"
+                                 ng-disabled="inventory.id"
+                                 required>
+                            <option value="">{{'INVT_ChonTinhThanh' | translate}}<!-- Chọn tỉnh/thành --></option>
+                        </select>
+                        <input
+                           ng-if="inventory.id && !inventory.check"
+                           type="text"
+                           ng-model="inventory.city.city_name"
+                           class="form-control"
+                           ng-disabled="true"
+                           required
+                        >
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_QuanHuyen' | translate}}<!-- Quận/Huyện --></label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <select
+                                ng-if="!inventory.id || inventory.check == 1"
+                                required
+                                boxme-district-by-province
+                                province-id="inventory.city_id"
+                                district-id="inventory.province_id"
+                                default-label="{{'ACC_ChonQuanHuyen' | translate}}"
+                                ng-model="inventory.province_id"
+                                ng-disabled="inventory.id"
+                                class="form-control">
+                        </select>
+                        <input
+                            ng-if="inventory.id  && !inventory.check"
+                            type="text"
+                            ng-model="inventory.district.district_name"
+                            class="form-control"
+                            ng-disabled="true"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_PhuongXa' | translate}}<!-- Phường/Xã --></label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <select
+                                ng-if="!inventory.id || inventory.check == 1"
+                                boxme-ward-by-district
+                                district-id="inventory.province_id"
+                                ward-id    = "inventory.ward_id"
+                                default-label="{{'OBG_ChonPhuongXa' | translate}}"
+                                ng-model="inventory.ward_id"
+                                ng-disabled="inventory.id"
+                                required
+                                class="form-control">
+                        </select>
+                        <input
+                            ng-if="inventory.id && !inventory.check"
+                            type="text"
+                            ng-model="inventory.ward.ward_name"
+                            class="form-control"
+                            ng-disabled="true"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'INVT_DiaChi' | translate}}<!-- Địa chỉ --></label>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <textarea class="form-control" rows="3" ng-model="inventory.address" ng-disabled="inventory.id" required></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 col-md-3 col-lg-2 control-label"></div>
+                    <div class="col-sm-9 col-md-9 col-lg-4">
+                        <button  type="submit" class="btn btn-success"
+                           ng-disabled="formAddEditInventory{{$index}}.$invalid"
+                           tour-step order="8" 
+                           content="Lưu thông tin kho" 
+                           placement="left"
+                        >{{'Btt_update' | translate}}<!-- Cập nhật --></button>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div> <!-- / Panel -->
+        <!-- header -->
+    
+    <!--/ Content-->
+    </div>
+    
+</div>

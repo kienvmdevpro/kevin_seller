@@ -1,0 +1,109 @@
+<div class="wrapper"> </div>
+<div class="wrapper bg-light lter b-b" tour-step order="18" content="Phân quyền và quản lý tài khoản con" placement="top">
+    <div class="row">
+        <div class="col-lg-5 padder-lg">
+            <h2 class="font-thin m-n">{{'Api_Ketnoi' | translate}} Etsy</h2>
+        </div>
+        <div class="col-lg-7">
+            <button class="btn btn-lg btn-success pull-right" ng-click="open_popup_etsy_add_store('lg')">
+                <i class="fa fa-plus"> </i> {{'Add_Store_SPF' | translate}}</button>&nbsp;&nbsp;
+        </div>
+    </div>
+</div>
+<div class="wrapper b-b bg-white text-center">
+    <h4 class="pull-left" style="color:#23b7e5" ng-if="list_store['etsy'].length && !waiting">{{list_store['etsy'].length}} {{'Api_Luutrudaketnoi' | translate}}</h4>
+    <div class="table-responsive">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th class="ng-binding">
+                        {{'Api_Tenluutru' | translate}}
+                    </th>
+                    <th class="ng-binding">
+                        Etsy Store URL
+                        <!--  Loại hình lưu kho -->
+                    </th>
+                    <th class="ng-binding">
+                        Sync Order
+                    </th>
+                    <!-- <th class="ng-binding">
+                        Sync Inventory
+                    </th> -->
+                    <th class="ng-binding text-center">
+                        Test
+                    </th>
+                    <th class="ng-binding text-center">
+                        {{'Api_hanhdong' | translate}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="ng-scope">
+                <tr ng-show="!list_store['etsy'].length && waiting_store">
+                    <td colspan="10" class="text-center ng-binding">
+                        <i class="fa-2x fa fa-spinner fa-spin"></i>
+                    </td>
+                </tr>
+                <tr ng-if="!list_store['etsy'].length && !waiting_store">
+                    <td colspan="10" class="text-center ng-binding">
+                        {{'lazada_KhongTimThayDuLieu' | translate}}
+                    </td>
+                </tr>
+                <tr ngif="list_store['etsy'].length && !waiting_store" ng-repeat="item in list_store['etsy']">
+                    <td class="text-left">
+                        <p>{{item.store_name}}</p>
+                        <p>
+                            <ui-select style="margin-bottom:15px" ng-model="courier[item.id]" ng-disabled="disabled" required on-select="change_store(item,4,courier[item.id])">
+                                <ui-select-match placeholder="{{'SHIPC_tab2_select_Chonhvc' | translate}}">{{$select.selected.value.name }}</ui-select-match>
+                                <ui-select-choices refresh-delay="300" repeat="value.value as (key, value) in list_courier | filter: $select.search">
+                                    {{value.value.name}}
+                                </ui-select-choices>
+                            </ui-select>
+                            <ui-select class="order-service" ng-model="service[item.id]" required id="service_select" on-select="change_store(item,5,service[item.id])">
+                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}">
+                                    <i class="fa {{$select.selected.icons}} " aria-hidden="true"></i>
+                                    {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}}
+                                </ui-select-match>
+                                <ui-select-choices group-by="'group'" repeat="value.id as value in list_service | filter: $select.search">
+                                    <span>
+                                        <i class="fa {{value.icons}} " aria-hidden="true"></i> {{keyLang=='vi' ? value.name : value.name_en}}
+                                        <!-- {{value.name}} -->
+                                    </span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </p>
+                    </td>
+                    <td class="text-left">{{item.store_url}}</td>
+                    <td class="text-left">
+                        <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                            <input type="checkbox" ng-model="item.sync_order" ng-checked="item.sync_order == 1" ng-true-value="1" ng-false-value="0"
+                                ng-change="change_store(item,1)" />
+                            <i></i>
+                        </label>
+                    </td>
+                    <!-- <td class="text-left">
+                        <label class="i-switch i-switch-md bg-info m-t-xs m-r">
+                          <input type="checkbox" 
+                          ng-model="item.sync_inventory" 
+                          ng-checked="item.sync_inventory == 1"
+                          ng-true-value="1"  
+                          ng-false-value="0" 
+                          ng-change="sync_inventory(item)"  
+                          />
+                          <i></i>
+                      </label>
+                  </td> -->
+                    <td class="text-center">
+                        <a ng-click="open_popup_trial_store('lg',item.id,5,'ModalTrialStoreEtsy.html')">
+                            <i class="fa fa-gavel" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a ng-click="delete_store(item.id, $index, 5)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

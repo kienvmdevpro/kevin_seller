@@ -1,0 +1,57 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="install_app()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">List Order Test</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="ng-binding">
+                                    Order
+                                </th>
+                                <th class="ng-binding">
+                                    Date
+                                    <!--  Loại hình lưu kho -->
+                                </th>
+                                <th class="ng-binding">
+                                    Customer
+                                </th>
+                                <th class="ng-binding">
+                                    Payment status
+                                </th>
+                                <th class="ng-binding">
+                                    Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody  class="ng-scope">
+                            <tr ng-show="!list_data.length && waiting_trial">
+                                <td colspan="10" class="text-center ng-binding">
+                                    <i class="fa-2x fa fa-spinner fa-spin"></i>
+                                </td>
+                            </tr>
+                            <tr ng-if="!list_data.length && !waiting_trial">
+                                <td colspan="10" class="text-center ng-binding">
+                                    Không có dữ liệu
+                                </td>
+                            </tr>
+                            <tr ngif="list_data.length && !waiting_trial" ng-repeat="item in list_data">
+                                <td class="text-left">#{{item.Order.Order_code}}</td>
+                                <td class="text-left">{{item.Order.Time_create}}</td>
+                                <td class="text-left">{{item.To.Name}}</td>
+                                <td class="text-left">pending</td>
+                                <td class="text-left">{{item.Order.Amount + ' ' + item.Order.Currency}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">Cancel</button>
+    </div>
+</form>

@@ -1,0 +1,38 @@
+<div>
+    <div class="wrapper-md bg-light b-b">
+        <h1 class="m-n font-thin h3">Thêm nhiều sản phẩm mới bằng file csv</h1>
+    </div>
+
+    <div class="hbox hbox-auto-xs hbox-auto-sm" ng-controller="importProduct">
+        <div class="col wrapper-sm">
+            <div class="clearfix m-b">
+                <div class="panel panel-default">
+	                <form name="formImport" novalidate>
+		                <div class="panel-body">
+			                <h4>Bước 1: Tải file thêm sản phẩm mẫu</h4>
+			                <p>Để bắt đầu, quý khách hàng tải file tạo sản phẩm mẫu để đăng lên. Bạn có thể mở file mẫu bằng các phần mềm như Micrrosoft Excel, hay Apple Numbers, Liber office ...</p>
+			                <p>Sau khi tải file về quý khách vui lòng đọc kỹ nội dung hướng dẫn và trang ví dụ. Nếu quý khách cần hướng dẫn thêm về chức năng này vui lòng liên hệ tổng đài {{app.hotline}} hoặc gửi email về {{app.emailSupport}}</p>
+			                <p>Lưu ý: Các cột màu vàng là các thông tin tối thiểu & bắt buộc có</p>
+							<p><strong>Tải file mẫu:</strong>
+							<a  href="{{linkDownloadTemp}}" download="Product_Template.xlsx" class="btn m-b-xs w-xs btn-success"> <i class="fa fa-download"></i>Tại đây</a>
+							</p>
+			                <div class="col-lg-4">
+				                <input ui-jq="filestyle" type="file" name="file" ng-model="filename" required file-selected
+				                onchange="angular.element(this).scope().getFile(this.files)" data-icon="false"
+				                data-classbutton="btn btn-default" data-classinput="form-control inline v-middle input-s"
+				                id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+			                </div>
+
+			                <div class="clearfix"></div><br/>
+			                <div class="col-lg-4">
+				                <button type="button" ng-disabled="filename" class="btn btn-success" ng-click="submit()">
+					                Tiếp tục
+				                </button>
+			                </div>
+		                </div>
+	                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

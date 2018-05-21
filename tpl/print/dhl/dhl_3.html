@@ -1,0 +1,299 @@
+<style type="text/css">
+html{
+background-color: #bec2c3 !important;}
+    .pleft {
+             float:left;
+         }
+         .pright {
+         font-size: 20px;
+             float:right;
+         }         
+         .mainPrints {   
+             max-height: 14.85cm;   
+             margin: 0 10px;     
+             background: white; 
+         }
+         .page {
+            width: 21cm;
+            max-height: 29.7cm;
+            margin: 0 auto; 
+            background-color: #FFF;
+            color: #000;
+         }
+         @page {
+             margin: 0;
+         }
+         .logo_cod_new {
+                height: 60px;
+                max-width: 200px;
+                position: absolute;
+                right: 0;
+                top: 0; 
+        }
+        body{
+                font-size: 13px ;
+               
+            }
+        .watermark{
+            position: relative;
+        }
+         @media print {
+            .print_td2 ,.print_td, .print_td3,.print_dichvu{
+                font-size: 12px;
+            }
+            body{
+                font-size: 12px ;
+            }
+             .page {
+                 margin: 10px;
+                 border: initial;
+                 border-radius: initial;
+                 width: initial;
+                 min-height: initial;
+                 box-shadow: initial;
+                 background: initial;
+                 page-break-after: always;
+             }
+             .logo_cod_new {
+                height: 60px;
+                max-width: 200px;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+            .settings {
+               display: none !important;
+            }
+            #livechat-compact-container{
+                display: none !important;
+            }
+            
+         }
+         .Print_title {
+             border-bottom: 5px solid #d97014;
+             margin-top: 20px;
+             width: 460px;
+         }
+             .Print_title span {
+                 float: right;
+             }
+        .barcodetitle, .barCode_Code {
+             padding:5px;
+         }
+         .barcodetitle {
+             margin-left: 283px;
+         }
+         .pcclear {
+             clear: both;
+             border:0;
+             margin:0;
+             padding:0;
+         }
+         .print_td {
+             height: 120px;
+             max-height: 200px;
+             width: 50%;
+             padding: 5px;
+             line-height:20px;
+             font-size: 13px;
+             border:solid 1px #999;
+         }
+         .print_td2{   
+             width: 50%;            
+             line-height:14px;
+             font-size: 13px;     
+             height: 90px;     
+             border-right: #999 solid 1px;
+             text-align: center;
+         }
+         .print_td3 {   
+             width: 50%;            
+             line-height:14px;
+             font-size: 13px;     
+             height: 90px; 
+             text-align: center; 
+         }
+         .print_codetype {
+            width: 41%;
+      line-height: 20px;
+      font-size: 13px;
+      border-right: #999 solid 1px;
+         }
+         .print_dichvu {
+            width: 49%;
+      line-height: 17px;
+      font-size: 13px;
+            padding-left: 5px;
+         }
+         table.print_table{
+            border-spacing: 2px !important;
+            border-collapse: separate !important;
+         }
+
+	#print{font-family: sans-serif;margin: 20px;font-size:20px}
+</style>
+<!-- ng-repeat="item in data" -->
+<div  class="page" ng-controller="PrintOrderDHLController"  ng-init="app.settings.headerFixed = false;app.settings.color = true"> 
+<div >
+<div class="portrait" id="print">
+	<div class="row" style="padding-top: 20px;">
+		<div class="col-xs-6"  >
+		<div class="row">
+			<div class="col-xs-12" style="text-align: center">
+				<h2 style="margin-bottom:0px">* ARCHIVE DOC *</h2>
+			</div>
+			<div class="col-xs-12" style="text-align: center;font-size:13px">
+				<span >Not to be attached to package</span>
+			</div>
+		</div>
+		</div>
+		<div class="col-xs-2" style="">
+			<img alt="Shipchung Printers" src="img/courier/17_wpx.png"  style="height: 75px;margin-top:7px;float:right;">
+		</div>
+		<div class="col-xs-4" >
+			<img alt="Shipchung Printers" src="img/courier/dhl_black1.png"  style="height: 52px;float:right;">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<!-- Gui tu,gui den -->
+	<div class="row" style="margin-top:5px;font-size:16px">
+		<div class="col-xs-8">
+		   <div class="col-xs-2">
+		   		<lable><strong>From:</strong></lable>
+		   </div>
+		   <div class="col-xs-10">
+		   		<p> {{dataInvoice.from.address}}</p>
+       		<p> {{dataInvoice.from.wardDistrict}}</p>
+       		<p> {{dataInvoice.from.city}}</p>
+       		<p> {{dataInvoice.from.country}}</p>
+		   </div>
+   		</div>
+		<div class="col-xs-4 ">
+			<div class="row" style="margin-right:10px">
+				<p class="pull-right">Origin:</p>
+			</div>
+			<div class="row" style="margin-right:5px">
+				<p class="pull-right" style="font-size:30px"><strong>SGN</strong></p>
+			</div>
+			<div class="row pull-right" style="margin-right:5px">
+			
+				<p>Contact: Ph : {{dataInvoice.from.phone}}</p>
+			</div>
+ 		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<!-- Gui tu,gui den -->
+	<div class="row" style="margin-top:20px">
+		<div class="col-xs-8">
+		   <div class="col-xs-2">
+		   		<lable><strong>To:</strong></lable>
+		   </div>
+		   <div class="col-xs-10">
+		   		<p> {{dataInvoice.to.address}}</p>
+       		<p> {{dataInvoice.from.wardDistrict}}</p>
+       		<p> {{dataInvoice.from.city}}</p>
+       		<p> {{dataInvoice.from.country}}</p>
+		   </div>
+   		</div>
+		<div class="col-xs-4 ">
+			<div class="row" style="margin-right:10px">
+				<p >Contact:</p>
+			</div>
+			<div class="row">
+				<p>Ph: {{dataInvoice.to.phone}}</p>
+			</div>
+			
+ 		</div>
+	</div>
+	<!-- gui den -->
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="text-align: center;font-size:45px">AU-SYD-SSE SSAB</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<div class="row" style="font-size:13px">
+		<div class="col-xs-7" >
+			<p>Product:</p>
+			<p style="font-size:18px"><strong>[P] EXPRESS WORLDWIDE (48)</strong></p>
+			<lable>Payment code:</lable><span>CIP</span><br>
+			<lable>FRT A/C No:</lable><span>{{dataInvoice.CourierAccount.courier_account_number}}</span><br>
+			<lable>Terms of Trade:</lable><span>CIP</span><br>
+			<lable>DTP A/C:</lable><span></span>
+		</div>
+		<div class="col-xs-5">
+			<p>Features / Services:</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<div class="row" style="font-size:13px">
+		<div class="col-xs-12" >
+			<div class="row">
+				<div class="col-xs-6"></div>
+				<div class="col-xs-6">
+					<lable>Shpt Wght:</lable><span style="font-size:18px"><strong>{{dataInvoice.detail.total_net_weight}}</strong># of Pieces</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12" style="margin-top:10px">
+			<div class="row">
+				<div class="col-xs-6">
+					<lable>Custom Val</lable><span>{{dataInvoice.detail.total_price}} {{dataInvoice.detail.currency_code}} </span></div>
+				<div class="col-xs-6">
+					<lable>Shipment Date</lable><span >{{dataInvoice.fields_info.date_approve}} </span>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12" style="margin-top:10px">
+			<lable>Contents</lable><span ng-repeat="item in dataInvoice.product">{{item.sku}} - {{item.name}} ({{item.qty}})</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	
+	<!-- barcode -->
+	<div class="row" style="margin-top:20px;">
+		<div class="col-xs-12">
+			<div class="col-xs-7">
+				<img alt="tracking code" src="{{dataInvoice.barcode.tracking_code_2_img}}"  style="width:130%">
+				<p style="text-align: center">{{dataInvoice.barcode.tracking_code_2}}</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12" style="border-top: 1px solid #000;"></div>
+	</div>
+	<div class="row" style="font-size:13px">
+		<div class="col-xs-12">
+			<div class="col-xs-12">
+				License Plates of pieces in shipment
+			</div>
+			<div class="col-xs-12">
+				JD014600003921874581
+			</div>	
+		</div>
+	</div>
+	<!-- Mô tả hàng hóa -->
+	<div class="settings panel panel-default">
+        <button class="btn bg-orange btn_print no-shadow pos-abt hidden-print" onClick="window.print();"><i class="fa fa-print"></i> In vận đơn</button>
+        <a class="btn bg-default btn_type no-shadow pos-abt print_type hidden-print" ui-sref="print({code:$stateParams.code})" ><i class="fa fa-gears"></i> In theo A4</a>
+    </div>
+	<div style="display: none; position: fixed; top: 0px; left: 0px; z-index: 60000;">
+		<img style="display: block; position: absolute;">
+		<div style="display: block; background-color: rgba(0, 0, 0, 0.34902); position: absolute;"></div>
+		<canvas width="120" height="60" style="position: absolute; cursor: crosshair; padding: 0px; margin: 0px;"></canvas>
+		<canvas style="position: fixed; top: 20px; right: 20px;"></canvas>
+	</div>
+</div>		
+</div>
+</div>

@@ -1,0 +1,221 @@
+<div id="listShipment" ng-controller="ShipmentController">
+	<div class="wrapper-md bg-light b-b">
+		<h1 class="m-n font-thin h3 inline" translate>SHIP_h1</h1>
+		<div class="pull-right" style="margin-right: 5px;">
+		    <button class="btn m-b-xs btn-success" ui-sref="product.shipment-create" translate>SHIP_btt_add</button>
+       	</div>
+       	<br>
+       	<br>
+	<div type="warning" class="alert alert-warning " ng-if="close" role="alert" style="margin-bottom: -10px;">
+		    <div>
+		    	<span class="ng-binding ng-scope">
+		    		<span class="font-bold">Thông báo: </span>
+		    		Mời quý khách dùng thử chức năng tạo yêu cầu nhập kho mới! Xem hướng dẫn <a class="text-info ng-binding" href="http://www.boxme.vn/huong-dan/lam-the-nao-de-tao-yeu-cau-nhap-kho/" target="_blank">tại đây</a>
+		    	</span>
+	    	</div>
+		</div>
+	</div>
+	<div class="hbox hbox-auto-xs hbox-auto-sm">
+		<div class="col wrapper-sm">
+			<div class="clearfix m-b">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="col-lg-10 list-data">
+							<form class="ng-pristine ng-valid " role="form" ng-submit="search.proceed(search.condition)">
+								<div class="form-group col-md-3 col-lg-3">
+									<select ng-model="search.condition.status" ng-change="search.proceed();" class="form-control">
+										<option value="" translate>SHIP_select_1</option>
+										<option ng-if="keyLang == 'vi'" value="{{status.code}}" ng-repeat="status in listProgress">{{status.namevi}}</option>
+										<option ng-if="keyLang != 'vi'" value="{{status.code}}" ng-repeat="status in listProgress">{{status.name}}</option>
+									</select>
+								</div>
+								<div class="form-group col-md-3 col-lg-3">
+									<select ng-model="search.condition.inventory_inbound_id" ng-change="search.proceed();" class="form-control">
+										<option value="" translate>SHIP_select_inbout</option>
+										<option ng-repeat="store in listStore" value="{{store.InventoryId}}">{{store.Name}}</option>
+									</select>
+								</div>
+								<div class="form-group col-md-3 col-lg-3">
+									<select ng-model="search.condition.inventory_outbound_id" ng-change="search.proceed();" class="form-control">
+										<option value="" translate>SHIP_select_outbout</option>
+										<option ng-repeat="store in listStore" value="{{store.InventoryId}}">{{store.Name}}</option>
+									</select>
+								</div>
+								<div class="col-md-3 col-lg-3 m-b">
+									<div class="input-group">
+										<input type="text" class="form-control" ng-model="search.condition.key"
+											   placeholder="{{'SHIP_placeholder_code' | translate }}"/>
+										<span class="input-group-btn">
+											<button type="submit" class="btn btn-default">
+												<i class="fa fa-search"></i></button>
+										</span>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="clearfix"></div>
+						<div class="col-lg-12 list-data">
+							<table class="table table-striped b-t b-light">
+								<thead>
+									<tr>
+										<!-- <th style="width: 20px;" class="text-center v-middle">
+											<label class="i-checks i-checks-sm">
+												<input type="checkbox"
+													   ng-disabled="shipments.totalItems()"
+													   ng-model="shipments.selectedAll" ng-click="checkboxAll()">
+												<i></i>
+											</label>
+										</th> -->
+										<th class="text-center v-middle" translate>SHIP_table_no</th>
+										<th class="text-center v-middle" translate>SHIP_table_code</th>
+										<th class="text-center v-middle" translate>SHIP_table_status</th>
+										<th class="text-center v-middle" translate>SHIP_table_tracking</th>
+										<th class="text-center v-middle" translate>SHIP_table_time</th>
+										<!-- <th class="text-center v-middle">Ngày dự kiến nhập kho</th> -->
+										<th class="text-center v-middle" style="min-width:120px" translate>SHIP_table_invent</th>
+										<!-- <th class="text-center v-middle">Kho nhập</th> -->
+                                        <th class="text-center v-middle" translate>SHIP_table_inbound</th>
+                                        <th class="text-center v-middle" translate>SHIP_table_noInbound</th>
+                                        <th class="text-center v-middle" translate>SHIP_table_quatity</th>
+										<th class="text-center v-middle" translate>SHIP_table_action</th>
+									</tr>
+                                    <tr>
+                                        <td class="text-center" colspan="13" ng-show="search.searching"><i class="fa fa-spin fa-spinner text-3x"></i></td>
+                                    </tr>
+								</thead>
+								<tbody class="animated" ng-class="{'fadeIn': !search.searching, 'fadeOut': search.searching}">
+									<tr ng-repeat="shipment in shipments.listOf('shipments')">
+										<!-- <td class="text-center v-middle">
+											<label class="i-checks i-checks-sm">
+												<input type="checkbox" ng-model="shipment.selected" ng-change="checkboxOne()">
+												<i></i>
+											</label>
+										</td> -->
+										<td class="text-center v-middle">{{(search.condition.page - 1) * search.condition.page_size + $index + 1}}</td>
+										<td class="text-center v-middle">
+											<span><a class="text-info" ui-sref="product.detail-shipment({id: shipment.ShipmentId})">{{shipment.RequestCode}}</a></span>
+											<br><span tooltip="Ngày tạo"> {{ shipment.CreateDate > 0 ? (shipment.CreateDate * 1000  | date : "dd-MM-yyyy  HH:mm") : ''}}
+										</td>
+										<td class="text-center v-middle">
+											<!-- <span>{{shipment.ShipmentStatus}}</span>
+											<label ng-if="shipment.ShipmentStatus != 'Shipped' && shipment.ShipmentStatus != 'Ready to ship' && shipment.ShipmentStatus != 'Working' && shipment.ShippingMethod == 'MYSELF'" class="btn btn-xs m-r-xs btn-danger m-b-xs">Đã giao hàng</label> -->
+											<span ng-if="shipment.ShipmentStatus == 'Working'" class="badge bg-dark" translate>SHIP_stt_creatr</span>
+											<span ng-if="shipment.ShipmentStatus == 'Ready to ship'" class="badge bg-info" translate>SHIP_stt_ready</span>
+											<span ng-if="shipment.ShipmentStatus == 'Shipped'" class="badge bg-info" translate>SHIP_stt_watting</span>
+											<span ng-if="shipment.ShipmentStatus == 'In-transit'" class="badge bg-dark" translate>SHIP_stt_tranfer</span>
+											<span ng-if="shipment.ShipmentStatus == 'Delivered'" class="badge bg-primary" translate>SHIP_stt_delivered</span>
+											<span ng-if="shipment.ShipmentStatus == 'Checked-in'" class="badge bg-warning" translate>SHIP_stt_check</span>
+											<span ng-if="shipment.ShipmentStatus == 'Direct to prep'" class="badge bg-warning" translate>SHIP_stt_redyInbound</span>
+											<span ng-if="shipment.ShipmentStatus == 'Receiving'" class="badge bg-info" translate>SHIP_stt_inbounding</span>
+											<span ng-if="shipment.ShipmentStatus == 'Closed'" class="badge bg-success" translate>SHIP_stt_success</span>
+											<span ng-if="shipment.ShipmentStatus == 'Cancelled'" class="badge bg-danger" translate>SHIP_stt_cancel</span>
+											<span ng-if="shipment.ShipmentStatus == 'Deleted'" class="badge bg-danger" translate>SHIP_stt_delete</span>
+											<span ng-if="shipment.ShipmentStatus == 'Receiving with problems'" class="badge bg-warning" translate>SHIP_stt_inbountPart</span>
+										</td>
+										<td class="text-center v-middle">
+											<span ng-if="shipment.transport_type == 2">{{shipment.TrackingNumber}}</span><br>
+											<a class="text-info" ng-if="shipment.transport_type == 1 || shipment.transport_type == 0" href="http://seller.shipchung.vn/#/print_hvc?code={{shipment.TrackingNumber}}" target="_blank">{{shipment.TrackingNumber}}</a><br>
+											<span ng-if="shipment.transport_type == 2 && shipment.TrackingNumber != null" translate>SHIP_type_tranfer_1</span>
+											<span ng-if="shipment.transport_type == 1 && shipment.TrackingNumber != null" translate>SHIP_type_tranfer_2</span>
+										</td>
+										<td class="text-left v-middle">
+											<span ng-if="shipment.ApprovedDate != 0" tooltip="Ngày duyệt"><i class="fa fa-check"></i>{{ shipment.ApprovedDate * 1000|date:"dd-MM-yyyy "}}</span>
+											<br><br><span style="left: 0" ng-if="shipment.ExpectDate != 0" tooltip="Ngày dự kiến nhập kho"><i class="fa  fa-clock-o"></i> {{ shipment.ExpectDate * 1000|date:"dd-MM-yyyy "}}</span>
+										</td>
+										<!-- <td class="text-center v-middle">
+											<span><input-utc-time time="shipment.ExpectDate" utc="7" format="'dd/MM/yyyy HH:mm'"></input-utc-time></span>
+										</td> -->
+										<td class="text-center v-middle">
+											<span tooltip="Kho xuất"><i class="fa fa-home"></i>&nbsp;{{shipment.ShipToAddress.Name}}</span><br>
+											<span tooltip="Kho nhập"><i class="fa fa-truck"></i>&nbsp;{{shipment.ShipFromAddress.Name}}</span>
+										</td>
+										<!-- <td class="text-center v-middle">
+											
+										</td> -->
+                                        <td class="text-center v-middle">
+                                            <span>{{shipment.In}}</span>
+                                        </td>
+                                        <td class="text-center v-middle">
+                                            <span>{{shipment.Out}}</span>
+                                        </td>
+										<td class="text-center v-middle">
+											<span>{{shipment.Quantity}}</span>
+										</td>
+										<td class="text-center v-middle"> 
+										<button ng-if="(shipment.ShipmentStatus == 'Ready to ship') || (shipment.ShipmentStatus == 'Shipped'  && shipment.transport_type == 1)"
+										ng-disabled="createLandingBtt" class="btn btn-success" ng-click="createLanding(shipment)" style="margin-bottom: 5px; font-size: 12px;">
+								          <i class="fa fa-check"></i>
+								          <span class="text" translate>Btt_aprrove</span>
+								        </button>
+								        <button style=" margin-bottom: 5px; font-size: 12px; min-width: 74px;" ng-if="shipment.ShipmentStatus == 'Working'" 
+								         class="btn btn-warning" ui-sref="product.shipment-edit-v2({ id: '{{shipment.ShipmentId}}' })">
+										    <i class="fa fa-pencil"></i>
+								          <span class="text" translate>Btt_edit</span>
+								        </button>
+								        <button style="margin-bottom: 5px; font-size: 12px; min-width: 74px;" ng-if="shipment.ShipmentStatus == 'Shipped' || shipment.ShipmentStatus == 'Ready to ship' || shipment.ShipmentStatus == 'Working'" 
+								        ng-click="doAction.deactive([shipment])" class="btn btn-danger">
+										    <i class="fa fa-times"></i>
+								          <span class="text" translate>Btt_cancel</span>
+								        </button>
+										</td>
+									</tr>
+									<tr ng-if="!shipments.listOf('shipments').length"><td class="text-center v-middle" colspan="11"><em translate>ERR_search_null</em></td></tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-lg-12 panel-footer text-center list-data" style="padding-top: 5px;">
+							
+							<small ng-if="shipments.totalItems() > 0" class="text-muted inline m-t-sm m-b-sm">
+								<!-- Hiển thị từ {{(search.condition.page-1) * search.condition.page_size + 1}} - {{(search.condition.page-1) * search.condition.page_size + shipments.listOf('shipments').length}} của {{shipments.totalItems()}} bản ghi -->
+							{{ 'Pagegin' | translate: {from: ((search.condition.page-1) * search.condition.page_size + 1), to: (search.condition.page-1) * search.condition.page_size + shipments.listOf('shipments').length, total: shipments.totalItems()} }}
+							</small>
+							<div class="pull-right">
+								<pagination class="pagination-sm" total-items="shipments.totalItems()" max-size="5"
+								ng-if="shipments.totalItems() > 0" items-per-page="search.condition.page_size"
+								ng-model="search.condition.page" ng-change="search.proceed()" boundary-links="false"
+								rotate=false></pagination>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
+				<!--/ Panel-->
+			</div>
+		</div>
+	</div>
+	<script type="text/ng-template" id="thongbaoship.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-11 pull-left no-padder" style="text-align: center;">
+                    <h4 class="modal-title">Thông báo</h4>
+               	</div>
+               	<button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+          	 </div>
+        </div>
+   	</div>
+	<div class="modal-body wrapper-md text-base">
+		<div style="border-bottom: 1px solid #dee5e7;margin-bottom:10px;">
+		<p>Bạn chưa đăng kí dịch vụ fulfillment</p>
+		<p>Liên hệ với chúng tôi ngay để xử dụng ngay với nhiều tiện ích:</p>
+		<p>-Sử dụng kho hàng boxme/shipchung trên toàn quốc</p>
+		<p>- Tạo ngay đơn hàng từ sản phẩm trong kho</p>
+		<p> Mọi góp ý cho BoxMe.vn, quý khách vui lòng gưi về email hotro@boxme.vn.</p>
+		</div>
+	
+	<button class="btn btn-success" ng-click="cancel()">Tôi đã hiểu</button>
+	</div>
+	</script>
+</div>
+
+<!--Paging template-->
+<script id="template/pagination/pagination.html" type="text/ng-template">
+	<ul class="pagination m-t-none">
+		<li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(1)" title="First Page"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
+		<li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1)" title="Previous Page"><span class="fa fa-chevron-left"></span></a></li>
+		<li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+		<li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1)" title="Next Page"><span class="fa fa-chevron-right"></span></a></li>
+		<li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages)" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span> </a></li>
+	</ul>
+</script>

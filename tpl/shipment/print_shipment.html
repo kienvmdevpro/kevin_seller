@@ -1,0 +1,150 @@
+<style>
+@media print {
+
+    h4{
+        font-size: 14px;
+    }
+    #livechat-full, #extra{
+        display: none !important;
+    }
+
+    .logo_cod{
+        max-width: 80px !important;
+        position: absolute;
+        top: -15px;
+        right: 0;
+    }
+
+    .logo_cod_hvc{
+        top: 0px;
+        right: 10%;
+        position: absolute;
+        max-width: 150px !important;
+    }
+
+    body {
+        overflow: hidden !important;
+        font-family: Helvetica,Verdana,Arial,sans-serif;
+        height: auto;
+    }
+
+    .print_hvc{
+        page-break-after: always;
+        margin-bottom   : 0;
+    }
+
+    .wrapper-xs{
+        padding: 0px;
+    }
+
+    .col-print-i{
+        width: 50%;
+    }
+
+    .col-print{
+        width: 30%;
+        float: left;
+    }
+
+    .font-barcode{
+        font-size: 8px;
+    }
+
+    .print-no-padder{
+        padding: 5px;
+    }
+
+    .font-print{
+        font-size: 10px;
+    }
+
+    .row-print{
+        height: 185px;
+    }
+    p{ padding:0px;margin: 0px}
+}
+</style>
+<div ng-controller="ShipmentsDetailController" ng-init="load();app.settings.headerFixed = false;app.settings.color = true;total=0;" class="wrapper-xs bg-white ng-scope">
+    <div class="hbox hbox-auto-xs hbox-auto-sm ng-scope print_hvc" >
+        <!-- ngRepeat: item in data -->
+        <div class="col-xs-1 col-md-1 pull-right no-padder">
+            <img ng-src="img/logo-dark.png" alt="" width="" src="img/logo.png">
+        </div>
+        <div class="inline pull-left">
+            <div class="col-sm-12 col-xs-12 no-padder font-print">
+                <h4 class="m-t-none"><!-- BẢNG KÊ YÊU CẦU NHẬP HÀNG --> {{'SHIPD_Bangkenhaphang' | translate }} {{ShipmentItem.RequestCode}}</h4>
+                <div class="m-t-sm">
+                    <p>
+                        <span><!-- Tên khách hàng:  --> {{'SHIPD_Tenkhachhang'| translate }}{{ShipmentItem.SellerName}}</span>
+<!--                         <span> , Điện thoại: {{ShipmentItem.SellerPhone}}</span> -->
+						 <span ng-if="ShipmentItem.ShipToAddress.phone">  , <!-- Điện thoại -->{{'SHIPD_Dienthoai' | translate }} {{ShipmentItem.ShipToAddress.phone}}</span>
+						<span ng-if="!ShipmentItem.ShipToAddress.phone"> , <!-- Điện thoại khách hàng --> {{'SHIPD_Dienthoaikhachhang' | translate }} {{ShipmentItem.SellerPhone}}</span>						 
+                    </p>
+                    <p><!-- Ngày tạo: --> {{'SHIPD_Ngaytao'| translate }}: <input-utc-time time="ShipmentItem.CreateDate" utc="7" format="'dd/MM/yyyy HH:mm'"></input-utc-time></p>
+                    <!-- p>Ngày tạo: {{ShipmentItem.CreateDate*1000 | date:'dd/MM/yyyy HH:mm:ss'}}</p> -->
+                </div>
+                <div class="m-t-sm m-b">
+                    <p><!-- Mã vận đơn: -->{{'SHIPD_Mavandon' | translate }} {{ShipmentItem.Tracking}}</p>
+                    <p>{{'SHIPD_Soluongkienhang' | translate }}<!-- Số lượng kiện hàng: --> {{ShipmentItem.TotalQuantity}}</p>
+                    <p><!-- Tổng số lượng sản phẩm: -->{{'SHIPD_Tongsoluongsanpham' | translate }}  {{ShipmentItem.Quantity}}</p>
+                    <!-- <p><strong>Lưu ý:</strong> Bạn cần yêu cầu bưu tá kiểm tra số lượng và ký trên bảng kê. Trường hợp nhập hàng số lượng không chính xác so với bảng kê nhưng chưa có ký nhận của bưu tá thì Boxme sẽ được phép miễn trách nhiệm bồi thường do chưa đủ điều kiện nhập hàng.</p> -->
+                    <p translate>SHIPD_LuuyBancanyeucau</p>
+                </div>
+            </div>
+        </div>
+        <table class="table table-bordered bg-white no-padder font-print">
+            <thead>
+            <tr>
+                <th class="text-center v-middle col-xs-1">{{'SHIPD_STT' | translate }}</th>
+                <th class="text-center v-middle ">{{'SHIPD_Tensanpham' | translate }}<br/>({{'SHIPD_ProductName' | translate }})</th>
+                <th class="text-center v-middle">BSIN/SKU<br/>{{'SHIPD_Masanpham' | translate}}</th>
+                <th class="text-center v-middle">Quantity<br/>(Số lượng)</th>
+                <th class="text-center v-middle col-md-1 col-xs-2">{{'SHIPD_Donggoitrongkienhangso' | translate}}<!-- Gói trong kiện hàng số --></th>
+                <th class="text-center v-middle col-md-3 col-xs-3">{{'SHIPD_Ghichu' | translate }}<!-- Ghi chú --><br/>{{'SHIPD_Neuco' | translate}}<!-- (nếu có) --></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in ShipmentItem.ShipmentItems">
+                <td class="text-center v-middle col-xs-1">{{$index + 1}}</td>
+                <td class="text-center v-middle">{{item.ProductName}}</td>
+                <td class="text-center v-middle">{{item.SellerSKU}}</td>
+                <td class="text-center v-middle">{{item.QuantityShipped}}</td>
+                <td class="text-left v-middle"></td>
+                <td class="text-center v-middle"></td>
+            </tr>
+            <tr ng-if="!ShipmentItem.ShipmentItems.length">
+                <td class="text-center v-middle" colspan="6">
+                    <em>{{'SHIPD_khongcoketqua' | translate}}<!-- Không có kết quả --></em>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <footer class="col-lg-12 col-xs-12 font-print" style="bottom: 0px">
+            <div class="col-lg-12 col-xs-12 m-b-md">
+                <div class="col-lg-4 col-xs-4 pull-right text-center">
+                    <p>...............,{{'SHIPD_Ngay' | translate}}......./......./..........</p>
+                </div>
+            </div>
+            <div class="col-lg-12 col-xs-12">
+                <div class="col-lg-4 col-xs-4 pull-left text-center">
+                    <p><strong>{{'SHIPD_Buutanhanhang' | translate}}<!-- BƯU TÁ ĐÃ NHẬN HÀNG --></strong></p>
+                </div>
+                <div class="col-lg-4 col-xs-4 pull-right text-center">
+                    <p><strong>{{'SHIPD_Khachhang' | translate }}<!-- KHÁCH HÀNG --></strong></p>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-xs-12">
+                <div class="col-lg-4 col-xs-4 pull-left text-center m-t-xxl">
+                    <p><strong>........................................</strong></p>
+                </div>
+                <div class="col-lg-4 col-xs-4 pull-right text-center m-t-xxl">
+                    <p><strong>........................................</strong></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="settings panel-default" style="right: -165px">
+        <button class="btn no-shadow pos-abt hidden-print" onclick="window.print();"><i class="fa fa-print"></i> {{'SHIPD_Invandon' | translate }}<!-- In vận đơn --></button>
+    </div>
+</div>

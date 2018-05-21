@@ -1,0 +1,65 @@
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 text-center">
+              <h4>Sửa địa chỉ người nhận</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body wrapper-md">
+        <form class="form-horizontal form-validation" name="frm-edit">
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Tỉnh/Thành Phố</label>
+                <div class="col-lg-9">
+                    <select
+                            class="form-control"
+                            ng-model="data.to_city_id"
+                            ng-options="type.id as type.city_name for type in list_city"
+                            required>
+                        <option value="">Tỉnh/Thành Phố</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Quận/Huyện</label>
+                <div class="col-lg-9">
+                    <select
+                            boxme-district-by-province
+                            province-id="data.to_city_id"
+                            district-id="data.to_province_id"
+                            default-label="Chọn quận/huyện"
+                            ng-model="data.to_province_id"
+                            class="form-control"
+                            required>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Phường Xã</label>
+                <div class="col-lg-9">
+                    <select
+                        boxme-ward-by-district
+                        district-id="data.to_province_id"
+                        ward-id    = "data.to_ward_id"
+                        default-label="Chọn Phường/Xã"
+                        ng-model="data.to_ward_id"
+                        class="form-control">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Địa chỉ</label>
+                <div class="col-lg-9">
+                    <input type="text" placeholder="Địa chỉ ..." ng-model="data.to_address" class="form-control">
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-success" ng-disabled="frm-edit.$invalid || frm_submit" ng-click="save(data)">Lưu</button>
+        <button class="btn btn-info" ng-click="close()">Đóng</button>
+    </div>

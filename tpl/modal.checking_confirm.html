@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-7 pull-left no-padder">
+                <h4 class="modal-title">Xác nhận không cho xem hàng</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body wrapper-md">
+    <div class="row">
+        <div class="col-md-12">
+            <p>Bạn có chắc chắn muốn từ chối yêu cầu xem hàng của người nhận (mua) ? </p>
+            <small>Lưu ý: Kể từ 01/01/2016 Shipchung từ chối nhận yêu cầu thay đổi này khi phát hàng.</small>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col-md-7 text-left">
+        <label class="i-checks padder-md padder-xs ng-binding ">
+            <input type="checkbox" ng-model="check" ng-change="toggleCheckbox(check)" class="ng-valid ng-dirty"><i></i>
+            <small>Thông báo này sẽ không hiển thị lần sau.</small>
+        </label>
+    </div>
+    <div class="col-md-5 text-right">
+        <button class="btn btn-info r-2x" ng-click="run('accept')" ng-disabled="time_count > 0">Đồng ý<span ng-if="time_count > 0">... {{time_count}}s</span></button>
+        <!-- <button class="btn btn-info r-2x" ng-click="run()" ng-disabled="time_count > 0">Đóng<span ng-if="time_count > 0">... {{time_count}}s</span></button> -->    
+    </div>
+    
+    <div class="clearfix"></div>
+</div>

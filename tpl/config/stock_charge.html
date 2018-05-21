@@ -1,0 +1,114 @@
+<div ng-controller="PaymentChargeSettingController" ng-init="search.procced()">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n" translate>SETCHAR_h1</h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white">
+    	<div role="alert" class="alert ng-isolate-scope alert-warning alert-dismissable alert-warning" close="closeAlert($index)" type="warning">
+		    <div>
+		    	<span class="ng-binding ng-scope">
+		    		<span class="font-bold" translate>SETCHAR_label_warning</span><br/>
+		    		{{'SETCHAR_label_warning1' | translate }} <br>
+		    		{{'SETCHAR_label_warning2' | translate }}
+		    		<!-- 1. Để thay đổi cách tính phí bạn cần thanh toán các khoản phí phát sinh trước đó và đảm bảo số dư hiện tại dương.<br/> -->
+		    		<!-- 2. Khi chuyển đổi bạn sẽ không được áp dụng miễn phí dùng thử 30 ngày đầu tiên khi sử dụng hình thức tính phí mới này. Chính sách này chỉ áp dụng với các khách hàng dùng mới. -->
+		    	</span>
+	    	</div>
+		</div>
+        <form name="formAddEditShipping" ng-submit="update()" role="form" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold" translate>SETCHAR_label_change</div>
+                <div class="panel-body">
+                     <div class="form-group" style="position:relative">
+                        <div class="radio m-t-xs m-b-xs col-sm-7">
+                             <label class="i-checks i-checks-sm">
+                                 <input type="radio" value="0" ng-model="search.condition.payment_type" name="payment_type" class="ng-pristine ng-valid" ng-click="checkPaymentNew(0)">
+                                 <i></i>
+                                 {{'SETCHAR_label_change_1' | translate }}
+                                 <!-- Tính phí theo số lượng tồn kho (Bạn đang sử dụng hình thức này) -->
+                                 <ul>
+                                 	<li class="text-muted" translate>SETCHAR_label_change_11</li>
+									<li class="text-muted" translate>SETCHAR_label_change_12</li>
+									<li class="text-muted" translate>SETCHAR_label_change_13</li>
+                                 </ul>
+                             </label>
+                            <!-- ngIf: windowWith <= 375 -->
+                            <label class="i-checks i-checks-sm">
+                                <input type="radio" value="2" ng-model="search.condition.payment_type" name="payment_type" class="ng-pristine ng-valid" ng-click="checkPaymentNew(2)">
+                                <i></i>
+                                {{'SETCHAR_label_change_2' | translate }}
+                               <!--  Tính phí theo khoang giá kệ (1 khoang 0.4 m3 = 2m x 0.4m x 0.5m) -->
+                                <ul>
+									<li class="text-muted" translate>SETCHAR_label_change_21</li>
+									<li class="text-muted" translate>SETCHAR_label_change_12</li>
+									<li class="text-muted" translate>SETCHAR_label_change_13</li>
+									<!-- <li class="text-muted">Có phí lưu kho tạm tính từ 1.000.000đ trở lên</li> -->
+                                </ul>
+                            </label>
+                            <!-- <label class="i-checks i-checks-sm">
+                                <input type="radio" value="1" ng-model="search.condition.payment_type" name="payment_type" class="ng-pristine ng-valid" ng-click="checkPaymentNew(1)">
+                                <i></i>
+                                Tính phí theo pallet (1.1m x 1.1m x cao không quá 1.5m)
+                                <ul>
+                                	<li class="text-muted">Miễn phí 30 ngày đầu tiên, kể từ ngày thứ 31 trở đi là 80.000 vnđ/block 15 ngày</li>
+									<li class="text-muted">Hàng hoá có khối lượng từ 3kg - 30kg hoặc thể tích quy đổi dưới 60,000 cm3 tới 180,000 cm3</li>
+									<li class="text-muted">Tối đa 50 sản phẩm/khoang nếu hàng từ 3kg - 10kg và tối đa 20 sản phẩm nếu hàng từ 10kg - 30kg</li>
+									<li class="text-muted">Có phí lưu kho tạm tính từ 1.000.000đ trở lên</li>
+                                </ul>
+                            </label> -->
+                            <p class="text-danger" ng-show="showCase">{{ 'SETCHAR_label_info' | translate: {param_money_temp: money_temp,param_money_temp_new: money_temp_new,param:money_temp -  money_temp_new   } }}</p>
+                             <!-- <p class="text-danger" ng-show="showCase">Khi chuyển đổi, BoxMe sẽ chuyển đổi phí lưu kho tạm tính <b>{{money_temp | vnNumber }}vnđ</b> theo hình thức tính phí mới thành <b>{{money_temp_new | vnNumber }}vnđ</b>. Giúp bạn tiết kiệm (nếu giảm) số tiền là <b>{{money_temp -  money_temp_new | vnNumber}}vnđ</b> so với hình thức cũ.</p> -->
+							<!-- <p class="text-danger" ng-show="showCase1">{{ 'SETCHAR_label_info_2' | translate: {param_money_temp: money_temp, param_money_temp_new: money_temp_new,param: money_temp_new - money_temp  } }}</p> -->
+							<!-- <p class="text-danger" ng-show="showCase1">Khi chuyển đổi, BoxMe sẽ chuyển đổi phí lưu kho tạm tính <b>{{money_temp | vnNumber }}vnđ</b> theo hình thức tính phí mới thành <b>{{money_temp_new | vnNumber }}vnđ</b>. Sẽ phát sinh tăng thêm phí số tiền là <b>{{money_temp_new - money_temp | vnNumber}}vnđ</b> so với hình thức cũ</p> -->
+							<!-- <p class="text-danger" ng-show="showCase2">{{ 'SETCHAR_label_info' | translate: {param: money_temp_new} }}</p> -->
+							<!-- <p class="text-danger" ng-show="showCase2">Số tiền này <b>{{money_temp_new | vnNumber}}vnđ</b> sẽ được trừ trực tiếp và ngay lập tức sau khi chuyển đổi.</p>  -->
+                        </div>
+                       	<div class="col-sm-5">
+                       		<div class="panel panel-default">
+					          <!-- <div class="panel-heading font-bold text-center">BẢNG SO SÁNH DỰ TÍNH</div> -->
+					          <div class="panel-body">
+					            <div ui-jq="plot" ng-if="d1_1 || d1_2 || d1_3" ui-options="
+					              [ 
+					                { label: '{{'SETCHAR_chart1' | translate }}', data: [[0, {{d1_1}}]]},
+					                { label: '{{'SETCHAR_chart2' | translate }}', data: [[0, {{d1_3}}]]}					                
+					              ],
+					              {
+					                bars: { show: true, fill: true, lineWidth: 1, order: 1, fillColor: { colors: [{ opacity: 0.5 }, { opacity: 0.9}] } },
+					                colors: ['{{app.color.info}}', '{{app.color.success}}', '{{app.color.primary}}'],
+					                series: { shadowSize: 1 },
+					                xaxis:{ font: { color: '#FFF' } },
+					                yaxis:{ font: { color: '#ccc' } },
+					                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },                
+					                tooltip: true
+					              }
+					            " style="height:240px"></div>
+					          </div>   
+					          <div class="text-center" translate>SETCHAR_chart</div>
+					          <div class="panel-body text-center">
+						          <div class="row">
+						            <div class="col-xs-6"> 
+						              <small class="text-muted block" translate>SETCHAR_chart1</small>
+						              <span class="text-right">{{productPrice|vnNumber}}vnđ</span>
+						            </div>
+						            <div class="col-xs-6">
+						              <small class="text-muted block" translate>SETCHAR_chart2</small>
+						              <span class="text-right">{{m3Price|vnNumber}}vnđ</span>
+						            </div>
+						            <!-- <div class="col-xs-4">
+						              <small class="text-muted block">Pallet</small>
+						              <span class="text-right">{{m2Price|vnNumber}}đ</span>
+						            </div> -->
+						          </div>
+						        </div>               
+                       		</div>
+                   		</div>
+                    </div>
+                </div>
+            </div> <!--/ Panel-->
+            <button type="submit" class="btn btn-success m-t-md" translate>Btt_update</button>
+        </form>
+    </div>
+    <!--/ Content-->
+</div>

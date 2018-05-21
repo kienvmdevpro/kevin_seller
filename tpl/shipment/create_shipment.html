@@ -1,0 +1,184 @@
+<!--Tab content-->
+<div class="tab-container tab-inside" ng-init="action=disabled?'edit':'new';" >
+	<div class="tab-content">
+		<h3 translate>SHIPC_tab2_H3_Buoc2ChonKho</h3>
+		<h4 style="margin-top:25px" translate>SHIPC_tab2_H4_1Diachiguivanhanhang</h4>
+		<div class="shipment_bb clearfix" >
+			<!-- <p style="margin-top:10px;" translate>SHIPC_tab2_p_Chonquocgianhaphang</p>
+			<div class="form-group clearfix">
+				<div class="col-lg-5 col-sm-8">
+					<select class="form-control" ng-model="step2.shipment.Contry"
+							ng-change="ChangeConntry(step2.shipment.Contry)">
+						<option value="237" >Việt Nam</option> 
+						<option value="101" >Malaysia</option>
+					</select>
+				</div>
+			</div> -->
+			<p style="margin-top:10px;" translate>SHIPC_tab2_p_ChonkhokhohangBoxme</p>
+			<div class="form-group clearfix">
+				<div class="col-lg-5 col-sm-8">
+					<select class="form-control" ng-model="step2.shipment.ShipToAddress.InventoryId"
+							ng-change="ChangeBoxme()">
+						<option value="{{item.InventoryId}}" ng-repeat="item in step2.listTo">{{item.Name}}</option>
+					</select>
+				</div>
+			</div>
+			<p>{{'SHIPC_tab2_p_Neuquykhachchuachonkho' | translate }} <a ui-sref="setting.default.inventory" href="#/setting/inventory" style="color: #428bca;" translate>SHIPC_tab1_p_helpLink</a></p>
+			<p translate>SHIPC_tab2_p_Chondiachikhohang</p>
+			<div class="form-group">
+				<div class="col-lg-5 col-sm-8">
+					<select class="form-control" ng-model="step2.shipment.ShipFromAddress.InventoryId" ng-change="ChangeEnterprise()">
+						<option value="{{item.InventoryId}}" ng-repeat="item in step2.listTo1">{{item.Name}}</option>
+					</select>
+				</div>
+			</div>		
+		</div>
+		<h4 style="margin-top:20px;" translate>SHIPC_tab2_p_Hinhthucnhapkho</h4>
+		<div class="shipment_bb clearfix" >
+			<div class="boxme_shipment">
+				<p style="margin-top:10px;" translate>SHIPC_tab2_p_Quykhachcothechon</p>
+				<div class="radio">
+				  <label >
+				    <input type="radio"  ng-model="step2.shipment.TypeTransport" value="1" ng-change="showstranpost()">
+				   {{'SHIPC_tab2_p_Vanchuyenquadoitac' | translate}}
+				  </label>
+				</div>
+				<div style="margin-left:15px;" ng-show="type_transbm" >
+					<p style="color: #868686;">
+					{{'SHIPC_tab2_p_Doitaccuachungtoi' | translate }}<br>
+					{{'SHIPC_tab2_p_DacbietBoxmese' | translate }}
+					</p>
+						<!-- <a class="price-product" ng-hide="editprice"  style="color:black;margin-right: 8px;" ng-click="editprice = true" ng-class="col-md-6" >{{ 'SHIPC_tab2_tb_Tongkhoiluong' | translate}} {{blance.WeightItem}} kg
+							<i style=" margin-left: 5px;color: #428bca;padding-top:3px;position: absolute;" class="fa fa-edit (alias) hide-product" ></i>
+						</a>
+						<div class="input-group"    ng-show="editprice" tooltip="{{'PRO_NhanExterdeluu' | translate }}">
+							<input  class="form-control ng-valid" boxme-enter="updateProductSale(product)" numeric-input ng-model="product.SalePrice" class="form-control" maxlength="9">
+						</div> -->
+					<div style = "width: 68%;"type="warning" close="closeAlert($index)" class="alert ng-isolate-scope alert-warning alert-dismissable" ng-class="{'alert-warning': true, 'alert-dismissable': closeable}" role="alert">
+						<strong translate>SHIPC_tab2_p_Bannenchondichvu</strong>
+					</div>
+				</div>
+				<div class="row" ng-show="type_transbm">
+					<div class="col-md-12">
+						<form class="navbar-form form-validation" role="form">
+							<div class="row input-group">
+								<div class="col-md-12" style="margin-bottom:10px">
+								</div>
+								<div class="col-md-12" style="margin-bottom:10px">
+									<select style="min-width: 280px;" ng-model="paymentType" class="form-control" ng-change="changetypepayment(paymentType)"  >
+										<option value="2" translate>SHIPC_tab2_select_Chuyenphatnhanh</option>
+										<option value="1" translate>SHIPC_tab2_select_Chuyenphattietkiem</option>
+										<option value="5" translate>SHIPC_tab2_select_Vantai</option>
+										<!--<option ng-repeat="store in listStore" value="{{store.InventoryId}}">{{store.Name}}</option>-->
+									</select>
+								</div>
+							</div>
+							<br>
+							<div class="col-md-4">
+								<p translate>SHIPC_tab2_tb_Phivanchuyendutinh</p>
+								<table>
+									<tbody>
+										<tr>
+											<td style="min-width:200px" class="text-left v-middle" translate>SHIPC_tab2_tb_Thoigiangiaohang</td>
+											<td  class="text-right v-middle" style="max-width:250px"><a ng-if="dateblance>=1"> {{dateblance -1}} - {{dateblance}}</a> {{'report.inventory.table.date'}}<!-- ngày --></td>
+										</tr>
+										<tr>
+											<td style="min-width:200px" class="text-left v-middle" translate>SHIPC_tab2_tb_Tongkhoiluong</td>
+											<td class="text-right v-middle" style="max-width:250px">
+												<input style="float:left;max-width:100px;height: 26px;margin-right:10px" class="form-control ng-valid"  numeric-input ng-model="step2.shipment.WeightChange" ng-change="changetypepayment(null)" ng-delay="1000" class="form-control" maxlength="9">
+												<!-- <lable style="color:#993333;" ng-hide="editprice">{{blance.WeightItem}}</lable> -->  gram
+												<!-- <a class="price-product" ng-hide="editprice"  style="color:black;margin-right: 8px;" ng-click="editprice = true" ng-class="col-md-6" >
+													<i style=" margin-left: 5px;color: #428bca;padding-top:3px;position: absolute;" > thay đổi</i>
+												</a> 
+												<div class="input-group"  ng-show="editprice" tooltip="{{'PRO_NhanExterdeluu' | translate }}">
+													<input  class="form-control ng-valid" boxme-enter="updateProductSale(product)" numeric-input ng-model="product.SalePrice" class="form-control" maxlength="9">
+												</div> -->
+											</td>
+										</tr>
+										<tr ng-show="blance.WeightVolume!=0">
+											<td style="min-width:200px" class="text-left v-middle" translate>SHIPC_tab2_tb_Khoiluongquydoi</td>
+											<td class="text-right v-middle" style="max-width:250px"><lable style="color:#993333;" > {{blance.WeightVolume}} kg</lable>
+												</td>
+										</tr> 
+										<tr>
+											<td style="min-width:200px" class="text-left v-middle" translate>SHIPC_tab2_tb_Phivanchuyentamtinh</td>
+											<td  class="text-right v-middle" style="max-width:250px"><lable style="color:#993333;">{{blance.Price | number}}</lable>  vnđ</td>
+										</tr>
+										<tr>
+											<td style="min-width:200px" class="text-left v-middle" translate>SHIPC_tab2_tb_Giamgia</td>
+											<td class="text-right v-middle" style="max-width:250px"><lable style="color:#993333;">{{blance.DiscountPrice | number}}</lable>  vnđ</td>
+										</tr>
+										<tr>
+											<td style="min-width:200px" class="text-left v-middle" translate>SHIPC_tab2_tb_Tongphivanchuyen</td>
+											<td class="text-right v-middle" style="max-width:250px"><lable style="color:#993333;">{{blance.Total | number}}</lable>  vnđ</td>
+										</tr>
+										
+									</tbody>
+								</table>
+							</div>
+							<div class="col-md-8">
+								<p translate>SHIPC_tab2_tb_Doitacvanchuyen</p>
+								<div style="width:135px;border: 2px solid #edf1f2;">
+									<img width="100%" ng-src="{{imgs.images}}" >
+								</div>
+								
+							</div>
+		           		 </form>
+					</div>
+				</div>
+			</div>
+			<div class="custummer_shipment">
+				<div class="radio" style="margin-bottom: 20px;">
+				  <label>
+				    <input type="radio" ng-model="step2.shipment.TypeTransport" value="2" ng-change="showstranpost()">
+				   	{{'SHIPC_tab2_p_Toituchuyenhang' | translate}}
+				  </label>
+				</div>
+				<div style="margin-left:15px;" ng-hide="type_transbm" >
+					<p style="color: #868686;">
+						{{ 'SHIPC_tab2_p_Quykhachtugiaohang' | translate}}<br>
+						{{ 'SHIPC_tab2_p_Chungtoiseguihuongdan' | translate}}
+					</p>
+				</div>
+				<div class="row" ng-hide="type_transbm">
+					<div class="col-md-12">
+						<form class="navbar-form form-validation inline" role="form">
+							<div class="row">
+								<div class="col-md-12 mg-bt_15 ">
+					                <input  ng-disabled="tranpost_custumer" type="text" style="float:left; min-width: 210px;" ng-click="dt2.open($event);dt1.close()" ng-change="check_date()" placeholder="{{ 'SHIPC_tab2_placeholder_Ngaynhap' | translate }}" class="form-control" datepicker-popup="{{format}}" ng-model="dt2.value" is-open="dt2.opened" datepicker-options="{}" close-text="Close" style="width: 150px" required>
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" ng-click="dt2.open($event);dt1.close()"><i class="glyphicon glyphicon-calendar"></i></button>
+									</span>
+					            </div>
+					            <p class="col-md-12 mg-bt_15" translate>SHIPC_tab2_p_Lamthenao</p>
+								<div class="col-md-12 mg-bt_15">
+					                <input  ng-disabled="tranpost_custumer" type="text" style="min-width: 250px;" placeholder="{{'SHIPC_tab2_placeholder_Nhapmavandon' | translate }}" class="form-control" ng-model="step2.shipment.TrackingSeller">
+								</div>
+								<div class="col-md-12 mg-bt_15" >
+									<select  ng-disabled="tranpost_custumer" style="min-width: 250px;" class="form-control" ng-model="step2.shipment.CourierName" >
+										<option value="undefined" translate>SHIPC_tab2_select_Chonhvc</option>
+										<option ng-repeat="Courier in Couriers" value="{{Courier.Name}}">{{Courier.Name}}</option>
+									</select>
+								</div>
+								<!-- <div class="col-md-12 mg-bt_15" >
+									<button ng-disabled="formShipmentRequest.$invalid" ng-click="gonext()" class="btn m-b-xs w-xs btn-success block">Tiếp tục</button>
+									<button  ng-click="goback()" class="btn m-b-xs w-xs btn-success block">Quay lại</button>
+								</div> -->
+								
+							</div>
+		           	 	</form>
+					</div>
+					
+					
+				</div>
+			</div>
+			<div class="col-md-12 mg-bt_15" >
+				<button style="float:left;min-width:120px" ng-disabled="formShipmentRequest.$invalid" ng-click="gonext()" class="btn btn-lg m-b-xs w-xs btn-success block" translate>SHIPC_tab1_Tran_Tieptuc</button>
+				<button style="margin-left:10px;min-width:120px" ng-click="goback()" class="btn btn-lg btn-default" translate>SHIPC_tab1_Tran_Quaylai</button>
+			</div>
+			
+		</div>
+		
+	
+	</div>  <!-- / Tab content-->
+</div> <!-- / Tab container-->

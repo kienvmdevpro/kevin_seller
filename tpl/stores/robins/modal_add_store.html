@@ -1,0 +1,38 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="add_store()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'Api_Themmoistore' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+            <span ng-if="waitting_add_store" style="position: absolute;top:50%;left:45%;z-index:1000"><i style="font-size:45px" class="fa-2x fa fa-spinner fa-spin"></i></span>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" placeholder="User Name *" name="frm.user_name" ng-model="frm.user_name" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Api Key *" name="frm.api_key" ng-model="frm.api_key" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <p style="color: red" ng-bind="message_err"></p>
+            </div>
+            <div class="col-md-6">
+                <label style="font-weight: bold;">Robins Description :</label>
+                <ul>
+                    <li>{{'Api_Store_Description1_Robins' | translate}}.</li>
+                    <li>{{'Api_Store_Description2' | translate}}.</li>
+                    <li>
+                        {{'Api_Store_Description3' | translate}}:
+                        <ul>
+                            <li>{{'Api_Store_Description3.1' | translate}}</li>
+                            <li>{{'Api_Store_Description3.2' | translate}}</li>
+                            <li>{{'Api_Store_Description3.3' | translate}}</li>
+                            <li>{{'Api_Store_Description3.4' | translate}}</li>
+                        </ul>
+                    </li>
+                    <li>{{'Api_Store_Description4' | translate}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+        <button type="submit" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    </div>
+</form>

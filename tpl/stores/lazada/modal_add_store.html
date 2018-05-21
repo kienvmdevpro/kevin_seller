@@ -1,0 +1,47 @@
+<form class="form-horizontal form-validation" ng-submit="add_store()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'Api_Themmoistore' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" placeholder="Store Name *" name="frm.store_name" ng-model="frm.store_name" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Lazada Store URL *" name="frm.store_url" ng-model="frm.store_url" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="text" placeholder="Lazada Email *" name="frm.user_name" ng-model="frm.user_name" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+                <input type="password" placeholder="Lazada API Key *" name="frm.api_key" ng-model="frm.api_key" class="form-control">
+                <div class="clearfix m-b-sm"></div>
+
+                <p></p>
+               <!-- <label style="font-weight: bold;">Example:</label>
+               <p>http://yourstore/magento.com</p> -->
+               <p style="color: red" ng-bind="message_err"></p>
+           </div>
+           <div class="col-md-6">
+            <label style="font-weight: bold;">Lazada Description :</label>
+            <ul>
+                <li>{{'Api_Store_Description1_Lazada' | translate}}.</li>
+                <li>{{'Api_Store_Description2' | translate}}.</li>
+                <li>
+                    {{'Api_Store_Description3' | translate}}:
+                    <ul>
+                        <li>{{'Api_Store_Description3.1' | translate}}</li>
+                        <li>{{'Api_Store_Description3.2' | translate}}</li>
+                        <li>{{'Api_Store_Description3.3' | translate}}</li>
+                        <li>{{'Api_Store_Description3.4' | translate}}</li>
+                    </ul>
+                </li>
+                <li>{{'Api_Store_Description4' | translate}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    
+    <button type="button" ng-if="!waiting" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+    <button type="submit" ng-if="!waiting" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    <i ng-if="waiting" class="fa fa-spin fa-spinner text-2x"></i>
+</div>
+</form>

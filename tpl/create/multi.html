@@ -1,0 +1,287 @@
+<div class="fade-in-right" ng-controller="CreateMultiCtrl">
+    <div class="padder-md bg-light b-b">
+        <div class="row">
+            <div class="col-md-5 wrapper-md">
+                <span class="m-n h2"><i class="fa fa-inbox text-info"></i> Tạo nhiều đơn hàng</span>
+            </div>
+
+            <div class="pull-right pull-none-xs text-center">
+                <a class="m-b-md inline m" href="">
+                    <span class="h3 block font-bold">{{total_fee|vnNumber}}</span>
+                    <small>Chi phí</small>
+                </a>
+                <a class="m-b-md inline m" href="">
+                    <span class="h3 block font-bold">{{total_collect|vnNumber}}</span>
+                    <small>Thu Hộ</small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="clearfix m-b">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <label class="control-label"><h4><i class="text-danger">*</i> Địa chỉ lấy hàng : </h4></label>
+                                <div class="form-group">
+                                    
+                                    <ui-select ng-model="fee.Inventory"   ng-disabled="disabled" >
+                                        <ui-select-match placeholder="Kho hàng">{{$select.selected.user_name + ' ' + $select.selected.phone + ' - ' + $select.selected.full_address}}</ui-select-match>
+                                        <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                                        <ui-select-choices  group-by="'inventory'" repeat="value in list_inventory | filter: $select.search">
+                                          <span>{{value.user_name + ' - ' + value.phone}} <br/>
+                                          <span>{{value.full_address}} <small ng-if="value.distance" class="text-info">(cách đây : {{value.distance}} km)</small></span></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                    
+                                    <a ng-if="fee.Inventory.post_office == true"  style="color:#8a6d3b" class="help-block m-b-none text-warning"> <strong>Lưu ý: </strong> Bạn đang chọn phương thức gửi hàng qua bưu cục, vui lòng nhấn vào đây để xem hướng dẫn cách mang hàng qua bưu cục .
+                                            </a>
+                                            
+                                    <a ng-if="!list_inventory.length" ui-sref="app.config.inventory" target="_blank" class="help-block m-b-none text-danger"> Bạn chưa cấu hình kho hàng, vui lòng click vào đây để nhập thông tin về địa chỉ kho lấy hàng !</a>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-md-offset-1 text-right wrapper-md">
+                                <button type="button" class="btn btn-lg btn-warning" ng-click="create_multi(0)">
+                                    <i class="fa fa-check-square"></i> Tạo đơn hàng
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-md-offset-9 text-right">
+                                <button type="button" class="btn btn-success" ng-click="add()">
+                                    <i class="fa fa-plus"></i> Thêm đơn hàng
+                                </button>
+                                <button type="button" class="btn btn-danger" ng-click="delete()">
+                                    <i class="fa fa-trash-o"></i> Xóa đơn hàng
+                                </button>
+                            </div>
+                        </div>
+                        <div class="prefix">&nbsp;</div>
+
+                        <form class="form-horizontal form-validation" ng-repeat="(key,order) in list_order" name="frmOrder_{{key}}" ng-if="order.delete != 1">
+                            <div class="row">
+                                <div class="col-md-1 padder-r">
+                                    <div class="input-group m-b-sm">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default">
+                                            {{key + 1}}
+                                        </button>
+                                         <label class="checkbox-inline i-checks b-a checkbox_create_multi">
+                                             <input type="checkbox" ng-model="order.check" ng-disabled="order.tracking_code"><i></i>
+                                         </label>
+                                    </span>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" tooltip="Mua bảo hiểm hàng hóa">
+                                            <i class="fa fa-shield text-info"></i>
+                                        </button>
+                                         <label class="checkbox-inline i-checks b-a checkbox_create_multi">
+                                             <input type="checkbox" ng-model="order.protected"  value="" ng-change="change(order)" ng-disabled="order.tracking_code"><i></i>
+                                         </label>
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" tooltip="Cho người nhận xem(coi) hàng">
+                                            <i class="fa fa-eye text-info"></i>
+                                        </button>
+                                         <label class="checkbox-inline i-checks b-a checkbox_create_multi">
+                                             <input type="checkbox" ng-model="order.checked" ng-change="changeChecking(order.checked)" value="" ng-disabled="order.tracking_code"><i></i>
+                                         </label>
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" tooltip="Hàng dễ vỡ, chất lỏng">
+                                            <i class="fa fa-glass text-info"></i>
+                                        </button>
+                                         <label class="checkbox-inline i-checks b-a checkbox_create_multi">
+                                             <input type="checkbox" ng-model="order.fragile" value="" ng-disabled="order.tracking_code"><i></i>
+                                         </label>
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 col-md-offset-2 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default"><strong>Chi Phí</strong></button>
+                                          </span>
+                                        <input type="text" class="form-control" placeholder="0" ng-model="order.vas" formatnumber disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-warning" tooltip="Phí CoD + Phí Bảo hiểm">
+                                                <strong ng-show="!order.waiting">Thu Hộ </strong>
+                                                <i ng-show="order.waiting" class="fa fa-spinner text-info"></i>
+                                            </button>
+                                          </span>
+                                        <input type="text" class="form-control" placeholder="0" formatnumber ng-model="order.money_collect" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <button ng-if="!order.tracking_code" class="btn btn-warning" ng-disabled="order.waiting || frmOrder_{{key}}.$invalid" ng-click="create(order)" >
+                                        <i class="fa fa-check-square"></i> Tạo đơn hàng
+                                    </button>
+                                    <a ng-if="order.tracking_code" ui-sref="detail({code:order.tracking_code})" class="btn btn-success" target="_blank">
+                                        {{order.tracking_code}}
+                                    </a>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group m-b-none">
+                                <div class="col-md-2 padder-r">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Người nhận"><i class="fa fa-user text-info"></i></button>
+                                          </span>
+                                        <input type="text" class="form-control" ng-model="order.to_name" placeholder="Người nhận" ng-disabled="order.tracking_code" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Số điện thoại"><i class="fa fa-tablet text-info"></i></button>
+                                          </span>
+                                        <input type="text" class="form-control" placeholder="Số điện thoại" ng-model="order.to_phone" ng-disabled="order.tracking_code" ng-minlength="9" ng-maxlength="14" ng-pattern="/^[0-9]+$/" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Quận/Huyện - Tỉnh/Thành phố">
+                                                <i ng-show="!order.loadingLocations" class="fa fa-map-marker text-info"></i>
+                                                <i ng-show="order.loadingLocations" class="fa fa-spinner text-info"></i>
+                                            </button>
+                                          </span>
+                                        <input type="text"
+                                               ng-model="order.to_location" class="form-control"
+                                               ng-change="change(order)"
+                                               typeahead="item as item.full_address for item in getLocation($viewValue, order)"
+                                               typeahead-min-length    = '3'
+                                               typeahead-wait-ms       = '500'
+                                               typeahead-loading       = "loadingLocations"
+                                               placeholder="Quận/Huyện - Tỉnh/Thành phố"
+                                               ng-disabled="order.tracking_code"
+                                               required
+                                        />
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Số nhà, tên đường, ngõ, hẻm"><i class="fa fa-home text-info"></i></button>
+                                          </span>
+                                        <input type="text" class="form-control" ng-model="order.to_address" placeholder="Số nhà, tên đường, ngõ, hẻm" ng-disabled="order.tracking_code" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r">
+                                    <div class="form-group controls">
+                                        <select class="form-control" ng-model="order.service" ng-options="key as value for (key , value) in service" ng-change="change(order)" ng-disabled="order.tracking_code" required>
+                                            <option value="" >Dịch vụ vận chuyển</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-2 padder-r">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Tên sản phẩm">
+                                                <i class="fa fa-shopping-cart text-info"></i>
+                                            </button>
+                                          </span>
+                                        <input type="text" class="form-control" ng-model="order.name" placeholder="Tên sản phẩm" ng-disabled="order.tracking_code" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Khối lượng">
+                                                <i class="fa  fa-tags text-info"></i></button>
+                                          </span>
+                                        <input type="text" class="form-control" ng-model="order.weight" ng-change="change(order)" placeholder="gram" formatnumber ng-disabled="order.tracking_code" required>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <div class="controls">
+                                        <input type="text" class="form-control" ng-model="order.amount" ng-change="change(order)" placeholder="Tổng tiền(đ)" formatnumber ng-disabled="order.tracking_code" required />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Số lượng">
+                                                <i class="fa fa fa-info text-info"></i></button>
+                                          </span>
+                                        <input type="text" class="form-control" ng-model="order.total_quantity" ng-change="change(order)" placeholder="Số lượng" formatnumber ng-disabled="order.tracking_code" required>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r no-padder-l">
+                                    <div class="input-group m-b-sm">
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" tooltip="Ghi chú"><i class="fa fa-edit text-info"></i></button>
+                                          </span>
+                                        <input type="text" class="form-control" ng-model="order.description" ng-disabled="order.tracking_code" placeholder="Ghi chú">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r no-padder-l">
+                                    <div class="controls">
+                                        <select class="form-control" ng-model="order.config" ng-options="items.id as items.name for items in list_pay_pvc" ng-change="change(order)" ng-disabled="order.tracking_code" required>
+                                            <option value="" >Hình thức thanh toán</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2 padder-r">
+                                    <div class="form-group controls">
+                                        <select class="form-control" ng-model="order.courier" ng-options="item as item.courier_name for item in order.list_courier" ng-change="change_courier(order)" ng-disabled="!order.courier || order.tracking_code" required >
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                        </form>
+                    </div>
+                </div> 
+                <!--/ Panel-->
+            </div>
+        </div>
+    </div>
+</div>

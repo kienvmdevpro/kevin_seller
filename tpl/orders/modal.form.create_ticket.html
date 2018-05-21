@@ -1,0 +1,114 @@
+ <form name="FormCreate" class="form-horizontal form-validation" ng-submit="createTicket(datacase, data, refer)" role="form">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-7 pull-left no-padder">
+                    <h4 ng-if="id == 0" class="modal-title">Gửi yêu cầu/khiếu nại</h4>
+                    <h4 ng-if="id > 0" class="modal-title">Gửi thành công yêu cầu số <a class="text-info" target="_blank" ui-sref="ticket.request.management({time_start:'14day', id: id})">#{{id}}</a></h4>
+                </div>
+                <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+   
+    <div class="modal-body wrapper-md">
+         <div class="form-group m-b-none">
+            <div class="col-sm-12">
+            <input type="text" placeholder="Tiêu đề yêu cầu" class="form-control" 
+                                ng-model                = "datacase"
+                                typeahead-min-length    = '3'
+                                typeahead-wait-ms       = '300'
+                                typeahead               = "item as item.type_name for item in getCase($viewValue) | limitTo:8"
+                                typeahead-loading       = "loadingCase"
+                                required
+            />
+         </div>
+        </div>
+            
+        <div class="form-group padder" ng-show="show_respond">
+            <a class="pull-right" ng-click="toogle_show()">
+              <i class="glyphicon glyphicon-transfer text-md text-muted wrapper-sm"></i>
+            </a>
+            <textarea rows="5" class="form-control w-full" ng-model="data.content"  placeholder="Nội dung khách hàng yêu cầu xử lý hoặc góp ý ..." required></textarea>
+        </div>
+        
+        <div class="form-group padder" ng-show="!show_respond">
+            <a class="pull-right" ng-click="toogle_show()">
+              <i class="glyphicon glyphicon-transfer text-md text-muted wrapper-sm"></i>
+            </a>
+            <div class="col-md-12 no-padder">
+                <div class="form-control wrapper-xxs b-success b-1x scroll-y" markdown="data.content" style="height: 117px;" >
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-12">
+                <tags-input
+                        ng-model="refer"
+                        placeholder="Liên quan đến ..."
+                        min-length="8"
+                        max-length="30"
+                        max-tags="5"
+                        ></tags-input>
+            </div>
+        </div> 
+        
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="b-a b-dashed" nv-file-drop="" uploader="_uploaderPopup">
+                    <div nv-file-over="" uploader="_uploaderPopup" over-class="another-file-over-class">
+                        <input type="file" class="w-full input-uploader-popup" nv-file-select="" uploader="_uploaderPopup" multiple />
+                        <span class="content-uploader-popup"><i class="fa fa-picture-o fa-lg"></i> Kéo thả tối đa 5 file (mỗi file nhỏ hơn 3mb) vào đây hoặc click để lựa chọn</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="form-group text-xs m-b-none" ng-if="_uploaderPopup.queue.length > 0">
+            <div class="col-sm-12">
+                <table class="table m-b-none">
+                    <thead>
+                        <tr>
+                            <th width="50%">Tên</th>
+                            <th ng-show="_uploaderPopup.isHTML5">Size</th>
+                            <th ng-show="_uploaderPopup.isHTML5">Progress</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in _uploaderPopup.queue">
+                            <td><strong>{{ item.file.name }}</strong></td>
+                            <td ng-show="_uploaderPopup.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                            <td ng-show="_uploaderPopup.isHTML5">
+                                <div class="progress" style="margin-bottom: 0;">
+                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                            </td>
+                            <td nowrap>
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                    <span class="glyphicon glyphicon-trash"></span> Xóa
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div> 
+
+    </div>
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">Hủy bỏ</button>
+        <button class="btn btn-info" ng-disabled="FormCreate.$invalid || frm_submit" >Gửi yêu cầu</button>
+    </div>
+    </form>
+
+    

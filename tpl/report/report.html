@@ -1,0 +1,57 @@
+<div ng-controller="ReportSettingController">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n" translate>EMPLOY_h1</h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+  
+    <div class="wrapper b-b bg-white">
+        <form name="" role="form" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    <lable translate>EMPLOY_lable </lable>
+                    <div class="input-group inline m-l" ng-init="dt1.opened=false;">
+                        <input placeholder="{{'EMPLOY_placeholder_from' | translate }}" type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt1.value" is-open="dt1.opened"
+                               ng-change="" datepicker-options="{}" close-text="Close"  style="width: 150px">
+                        <button type="button" class="btn btn-default" ng-click="dt1.opened=true;dt2.opened=false;$event.preventDefault();$event.stopPropagation();">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </div>
+                    <div class="input-group inline m-l" ng-init="dt2.opened=false;">
+                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt2.value" is-open="dt2.opened"
+                               ng-change="" datepicker-options="{}" close-text="Close" placeholder="{{'EMPLOY_placeholder_to' | translate}}" style="width: 150px">
+                        <button type="button" class="btn btn-default" ng-click="dt2.opened=true;dt1.opened=false;$event.preventDefault();$event.stopPropagation();">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-info ng-binding" ng-click="set_date()">
+					<i class="fa fa-search"></i>&nbsp;{{'Btt_search' | translate }}<!-- Tìm kiếm -->
+					</button>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered b-t b-light">
+                        <thead>
+                            <tr>
+                                <th class="text-center v-middle" translate>EMPLOY_table_no</th>
+                                <th class="text-center v-middle" translate>EMPLOY_table_name</th>
+                                <th class="text-center v-middle" ng-repeat="title in heading" >{{keyLang=='vi' ? title.name : title.nameEn}}</th>
+                                <th class="text-center v-middle" translate>EMPLOY_table_total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in users" class="animated fadeIn">
+                                <td class="text-center v-middle">{{$index+1}}</td>
+                                <td class="text-center v-middle"><p>{{user.name}}</p><p>{{user.email}}</p></td>
+                                <td class="text-center v-middle" ng-repeat="val in user.data">
+                                {{ val.item}}</td>
+                                <td class="text-center v-middle">{{sum(user.data)}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--/ Content-->
+</div>

@@ -1,0 +1,263 @@
+<style>
+    .pac-container {
+        z-index: 100000;
+    }
+
+    .nav.nav-tabs .thembtn a {
+        cursor: pointer!important;
+        color: #428bca!important;
+    }
+
+    /*@media (min-width: 767px) {*/
+
+    .add-shopify {
+        position: absolute;
+        right: 10px;
+        top: 1px;
+    }
+
+    .add-lazada {
+        position: absolute;
+        right: 178px;
+        top: 1px;
+    }
+
+    .order-service .ui-select-choices-row>a {
+        padding: 10px 10px 10px 10px;
+    }
+
+    .order-service .divider {
+        margin: 0;
+    }
+
+    .order-service .dropdown-header,
+    .order-service .dropdown-menu>li>a {
+        padding: 2px 15px;
+    }
+
+    .order-select-country .ui-select-bootstrap .ui-select-toggle>.caret {
+        right: 3px !important;
+    }
+
+    .order-select-country .ui-select-choices {
+        width: 216px;
+    }
+
+    .order-select-country {
+        max-width: 40px;
+    }
+
+    .order-autocomplete-phone .dropdown-menu {
+        left: 0px !important;
+    }
+
+    .sdt {
+        padding-left: 40px;
+    }
+
+    .opencontry {
+        position: absolute;
+        z-index: 999;
+        top: 4px;
+    }
+
+    .opencontry .select-opencontry {
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    div.hvc-select .ui-select-bootstrap .ui-select-choices-row .hvc_description>span {
+        white-space: normal;
+    }
+
+    div.hvc-select .ui-select-bootstrap .ui-select-match>span.btn {
+        white-space: normal;
+        /* height: auto; */
+    }
+
+    .hvc_show {
+        display: inline !important;
+    }
+
+    /*  */
+</style>
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="save()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'OBG_1ThongTinNguoiNhan' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <span ng-if="waitting_add_store" style="position: absolute;top:50%;left:45%;z-index:1000">
+            <i style="font-size:45px" class="fa-2x fa fa-spinner fa-spin"></i>
+        </span>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-xs-12">
+                <div id="buyer-info">
+                    <div class="form-group">
+                        <label for="buyer_phone" name="buyer_phone" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_SoDienThoai' | translate}}
+                            <!-- Số điện thoại -->
+                        </label>
+
+                        <div class="col-lg-9 col-md-8">
+                            <style>
+                                .phone-disable #order_phone {
+                                    cursor: not-allowed;
+                                    background-color: #eee;
+                                    opacity: 1;
+                                }
+                            </style>
+                            <div class="input-group">
+                                <ul class="nav navbar-nav opencontry" ng-init="openphone = false;">
+                                    <li class="dropdown {{openphone == true ? 'open' : ''}}" ng-class="classphone">
+                                        <a style="margin-left: 7px;padding:0px;height: 25px;" href class="dropdown-toggle padder-xs clear" id="dropdownMenu2" ng-click="open_sdt()">
+                                            <div style="max-width: 45px;float: left;" class="iti-flag {{To.Buyer.Country.country_code_img}}"></div>
+                                            <span class="caret" style="margin-bottom: 5px;"></span>
+                                            </span>
+
+                                        </a>
+                                        <ul ng-hide="hideopenphone" class="dropdown-menu left-none select-opencontry" role="menu">
+                                            <li ng-repeat="value in list_country">
+                                                <a ng-click="setcontry(value);openphone =false">
+                                                    <div style="max-width: 45px;float: left;" class="iti-flag {{value.country_code_img ? value.country_code_img : 'vn'}}"></div>&nbsp; {{value.country_name}}&nbsp;(+{{value.phone_code}})
+                                                </a>
+                                            </li>
+
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <buyer-autocomplete class="order-autocomplete-phone" ng-class="{'phone-disable' : Config.Service == 6}" fullname="To.Buyer.Name"
+                                    code="To.Buyer.Id" address="To.Buyer.Address" ng-model="To.Buyer.Phone" phonetwo="To.Buyer.Phone2"
+                                    area="To.Buyer.Area" defaultphone="defaultphone" country="To.Buyer.Country" phone-false="phoneFalse">
+                                </buyer-autocomplete>
+
+
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" ng-disabled="Config.Service == 6" type="button" ng-click="show_phone_2()">
+                                        <i class="fa {{!show_phone2 ? 'fa-plus' : 'fa-minus'}}"></i>
+                                    </button>
+                                </span>
+
+                            </div>
+                            <small class="label label-warning" ng-if="phoneFalse">
+                                {{'OBG_HinhNhuBanNhapSaoSDT' | translate}}</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="show_phone2">
+                        <label for="buyer_phone2" class="col-lg-3 col-md-4 control-label text-left">&nbsp;</label>
+                        <div class="col-lg-9 col-md-8">
+
+                            <input type="text" ng-disabled="[6,12].indexOf(Config.Service) >=0" ng-model="To.Buyer.Phone2" name="buyer_phone2" minlength="9"
+                                maxlength="14" class="form-control" placeholder="{{ 'OBG_SDTPhucuaNguoiNhan' | translate}}" autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buyer_name" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_HoTen' | translate}}
+                            <!-- Họ tên -->
+                        </label>
+                        <div class="col-lg-9 col-md-8">
+                            <input type="text" ng-model="To.Buyer.Name" name="buyer_name" class="form-control" id="buyer_name" placeholder="{{'OBG_HoTen' | translate}}"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="buyer_address" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_DiaChi' | translate}}
+                            <!-- Địa chỉ -->
+                        </label>
+                        <div class="col-lg-9 col-md-8">
+                            <input ng-show="To.Buyer.Country.id != 237" id="addressgg1" tabindex="3" class="form-control" ng-model="To.Buyer.Address"
+                                name="buyer_address" details="autocomplete_details" required google-autocomplete-country country="To.Buyer.Country.country_code"
+                                required placeholder="{{'OBG_NhapDiaChiDuongNgo' | translate}}" />
+
+                            <input id="addressgg" ng-show="To.Buyer.Country.id == 237" class="form-control" ng-model="To.Buyer.Address" name="buyer_address"
+                                details="autocomplete_details" required google-autocomplete required placeholder="{{'OBG_NhapDiaChiDuongNgo' | translate}}"
+                            />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="country" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_QuocGia' | translate}}
+                            <!-- Quốc gia -->
+                        </label>
+                        <div class="col-lg-6 col-md-5">
+                            <ui-select ng-model="To.Buyer.Country" name="country" ng-disabled="disabled" required>
+                                <ui-select-match placeholder="{{'OBG_QuocGia' | translate}}">{{$select.selected.country_name }}</ui-select-match>
+                                <ui-select-choices repeat="value in list_country | filter: $select.search |limitTo: 30 track by $index">
+                                    {{value.country_name}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="col-md-3 col-lg-3" style="padding-left:0px">
+                            <input class="form-control" ng-model="To.Buyer.Zipcode" name="buyer_address" details="autocomplete_details" placeholder="ZipCode"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-if="To.Buyer.Country.id != 237">
+                        <label for="country" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TinhThanh' | translate}}
+                            <!-- Tỉnh thàn -->h</label>
+                        <div class="col-lg-9 col-md-8">
+                            <ui-select ng-model="To.Buyer.CityGlobal" name="country" ng-disabled="disabled" required>
+                                <ui-select-match placeholder="{{'OBG_TinhThanh' | translate }}">{{$select.selected.city_name}}</ui-select-match>
+                                <ui-select-choices refresh-delay="300" refresh="loadCityGlobal(To.Buyer.Country.id, $select.search)" repeat="value in list_city_global | filter: $select.search | limitTo: 20 track by $index">
+                                    {{value.city_name}}
+                                    <span ng-if="value.zipcode">({{value.zipcode}})</span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="form-group   " ng-if="To.Buyer.Country.id == 237">
+                        <label for="buyer_name" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_KhuVuc' | translate}}
+                            <!-- Khu vực -->
+                        </label>
+                        <div class="col-lg-9 col-md-8   ">
+                            <district-from-google-place ng-model="To.Buyer.Area" name="buyer_area" default-district="To.Buyer.Area.district_id" details="autocomplete_details"></district-from-google-place required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-if="list_ward_by_district.length > 0" ng-if="To.Buyer.Country.id == 237">
+                        <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_PhuongXa' | translate}}
+                            <!-- Phường/xã -->
+                        </label>
+                        <div class="col-lg-9 col-md-8">
+
+                            <select ng-model="To.Buyer.ward_id" class="form-control" name="buyer_ward" required>
+                                <option value="">{{'OBG_ChonPhuongXa' | translate}}
+                                    <!-- Chọn Phường/xã -->
+                                </option>
+                                <option value="{{item.id}}" ng-repeat="item in list_ward_by_district">{{item.ward_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="To.Buyer.Country.id != 237 ">
+                        <label for="inventory_area" class="col-lg-3 col-md-4 control-label text-left">&nbsp;</label>
+                        <div class="col-lg-9 col-md-8">
+                            <label class="checkbox i-checks ">
+                                <input type="checkbox" ng-model="To.Buyer.POBox" class="ng-valid ng-dirty ng-valid-parse ng-touched" tabindex="0" aria-checked="true"
+                                    aria-invalid="false">
+                                <i></i>
+                                PO Box
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+        <button type="submit" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    </div>
+</form>

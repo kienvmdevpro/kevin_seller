@@ -1,0 +1,25 @@
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img ng-src="img/sc_logo.jpg" />
+              <h4>Cổng vận chuyển giao nhận và thu tiền toàn quốc</h4>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-body wrapper-md">
+      <div class="row">
+        <div class="col-md-12">
+                    Bạn đã tạo vận đơn <a class="text-orange"  ui-sref="detail({code:Order.TrackingCode})" target="_blank">{{Order.TrackingCode}}</a> thành công.<br />
+                    Chú ý: Quý khách cần ghi mã vận đơn <a class="text-orange"  ui-sref="detail({code:Order.TrackingCode})" target="_blank">{{Order.TrackingCode}}</a> và tên hãng vận chuyển lên gói hàng)
+                    <br /><br />
+                    <a class="text-orange" ui-sref="print({code:Order.TrackingCode})" target="_blank"><i class="fa fa-print"></i> In vận đơn </a>&nbsp; <button type="button" ng-if="Order.status == 20" ng-dissabled="waiting_status" class="btn btn-success" ng-click="accept_order(Order.TrackingCode)"><i class="fa fa-thumbs-o-up"></i> Duyệt vận đơn</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+        <button class="btn btn-info r-2x" ng-click="run()">Đóng</button>
+    </div>

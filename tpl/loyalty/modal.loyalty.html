@@ -1,0 +1,66 @@
+<div class="b-b grad-loyalty">
+    <span class="row">
+        <div class="col-md-2">
+            <img ng-if="userInfo.loy_level == 2"  class="max-height-none" style="max-width: 100px;" ng-src="img/gold.png" alt="." />
+            <img ng-if="userInfo.loy_level == 1"  class="max-height-none" style="max-width: 100px;" ng-src="img/sliver.png" alt="." />
+            <img ng-if="userInfo.loy_level == 0"  class="max-height-none" style="max-width: 100px;" ng-src="img/copper.png" alt="." />
+        </div>
+        <div class="col-md-8 no-padder m-t-sm m-b-sm text-white">
+            <span class="text-2x">{{userInfo.fullname}}</span>  <br />
+            <span class="text-xs">{{loyalty_level[userInfo.loy_level]['name']}}</span> <br />
+            <button class="btn btn-rounded btn-success m-t-sm" data-ng-click="get_gift()">&nbsp;&nbsp;Đổi thưởng&nbsp;&nbsp;</button>
+        </div>
+        <div class="col-md-2 text-white m-t-sm">
+            <button type="button" class="pull-right close" style="margin-top: -15px;" ng-click="cancel()"><i class="fa fa-times"></i></button>
+            <span class="text-3x m-t-md">{{data.user.current_point || '0' | vnNumber }}</span>  <br />
+            <span class="text-xs">Điểm trong tháng</span>
+        </div>
+    </span>
+</div>
+
+<div class="hbox hbox-auto-xs hbox-auto-sm">
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+            <tabset class="tab-container">
+                <tab>
+                    <tab-heading>
+                        Tất cả lịch sử
+                    </tab-heading>
+                    <ul class="list-group list-group-alt list-group-lg no-borders pull-in m-b-none">
+                        <div data-ng-include=" 'tpl/loyalty/history.html' "></div>
+                    </ul>
+                </tab>
+                <tab>
+                    <tab-heading>
+                        Tích lũy điểm
+                    </tab-heading>
+                    <ul class="list-group no-borders pull-in m-b-none">
+                        <div data-ng-include=" 'tpl/loyalty/point.html' "></div>
+                    </ul>
+                </tab>
+                <tab>
+                    <tab-heading>
+                        Thay đổi hạng
+                    </tab-heading>
+                    <ul class="list-group no-borders pull-in m-b-none">
+                        <div data-ng-include=" 'tpl/loyalty/level.html' "></div>
+                    </ul>
+                </tab>
+                <tab>
+                    <tab-heading>
+                        Đổi quà
+                    </tab-heading>
+                    <ul class="list-group no-borders pull-in m-b-none">
+                        <div data-ng-include=" 'tpl/loyalty/gift.html' "></div>
+                    </ul>
+                </tab>
+            </tabset>
+
+        </div>
+    </div>
+</div>
+
+<script id="ModalGiftLoyaltyCtrl.html" type="text/ng-template">
+    <div ng-include="'tpl/loyalty/modal.get_gift.html'"></div>
+</script>

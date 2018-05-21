@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <strong><!-- Set quyền sử dụng cho tài khoản nhân viên -->
+            {{'VER_SetQuyenChoTaiKhoanNhanVien' | translate}}</strong>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body wrapper-md">
+    <form>
+        <div class="form-group">
+            <select ng-model="frm.privilege" class="form-control">
+                <option value="">------</option>
+                <!-- <option value="0">Ông chủ</option> -->
+                <option value="1">{{'USER_QuanLy' | translate}}</option>
+                <option value="2">{{'VER_TruongNhom' | translate}}</option>
+                <option value="3">{{'VER_NhanVien' | translate}}</option>
+            </select>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="accept(frm)">{{'Btt_update' | translate}}</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">{{'Btt_close' | translate}}</button>
+</div>

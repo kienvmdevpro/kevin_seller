@@ -1,0 +1,216 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="save()" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">Dịch vụ</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12 col-lg-12 service_box" ng-class="{'waiting': waiting}">
+                <div id="service">
+                    <div class="form-group" ng-if="!disabled_payment_type">
+                        <div class="col-lg-12 col-md-12">
+                            <select id="u376_input" class="form-control" ng-model="Config.Type" ng-disabled="Config.Service == 6">
+                                <option value="2">{{'OBG_ThuHoTienHang_PVC_COD' | translate }}
+                                    <!-- Thu hộ tiền hàng &amp; phí vận chuyển, phí thu hộ -->
+                                </option>
+                                <option value="1">{{'OBG_ThuHoTheoSoTienKHNhap' | translate }}
+                                    <!-- Thu hộ theo số tiền quý khách nhập -->
+                                </option>
+                                <option value="3">{{'OBG_ChiThuHoTienHang' | translate }}
+                                    <!-- Chỉ thu hộ tiền hàng -->
+                                </option>
+                                <option value="4">{{'OBG_ChiThuPVC_Cod' | translate }}
+                                    <!-- Chỉ thu hộ phí vận chuyển &amp; phí thu hộ -->
+                                </option>
+                                <option value="5">{{'OBG_KhongThuHo' | translate }}
+                                    <!-- Không thu hộ -->
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12 {{data_service_popup.css}}">
+                            <!-- VI -->
+                            <ui-select class="order-service " ng-model="Config.Service" popover-placement="bottom" popover-enable="data_service_popup.isOpen"
+                                popover-template="'popover_service_teamplate.html'" required id="service_select" ng-if="!disabled_service && keyLang !='en'">
+                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}">
+                                    <i class="fa {{$select.selected.icons}} " aria-hidden="true"></i>
+                                    {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}}
+                                    <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span>
+                                </ui-select-match>
+                                <ui-select-choices group-by="'group'" repeat="value.id as value in list_services | filter: $select.search">
+                                    <span>
+                                        <i class="fa {{value.icons}} " aria-hidden="true"></i> {{keyLang=='vi' ? value.name : value.name_en}}
+                                        <!-- {{value.name}} -->
+                                        <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span>
+                                    </span>
+                                    <br>
+                                    <span style="font-size: 10px;">
+                                        <i class="fa  icon-info "></i>&nbsp;
+                                        <i>{{keyLang=='vi' ? value.note : value.note_en}}</i>
+                                    </span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <!-- EN -->
+                            <ui-select class="order-service " ng-model="Config.Service" popover-placement="bottom" popover-enable="data_service_popup.isOpen"
+                                popover-template="'popover_service_teamplate.html'" required id="service_select" ng-if="!disabled_service && keyLang =='en'">
+                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}">
+                                    <i class="fa {{$select.selected.icons}} " aria-hidden="true"></i>
+                                    {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}}
+                                    <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span>
+                                </ui-select-match>
+                                <ui-select-choices group-by="'group'" repeat="value.id as value in list_services | filter: $select.search">
+                                    <span>
+                                        <i class="fa {{value.icons}} " aria-hidden="true"></i> {{keyLang=='vi' ? value.name : value.name_en}}
+                                        <!-- {{value.name}} -->
+                                        <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span>
+                                    </span>
+                                    <br>
+                                    <span style="font-size: 10px;">
+                                        <i class="fa  icon-info "></i>&nbsp;
+                                        <i>{{keyLang=='vi' ? value.note : value.note_en}}</i>
+                                    </span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                            <!-- quoc te -->
+                            <ui-select ng-model="Config.Service" required id="service_select" ng-if="disabled_service">
+                                <ui-select-match placeholder="{{'OBG_ChonDichVu' | translate}}">
+                                    <i class="fa fa-globe" aria-hidden="true"></i>&nbsp; {{keyLang=='vi' ? $select.selected.name : $select.selected.name_en}}
+                                    <!-- {{$select.selected.name}} -->
+                                    <span ng-if="calculateInfo.selected_courier">({{calculateInfo.selected_courier.leatime_str}})</span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="value.id as value in list_services_global | filter: $select.search">
+                                    <span>
+                                        <i class="fa fa-globe " aria-hidden="true"></i>{{keyLang=='vi' ? value.name : value.name_en}}
+                                        <span ng-if="calculateInfo.selected_courier && value.id == $select.selected.id">({{calculateInfo.selected_courier.leatime_str}})</span>
+                                    </span>
+                                    <br>
+                                    <span style="font-size: 10px;">
+                                        <i class="fa  icon-info "></i>&nbsp;
+                                        <i>{{keyLang=='vi' ? value.note : value.note_en}}</i>
+                                    </span>
+                                </ui-select-choices>
+                            </ui-select>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12 hvc-select">
+                            <ui-select ng-model="Config.Courier" ng-disabled="disabled">
+                                <ui-select-match placeholder="{{'OBG_HangVanChuyen' | translate}}">
+                                    <img ng-src="/img/logo-hvc/{{$select.selected.courier_id}}.png" alt="" width="50px"> &nbsp; {{$select.selected.value.name}}
+                                    <span ng-if="$select.selected.fee.pvc" style="position: absolute; right: 25px;top: 9px;">
+                                        <convert-currency style="color:#993333" home-currency="$select.selected.fee.pvc +  $select.selected.money_pickup"></convert-currency>
+                                        <!-- ({{$select.selected.fee.pvc +  $select.selected.money_pickup}}{{viewCurrency}}) -->
+                                    </span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="value.value as (key, value) in list_courier  | filter: $select.search track by $index">
+                                    <div ng-mouseenter="value.hide='hide';value.css='hvc_show'" ng-mouseleave="value.hide='';value.css=''">
+                                        <div class="row">
+                                            <div class="pull-left">
+                                                <span style="color: black;">{{value.value.name}} </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12 hvc-select" ng-if="Config.Type == 1">
+                            <input type="text" ng-model="Product.MoneyCollect" id="money_collect" formatnumber
+                        class="form-control" id="product_collect" placeholder="{{'OBG_TienThiHo' | translate}}" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }}"
+                        tooltip-trigger="focus">
+                        </div>
+                </div>
+
+                    <div class="form-group" ng-if="show_inputCouponCode == false">
+                        <div class="col-md-7"> &nbsp;{{'OBG_DoYouHaveCouponCode' | translate}}</div>
+                        <div class="col-md-5 text-right">
+                            <a ng-click="show_CouponCode(true)">
+                                <span class="text-info">{{'OBG_ApplyCouponCode' |translate}}</span>
+                            </a>
+                        </div>
+                        <div class="cleafix"></div>
+                    </div>
+
+                    <div class="form-group" ng-if="show_inputCouponCode == true">
+                        <div class="col-lg-9 col-md-8">
+                            <input type="text" ng-model="Config.Coupon_code" ng-delay="1800" ng-change="add_coupon_code()" class="form-control" placeholder="{{'OBG_TypePromotionCouponCode' | translate}}">
+                        </div>
+                        <div class="col-lg-3 col-md-4">
+                            <a style="height: 34px !important;padding-top: 7px;color: white;" ng-click="show_CouponCode(false)" class="btn bg-orange btn-sm  pull-right ng-binding">
+                                {{'OBG_ApplyCouponCode_' | translate}}
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- <div class="form-group" ng-if="Config.Service!=3 && calculateInfo.selected_courier  &&  [1,8,11].indexOf(calculateInfo.selected_courier.courier_id) >=0">
+                        <div class="col-lg-12 col-md-12">
+                            <label class="i-switch m-t-xs m-r">
+                                <input type="checkbox" ng-model="Config.ToPostOffice" ng-true-value="1" ng-false-value="2">
+                                <i></i>
+                            </label> {{'ORDERC_ToiSeMangHangRaBuuCuc' | translate}}
+                            <a href="javascript:;">
+                                <i class="icon-question" aria-hidden="true" tooltip="{{'ORDERC_ToiSeMangHangRaBuuCuc_ChuThich' | translate }}" tooltip-trigger="mouseenter"></i>
+                            </a>
+
+                        </div>
+                    </div> -->
+
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12">
+                            <label class="i-switch m-t-xs m-r">
+                                <input type="checkbox" ng-checked="Config.Protected == 1" ng-model="Config.Protected" ng-true-value="1" ng-false-value="2">
+                                <i></i>
+                            </label>
+                            <a ng-click="giautest()">{{'OBG_MuaDichVuKHaiGia' | translate}}</a>
+                            <!-- Mua dịch vụ khai giá -->
+                            <a href="javascript:;">
+                                <i class="icon-question" aria-hidden="true" tooltip="{{'OBG_NeuQuyKhachMuaDVBaoHiem' | translate }}" tooltip-trigger="mouseenter"></i>
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12">
+                            <label class="i-switch m-t-xs m-r">
+                                <input type="checkbox" ng-checked="Config.Fragile == 1" ng-model="Config.Fragile" ng-true-value="1" ng-false-value="2">
+                                <i></i>
+
+                            </label> {{'OBG_HangDeVo' | translate }}
+                            <!-- Hàng dễ vỡ/chất lỏng -->
+                            <a href="javascript:;">
+                                <i class="icon-question" aria-hidden="true" tooltip="{{'OBG_VoiHangDeVoVuiLongDongGoi' | translate }}" tooltip-trigger="mouseenter"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-if="!disabled_service">
+                        <div class="col-lg-12 col-md-12">
+                            <label class="i-switch m-t-xs m-r">
+                                <input type="checkbox" ng-checked="Config.Checking == 1" ng-model="Config.Checking" ng-true-value="1" ng-false-value="2">
+                                <i></i>
+
+                            </label> {{'OBG_ChoKhachXemHangKhiNhan' | translate}}
+                            <!-- Cho khách xem hàng khi nhận -->
+                            <a href="javascript:;">
+                                <i class="icon-question" aria-hidden="true" tooltip="{{'OBG_NeuBanSuDungDichVu' | translate}}" tooltip-trigger="mouseenter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+        <button type="submit" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    </div>
+</form>

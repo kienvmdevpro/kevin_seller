@@ -1,0 +1,342 @@
+<style>
+    .order-service .ui-select-choices {
+        min-width: 220px;
+    }
+    .table > tbody > tr > td{
+        padding: 20px 5px 8px 5px;
+    }
+</style>
+<div class="fade-in-right" ng-controller="CreateExcelCtrl">
+    <div class="wrapper-md bg-light">
+        <h1 class="m-n font-thin h3">
+            <i class="fa fa-edit"></i> {{'HEAD_taonhieudonExcel' | translate }}
+            <!-- Tạo nhiều đơn hàng (xls) -->
+        </h1>
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <tabset class="tab-container tab_type tab-inside h60 text-sm" justified="false">
+            <tab ng-click="change_tab(false)">
+                <tab-heading>
+                    <!-- Tạo đơn hàng từ kho riêng -->{{'EXC_Buoc3_TaoTuKhoRieng' | translate}}
+                    <small>({{counter.own_inventory}})</small>
+                </tab-heading>
+            </tab>
+            <tab ng-click="change_tab(true)">
+                <tab-heading>{{'EXC_Buoc3_TaoTuKhoBoxme' | translate}}
+                    <!-- Tạo đơn hàng từ kho Boxme -->
+                    <small>({{counter.boxme_inventory}})</small>
+                </tab-heading>
+            </tab>
+        </tabset>
+        <div class="tab-container">
+            <div class="tab-content tab-fake">
+                <div class=" wrapper-sm">
+                    <div class="clearfix m-b">
+                        <div class="col-md-12">
+
+                        </div>
+
+                        <div class="panel" ng-class="{'panel-default' : total > 0, 'panel-info' : total == 0}">
+                            <div class="panel-heading">
+                                <div class="panel-header">
+                                    <div style="margin:7px" class="alert alert-info m-b-none text-base">
+                                        <!-- Bạn đang sử dụng mẫu tạo file excel đơn giản(nhập tỉnh thành/ quận huyện bằng tay). -->
+                                        {{'EXC_Buoc3_BanDangXuDungMauDG' | translate}}
+                                        <br/>
+                                        <!--  Với mẫu này sẽ có tỷ lệ đơn hàng chưa khớp được tỉnh thành quận huyện chính xác. -->
+                                        {{'EXC_Buoc3_VoiMauNaySeCo' | translate}}
+                                        <br/>
+                                        <!--  Bạn vui lòng kiểm tra kỹ đơn hàng trước khi tạo & duyệt đơn.  -->
+                                        {{'EXC_Buoc3_VuiLongKiemTra'| translate}}
+                                        <br />
+                                        <!--  - Vui lòng chọn lại nếu hệ thống không khớp được thông tin. -->
+                                        {{'EXC_Buoc3_VuiLongChonLai' | translate}}
+                                        <br /> {{'EXC_Buoc3_KiemTraHinhThuc' | translate}}
+                                        <!-- - Kiểm tra lại hình thức thanh toán và thu hộ bạn đang chọn. -->
+                                        <!--strong>Quý khách vui lòng tải file excel mới về để tạo đơn</strong> <a class="text-info" ng-href="{{link_storage}}template/Template_VanDon.xls">tại đây</a-->.
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
+                                <!--label ng-if="total == 0" class="control-label text-md">
+                            Bạn đã tạo đơn hàng thành công, hãy <a class="badge bg-warning" ui-sref="order.list" href="javascript:;" target="_blank">Duyệt đơn hàng ngay</a> để Shipchung thực hiện việc lấy hàng và giao đến cho người mua nhanh nhất!
+                        </label-->
+
+                                <div class="row" ng-show="total > 0">
+                                    <div class="col-lg-8">
+                                        <div class="col-lg-8">
+                                            <div class="form-group">
+                                                <label class="control-label">
+                                                    <h4>{{'EXC_Buoc3' | translate}}
+                                                        <!-- Bước 3: Chỉnh sửa và duyệt đơn hàng -->
+                                                    </h4>
+                                                </label>
+
+                                                <ui-select ng-model="fee.Inventory" ng-disabled="disabled">
+                                                    <ui-select-match placeholder="Kho hàng">{{$select.selected.user_name + ' ' + $select.selected.phone + ' - ' +
+                                                        $select.selected.full_address}}
+                                                    </ui-select-match>
+                                                    <!-- refresh="loadInventory(pos, $select.search)" refresh-delay="0" -->
+                                                    <ui-select-choices group-by="'inventory'" repeat="value in list_inventory | filter: $select.search">
+                                                        <span>{{value.user_name + ' - ' + value.phone}}
+                                                            <br/>
+                                                            <span>{{value.full_address}}
+                                                                <small ng-if="value.distance" class="text-info">({{'OBG_CachDay' | translate}} : {{value.distance}})</small>
+                                                            </span>
+                                                        </span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+
+
+                                                <a ng-if="fee.Inventory.post_office == true" style="color:#8a6d3b" class="help-block m-b-none text-warning">
+                                                    <strong>{{'SETPRI_PO_LuuY' | translate}}
+                                                        <!-- Lưu ý: -->
+                                                    </strong>
+                                                    <!-- Bạn đang chọn phương thức gửi hàng qua bưu cục,
+                                                    vui lòng nhấn vào đây để xem hướng dẫn cách mang hàng qua bưu cục . -->
+                                                    {{'EXC_Buoc3_BandangchonPTBuuCuc' | translate}}
+                                                </a>
+                                                <a ng-if="!list_inventory.length" ui-sref="app.config.inventory" target="_blank" class="help-block m-b-none text-danger">
+                                                    <!-- Bạn chưa cấu hình kho hàng, vui lòng click vào đây để nhập thông tin về địa chỉ kho lấy hàng ! -->
+                                                    {{'EXC_Buoc3_BanChuaCauHinhKho' | translate}}</a>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label for="" class="control-label"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label>
+                                                <label class="i-checks m-t-lg" ng-if="total > 0">
+                                                    <input type="checkbox" ng-change="toggleChecking(checkingALL);changeChecking(checkingALL)" ng-checked="checkingALL == 1"
+                                                        ng-disabled="toggleCheckingProcess" ng-true-value="1" ng-false-value="2"
+                                                        ng-model="checkingALL" />
+                                                    <i></i>
+                                                    {{ checkingALL == 1 && 'OBG_ChoKhachXemHangKhiNhan' || 'EXC_KHongChoKhachXemHangKhiNhan' | translate }}
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 padder-lg">
+                                        <label class="control-label">
+                                            <h5>
+                                                <!-- Nhận dạng thành công {{total - total_disabled}}/{{total}} địa chỉ đơn hàng. -->
+                                                {{'EXC_NhanDangThanhCong' | translate :{param: (total - total_disabled)/total} }}</h5>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="pull-right">
+                                            <button ng-show="total > 0" class="btn m-b-xs btn-default btn-lg" type="button" ng-disabled="create_all || total - total_disabled == 0"
+                                                ng-click="action_create(check_box)">{{'ORDERC_taodonhang' | translate}}
+                                                <!-- Tạo đơn hàng -->
+                                            </button>
+                                            <button ng-show="total > 0" class="btn m-b-xs btn-success btn-lg" type="button" ng-disabled="create_all || total - total_disabled == 0"
+                                                ng-click="action_create(check_box,1)">{{'EXC_BTTTaoVaDuyet' | translate}}
+                                                <!-- Tạo & Duyệt đơn hàng ngay -->
+                                            </button>
+                                            <a ng-show="total == 0" class="btn bg-orange btn-xs" ui-sref="print_new({code:list_tracking_code.toString()})" target="_blank">
+                                                <!-- In đơn hàng -->{{'ORDERC_indonhang' | translate}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <progressbar ng-if="create_all" max="max" value="dynamic" type="info" class="progress-sm m-t-sm">
+                                    <span style="white-space:nowrap;">{{dynamic}}/{{max}}</span>
+                                </progressbar>
+
+                                <table class="table table-striped b-t b-light table-hover table-condensed">
+                                    <thead>
+                                        <th>
+                                            <label class="i-checks m-b-none" ng-if="total > 0">
+                                                <input type="checkbox" ng-change="toggleSelectionAll(checkall)" ng-checked="true" ng-true-value="1" ng-false-value="0" ng-model="checkall"
+                                                />
+                                                <i></i>
+                                            </label>
+                                            <th width="15%">{{'PO_diachi' | translate}}
+                                                <!-- Địa chỉ -->
+                                            </th>
+                                            <th width="20%">{{'ORDERC_nguoinhan1' | translate}}
+                                                <!-- Người nhận -->
+                                            </th>
+                                            <th width="20%">{{'EXC_SoLuong_KhoiLuong' | translate}}
+                                                <!-- Số lượng/Khối lượng -->
+                                            </th>
+
+                                            <th width="25%">{{'EXC_Dichvu' | translate}}
+                                                <!-- Hình thức vận chuyển -->
+                                            </th>
+                                            <th width="10%">{{'EXC_ThuHo' | translate}}
+                                                <!-- Tổng thu hộ -->
+                                            </th>
+                                            <th width="10%" class="text-center">{{'shopify_HanhDong' | translate}}</th>
+                                    </thead>
+                                    <tbody class="text-sm">
+                                        <tr ng-repeat="(key,item) in list_data ">
+                                            <td class="text-center">{{item_stt + $index + 1}}
+                                                <label class="i-checks m-b-none" ng-if="item.active == 0">
+                                                    <input type="checkbox" ng-model="check" ng-change="toggleSelection(key)" ng-checked="check_list(key)" ng-disabled="(item.to_city == 0)"
+                                                    />
+                                                    <i></i>
+                                                </label>
+                                            </td>
+
+                                            <td style="position:relative">
+                                                <div class="clearfix" style="position:absolute;top:10px;right:5px;">
+                                                    <i style="float:right; cursor:pointer;font-size:15px" class="fa fa-edit" ng-click="edit_address(item,key)"></i>
+                                                </div>
+                                                <p style="width: 100%" e-required>
+                                                    <i class="fa fa-map-marker"></i>&nbsp;{{item.to_address}}
+                                                </p>
+                                                <p style="width: 100%" ng-class="{'text-danger' : item.to_city == 0}" required>
+                                                    {{item.city_name}}
+                                                </p>
+                                                <p style="width: 100%" e-required>
+                                                    {{item.district_name}}
+                                                </p>
+                                                <p ng-if="item.synonyms_location==1 && item.to_city >0">
+                                                    <!-- -->
+                                                    <span>
+                                                        {{'EXC_NhanDang' | translate}} {{list_city[item.to_city] ? list_city[item.to_city].city_name : ''}} {{item.to_district>0
+                                                        ? ', ' + list_district_all[item.to_district].district_name:''}}
+                                                    </span>
+                                                </p>
+                                                <p ng-if="item.zipcode">
+                                                    {{item.zipcode}} - {{item.country_code}}
+                                                </p>
+                                            </td>
+
+                                            <td>
+                                                <p style="margin-bottom:10px" name="to_name" e-required>
+                                                    {{item.to_name}}
+                                                </p>
+
+                                                <p style="margin-bottom:10px" name="to_phone" e-required>
+                                                    {{item.to_phone}}
+                                                </p>
+                                            </td>
+
+                                            <td style="position:relative">
+                                                    <div ng-if="!item.boxme_inventory || (item.boxme_inventory && check_load_product)" class="clearfix" style="position:absolute;top:10px;right:5px;">
+                                                        <i style="float:right; cursor:pointer;font-size:15px" class="fa fa-edit" ng-click="edit_product_info(item,key,list_products)"></i>
+                                                    </div>
+                                                    
+                                                <p ng-if="!item.boxme_inventory" style="margin-bottom:10px" name="item_name">
+                                                    <i class="fa fa-gift"></i>&nbsp;{{item.item_name }}
+                                                </p>
+                                                <p ng-if="!item.boxme_inventory" style="margin-bottom:10px" name="item_qty" e-required>
+                                                   {{item.item_qty }} {{'nav_product_quanlyhanghoa' | translate}}
+                                                </p>
+                                                <p ng-if="item.boxme_inventory" style="margin-bottom:10px" name="item_qty" e-required>
+                                                    {{item.order_items.length }} {{'nav_product_quanlyhanghoa' | translate}}
+                                                 </p>
+                                                <p>
+                                                    <span ng-if="item.item_weight">{{item.item_weight | vnNumber}}(gram)</span>
+                                                    <span ng-if="!item.item_weight && !item.boxme_inventory" style="color: #f00">{{'OBG_ChuaCoCanNang' | translate}}</span>
+                                                </p>
+                                                <div ng-if="item.boxme_inventory && !item.name_str" ng-repeat="item_product in item.order_items">
+                                                    <p>
+                                                        <i class="fa fa-star-o"></i>&nbsp;{{item_product.sku}} x {{item_product.quantity}}&nbsp;</p>
+                                                </div>
+                                                <div ng-if="item.boxme_inventory && item.name_str">
+                                                    <span ng-bind-html="item.name_str"></span>
+                                                </div>
+                                                <p editable-text="item.item_price" e-name="collect" e-form="rowform" e-required>
+                                                    <i class="fa fa-dollar"></i>&nbsp;{{item.item_price | vnNumber}}&nbsp;(vnd)
+                                                </p>
+                                            </td>
+
+
+
+                                            <td style="position:relative">
+                                                    <div class="clearfix" style="position:absolute;top:10px;right:5px;">
+                                                    <i style="float:right; cursor:pointer;font-size:15px" class="fa fa-edit" ng-click="edit_service(item,key,list_courier,fee)"></i>
+                                                </div>
+                                                <p style="margin-bottom:10px" e-required>
+                                                    {{pay_pvc[item.vas]}}
+                                                </p>
+
+                                                <p>{{service[item.service]}}</p>
+                                                <p style="margin-bottom:10px" e-required style="width: 100%">
+                                                    <span ng-if="courier[item.courier]">{{ courier[item.courier] }}</span>
+                                                </p>
+
+                                                <p>
+                                                    <span>
+                                                        {{ item.checking == 1 && 'OBG_ChoKhachXemHangKhiNhan' || 'EXC_KHongChoKhachXemHangKhiNhan' | translate }}
+                                                        <!-- {{ item.checking == 1 && "Cho khách xem hàng" || "Không cho khách xem hàng" }} -->
+                                                    </span>
+                                                </p>
+
+                                            </td>
+
+                                            <td>
+                                                <p editable-text="item.collect" e-name="collect" e-form="rowform" e-required>
+                                                    <i class="fa fa-dollar"></i>&nbsp;{{item.collect | vnNumber}}&nbsp;(vnd)
+                                                </p>
+                                            </td>
+                                            <td>
+                                               
+                                            </td>
+
+                                            <td class="text-center">
+                                                <form ng-show=" rowform.$visible && (item.active == 0 || item.status == 'FAIL')" class="form-buttons form-inline" editable-form
+                                                    name="rowform" onbeforesave="save($data,item,key)" shown="inserted == item">
+                                                    <div class="btn-group-vertical w-m">
+                                                        <button type="submit" class="btn btn-success" type="button" ng-disabled="rowform.$waiting || rowform.$invalid">{{'Btt_update' | translate}}</button>
+                                                        <button type="button" class="btn btn-default" ng-disabled="rowform.$waiting" ng-click="remove(key)" type="button">{{'Btt_delete' | translate}}</button>
+                                                    </div>
+                                                </form>
+
+                                                <div class="btn-group-vertical w-m" ng-show="item.active == 0 && !item.waiting_create">
+                                                    <a style="color:#23b7e5" ng-disabled="item.waiting_create" ng-click="create(key,item)" ng-disabled="item.to_city == 0 || item.has_sku_not_found">
+                                                        {{'HEAD_taodonhang' | translate}}
+                                                    </a><br/><br/>
+                                                    <a style="color:#23b7e5" ng-click="remove(key)">{{'Btt_delete' | translate}}</a>
+                                                </div>
+                                                <i ng-if="item.waiting_create" class="fa fa-spin fa-spinner text-3x"></i>
+
+                                                <div ng-show="item.active != 0 && !rowform.$visible">
+                                                    <p>
+                                                        <span class="label" ng-class="{'bg-success': item.status == 'SUCCESS', 'bg-danger': item.status == 'FAIL'}">{{list_status[item.status]}}</span>
+                                                    </p>
+
+                                                    <p>
+                                                        <a ui-sref="detail({code:item.trackingcode})" class="text-info" href="javascript:;" target="_blank">{{item.trackingcode}}</a>
+                                                    </p>
+                                                    <div class="btn-group-vertical w-m">
+                                                        <a ng-if="item.status == 'FAIL'" style="color:#23b7e5" ng-disabled="item.waiting_create" ng-click="create(key,item)" ng-disabled="item.to_city == 0 || item.has_sku_not_found">
+                                                            {{'HEAD_taodonhang' | translate}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!--/ Panel-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="EditAddressExcel.html">
+    <div ng-include="'tpl/orders/edit_address_excel.html'"></div>
+</script>
+
+<script type="text/ng-template" id="EditProductInfo.html">
+    <div ng-include="'tpl/orders/edit_product_info_excel.html'"></div>
+</script>
+
+<script type="text/ng-template" id="EditService.html">
+    <div ng-include="'tpl/orders/edit_service_excel.html'"></div>
+</script>

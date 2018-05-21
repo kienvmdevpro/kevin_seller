@@ -1,0 +1,25 @@
+<div class="modal-header bg-dark">
+    <h3 class="modal-title"><i class="fa fa-user"></i> Yêu cầu đăng nhập</h3>
+</div>
+<div class="modal-body">
+    <h4>Vui lòng đăng nhập và thực hiện lại</h4>
+    <form name="form" class="form-validation">
+        <div class="list-group list-group-sm">
+            <div class="list-group-item">
+                <input type="text" placeholder="Tài khoản" class="form-control no-border" ng-model="user.username" required>
+            </div>
+            <div class="list-group-item">
+                <input type="password" placeholder="Mật khẩu" class="form-control no-border" ng-model="user.password" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="login()" ng-disabled='form.$invalid || onProgress'>
+            Đăng nhập <span ng-show="onProgress"><i class="fa fa-spin fa-spinner"></i></span>
+        </button>
+    </form>
+</div>
+<div class="modal-footer">
+    <small class="pull-left text-danger">{{authError}}</small>
+    <small>
+        <a target="_blank" ui-sref="access.forgotpwd">Quên mật khẩu&nbsp;<i class="glyphicon glyphicon-chevron-right"></i></a>
+    </small>
+</div>

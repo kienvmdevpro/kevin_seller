@@ -1,0 +1,137 @@
+<div ng-controller="previewImportProduct" ng-init="search.proceed()">
+	<div class="wrapper-md bg-light b-b">
+		<h1 class="m-n font-thin h3">Tạo sản phẩm bằng file (csv)</h1>
+	</div>
+	<div style="margin: 10px auto">
+		<form name="selectWarehouse" role="form">
+			<label class="col-sm-1 col-md-1 col-lg-1 control-label">Kho hàng <boxme-input-required></boxme-input-required></label>
+			<div class="col-sm-3 col-md-3 col-lg-3 m-b-xs">
+				<select class="form-control" name="product_inventory" ng-model="InventoryId" required>
+					<option value="">Chọn kho hàng</option>
+					<option type="number" value="{{warehouse.InventoryId}}" ng-repeat="warehouse in listWareHouse">{{warehouse.Name}}</option>
+				</select>
+				<sub class="text-danger" ng-show='selectWarehouse.product_inventory.$invalid'> Bạn vui lòng chọn kho hàng!</sub>
+			</div>
+			<div class="col-sm-3 col-md-3 col-lg-2">
+				<a ng-disabled="listWareHouse.length > 0" class="btn btn-default" ui-sref="setting.default.inventory" target="_blank">Tạo kho hàng</a>
+			</div>
+		</form>
+	</div>
+	<div class="hbox hbox-auto-xs hbox-auto-sm">
+		<div class="col wrapper-sm">
+			<div class="clearfix m-b">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div>
+							<ol>
+								<li ng-repeat="mess in messages"><span ng-bind="mess"></span></li>
+							</ol>
+						</div>
+
+						<div class="text-center" ng-show="search.searching">
+							<i class="fa-2x fa fa-spinner fa-spin"></i>
+						</div>
+						<div class="m-b-md ng-scope" ng-show="sum!=0">
+							<div role="alert" ng-class="{'alert-success': true, 'alert-dismissable': closeable}" class="alert ng-isolate-scope alert-success alert-dismissable" type="success"ng->
+							 
+							    <span class="ng-binding ng-scope" >
+							    Bạn đã tạo thành công <strong>{{sum}}</strong> sản phẩm, để xem các sản phẩm vừa chọn bạn vui lòng vào trang danh sách sản phẩm đổi lựa chọn "Có trong kho BoxMe" thành "Tất cả các sản phẩm" - Xem hướng dẫn <a href="http://www.boxme.vn/huong-dan/tai-sao-toi-khong-tim-thay-san-pham-vua-tao/">Tại đây</a></span>
+							</div>
+						</div>
+						
+						<div class="panel-body no-padder product-table-outter" style="overflow-x: scroll;">
+							<table class="table table-striped table-bordered b-t b-light" ng-show="!search.searching">
+								<thead>
+								<tr>
+									<th class="text-center v-middle hidden-md hidden-sm hidden-xs">STT.</th>
+									<th class="text-center v-middle hidden-md hidden-sm hidden-xs">Tên sản phẩm</th>
+									<th class="text-center v-middle">Loại sản phẩm</th>
+									<th class="text-center v-middle w-sm">Mô tả sản phẩm</th>
+									<th class="text-left v-middle">Tình trạng sản phẩm</th>
+									<th class="text-left v-middle">Thuộc tính</th>
+									<th class="text-left v-middle">Tên kiều/mẫu</th>
+									<th class="text-left v-middle">SKU</th>
+									<th class="text-left v-middle">Thể tích(cm3) - Khối lượng</th>
+									<th class="text-left v-middle">Giá bán (vnđ)</th>
+									<th class="text-left v-middle">Số lượng</th>
+									<th class="text-left v-middle">Trạng Thái</th>
+								</tr>
+								</thead>
+
+								<tbody class="animated" ng-class="{'fadeIn': !search.searching, 'fadeOut': search.searching}">
+								<tr ng-repeat="item in items">
+									<td class="text-center v-middle">{{$index + (search.condition.page - 1) * search.condition.page_size + 1}}</td>
+									<td class="text-center v-middle">{{item.Name}}</td>
+									<td class="text-center v-middle hidden-md hidden-sm hidden-xs">{{item.Category}}</td>
+									<td class="text-center v-middle">{{item.Description}}</td>
+									<td class="text-left v-middle">{{item.Description_1}}</td>
+									<td class="text-left v-middle">
+											<p ng-hide="!item.Variant_1">{{item.Variant_1}}: {{item.Variant_Option_1}}</p>
+											<p ng-hide="!item.Variant_2">{{item.Variant_2}}: {{item.Variant_Option_2}}</p>
+											<p ng-hide="!item.Variant_3">{{item.Variant_3}}: {{item.Variant_Option_3}}</p>
+										
+									</td>
+									<td class="text-left v-middle">{{item.Variant_Name}}</td>
+									<td class="text-left v-middle">{{item.Variant_SKU}}</td>
+									<td class="text-left v-middle">
+											<p ng-hide="!item.Volume">Thể tích(cm3): {{item.Volume}}</p>
+											<p ng-hide="!item.Weight">Khối lượng: {{item.Weight}}</p>
+										
+									</td>
+									<td class="text-left v-middle">
+											<p ng-hide="!item.Price">Lẻ: {{item.Price}}</p>
+											<p ng-hide="!item.Wholesale_Price">Sỉ: {{item.Wholesale_Price}}</p>
+											<p ng-hide="!item.Buy_Price">Mua: {{item.Buy_Price}}</p>
+										
+									</td>
+									
+									<td class="text-left v-middle">{{item.Quantity}}</td>
+									<td class="text-left v-middle">
+											<p ng-show="item.Status==0"><span class="label bg-light dk">Chưa xử lý</span></p>
+											<p ng-show="item.Status==1"><span class="label bg-success">Đã tạo</span></p>
+											<p ng-show="item.Status==2"><span class="label bg-danger">Lỗi</span>
+											</br>
+											{{item.Reason}}	
+											</p>
+										
+									</td>
+								</tr>
+
+								<tr ng-if="!categories.totalItems()" >
+									<td class="text-center v-middle" colspan="7">Không tìm thấy dữ liệu!</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-lg-12 panel-footer text-center list-data" ng-show="!search.searching" style="padding-top: 5px;">
+							<small ng-if="categories.totalItems() > 0" class="text-muted inline m-t-sm m-b-sm">
+								Hiển thị từ {{(search.condition.page - 1) * search.condition.page_size + 1}} - {{(search.condition.page - 1) * search.condition.page_size + listItems[0].length}} của {{categories.totalItems()}} bản ghi
+							</small>
+							<div class="pull-right">
+								<pagination class="pagination-sm" total-items="categories.totalItems()" boundary-links="false"
+								ng-if="categories.totalItems() > 0" max-size="5" items-per-page="search.condition.page_size"
+								ng-change="search.calcPagging()" ng-model="search.condition.page" rotate=false></pagination>
+							</div>
+						</div>
+
+						<div class="col-lg-12">
+							<button ng-click="approve()" class="btn btn-success" type="button">Tạo sản phẩm</button>
+							<button class="btn btn-default" ui-sref="product.upload" type="button">Tải lên file khác</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script id="template/pagination/pagination.html" type="text/ng-template">
+		<ul class="pagination m-t-none">
+			<li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(1)" title="First Page"> <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+			<li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1)" title="Previous Page"><span class="fa fa-chevron-left"></span></a></li>
+			<li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+			<li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1)" title="Next Page"><span class="fa fa-chevron-right"></span></a></li>
+			<li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages)" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span> </a></li>
+		</ul>
+	</script>
+</div>

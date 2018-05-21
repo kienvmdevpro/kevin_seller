@@ -1,0 +1,273 @@
+<style>
+    @media (min-width: 768px) {
+        #list_banks .ui-select-choices-content {
+            width: 135%; 
+        }
+    }
+</style>
+<div ng-controller="ConfigAccountingCtrl" tour-step order="10" content="Cấu hình thông tin để phục vụ việc thanh toán" placement="top">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n"> {{'ACCOUNT_CauHinhThanhToan' | translate}}<!-- Cấu hình thanh toán --></h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white" tour-step order="14" content="{{'ACCOUNT_CauHinhPhiVaHVC' | translate}}" placement="top">
+            <div class="panel panel-default">
+                <form class="form-horizontal form-validation" name="form_email_nl" ng-submit="save(user_info.email_nl,'email_nl')" role="form">
+                    <div class="panel-heading font-bold" tour-step order="13" content="{{'ACCOUNT_LienKetTKNL' | translate}}" placement="top">{{'ACCOUNT_LienKetTaiKhoanThanhToan' | translate}}<!-- Liên kết tài khoản thanh toán tiền thu hộ  --></div>
+                    <div class="panel-body">
+                        <p><strong>{{'ACCOUNT_MienPhi' | translate}}</strong> <!-- hoàn toàn chuyển tiền vào tài khoản ngân lượng của bạn. Rút tiền về tài khoản ngân hàng theo biểu phí của Ngân Lượng -->
+                        {{'ACCOUNT_ChuyenTienVaoTaiKhoanNganLuong' | translate}} ( <a href="http://help.nganluong.vn/chi-tiet-128/2/4518/Bieu-phi-rut-tien.html" class="text-info"><i class="text-info">  {{'ACCOUNT_bieuphi' | translate}}</i></a> )</p>
+                        <div class="form-group" ng-show="!email_nl">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_EmailNganLuong' | translate}}<!-- Email Ngân lượng --></label>
+                            <div class="col-sm-9 col-md-9 col-lg-5">
+                                <input ng-model="user_info.email_nl"  type="email" class="form-control" placeholder="{{'ACCOUNT_EmailNganLuong' | translate}}" required>  <small><i>{{'ACCOUNT_EmailChinhTKNL' | translate}}<!-- Email chính của tài khoản Ngân lượng --></i></small>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="!email_nl">
+                            <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                            <div class="col-sm-4 col-md-4 col-lg-2">
+                                <button ng-disabled="form_email_nl.$invalid || fsubmit" type="submit" class="btn btn-info btn-sm">{{'Btt_update' | translate}}<!-- Cập nhật --></button>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="email_nl">
+                            <span class="col-sm-12">
+                            {{'ACCOUNT_ChungToiDaGuiLink' | translate}}<!-- Chúng tôi đã gửi một đường link kích hoạt tài khoản của bạn tới địa chỉ email: --> <a class="text-info">{{email_nl}}</a>.<br />
+                            {{'ACCOUNT_VuiLongKiemTraEmil' | translate}}<!-- Xin vui lòng kiểm tra hòm thư để kích hoạt tài khoản và hoàn tất. --><br />
+                             {{'ACCOUNT_TranTrongCamOn' | translate}}<!-- Xin trân trọng cảm ơn! -->
+                            </span>
+                        </div>
+                    </div>
+                </form>
+
+                <form class="form-horizontal form-validation" name="form_vimo" ng-submit="save(vimo,'vimo')" role="form">
+                        <div class="panel-heading font-bold" tour-step order="13" content="{{'ACCOUNT_TaiKHoanNganHangTT' | translate}}" placement="top" on-next="onTourEnd()" >
+                        {{'ACCOUNT_NhanTienTrucTiepVaoTK' | translate}}<!-- Nhận tiền trực tiếp vào tài khoản ngân hàng (hoạt động từ 1/6/2015) --></div> 
+                        <div class="panel-body">
+                            <p>{{'ACCOUNT_PhiChuyeTienLa' | translate}}<!-- Phí chuyển tiền là: --> <strong>5.500đ/{{'ACCOUNT_GiaoDich' | translate}}<!-- giao dịch --></strong>, {{'ACCOUNT_TienSeDuocChuyenTrucTiep' | translate}}<!-- tiền sẽ được chuyển trực tiếp vào tài khoản ngân hàng của bạn. --> 
+                            <span class="text-info">{{'ACCOUNT_ThongTinTheCuaBan' | translate}}.<!-- (Áp dụng với khách hàng có thẻ ATM, Visa Debit hoặc Visa Credit) --></span></p>
+                            <p>{{'ACCOUNT_DoiVoiTheVisa' | translate}}.</p>
+                            
+                            <div ng-if="!savedVimo" id="list_banks">
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_NganHang' | translate}}<!-- Ngân hàng --></label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        <!-- <select ng-model="vimo.bank_code"  class="form-control" ng-options="item.code as item.name for item in list_bank" required />
+                                        </select> -->
+                                        <ui-select ng-model="vimo.bank_code"  ng-change="changeField()"  required>
+                                            <ui-select-match placeholder="{{'ACCOUNT_NganHang' | translate}}">{{$select.selected.name }}</ui-select-match>
+                                            <ui-select-choices refresh-delay="300" repeat="item.code as item  in list_bank | filter: $select.search">
+                                                {{item.name}}
+                                            </ui-select-choices>
+                                    </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_TenChuThe' | translate}}<!-- Họ tên chủ thẻ --></label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        <input  ng-model="vimo.account_name"  name="v_account_name" type="text" class="form-control" placeholder="" required >
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_SoThe' | translate}}<!-- Số thẻ --></label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        <input ng-model="vimo.account_number" name="v_account_number" type="text" class="form-control" placeholder="{{'ACCOUNT_SoThe' | translate}} " required  />
+                                        <span class="text-info">{{'ACCOUNT_ApDungKhachHangCoTheATM' | translate}}<!-- (Chỉ áp dụng với khách hàng có thẻ ATM, Visa Debit hoặc Visa Credit) --></span> 
+                                        <!--ng-pattern="/^\d+$/"/-->
+                                    </div>
+                                </div>
+                                <!--<div class="form-group">-->
+                                    <!--<label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_AnhMatTruocCuaThe' | translate}} Ảnh mặt trước của thẻ  -->
+
+                                    <!--</label>-->
+                                    
+                                    <!--<div class="col-sm-9 col-md-9 col-lg-5">
+                                        <label >
+                                            <input
+                                                type="file"
+                                                nv-file-select 
+                                                uploader="uploaderPopup"
+                                                    ><i></i> 
+                                        </label>-->
+                                        <!--<p ng-if="loading.atm"><i class="fa fa-spinner fa-spin"></i> {{'ACCOUNT_DangTaiLen' | translate}} Đang tải lên </p>-->
+                                        <!--<a href="{{ApiStorage + vimo.atm_image}}"  target="_blank" ng-if="vimo.atm_image"><span class="text-info">{{'ACCOUNT_XemAnh' | translate}} Xem ảnh </span></a>-->
+                                        <!--<br/>-->
+                                        <!--<span class="text-info"><strong>{{'ACCOUNT_LuuY' | translate}} Lưu ý </strong>: {{'ACCOUNT_KhongUpANhMatSau' | translate}} Không upload ảnh mặt sau của thẻ </span> -->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                                
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_AnhMatTruoCMND' | translate}}<!-- Ảnh mặt trước CMTND --></label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        <label >
+                                            <input
+                                                type="file"
+                                                nv-file-select
+                                                uploader="uploaderCMNDBefore"
+                                                    ><i></i> 
+                                        </label>
+                                        <p ng-if="loading.cmnd_before"><i class="fa fa-spinner fa-spin"></i>{{'ACCOUNT_DangTaiLen' | translate}}<!--  Đang tải lên --></p>
+                                        <a href="{{ApiStorage + vimo.cmnd_before_image}}" target="_blank" ng-if="vimo.cmnd_before_image"><span class="text-info">{{'ACCOUNT_XemAnh' | translate}}<!-- Xem ảnh --></span></a>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_AnhMatSauCMND' | translate}}<!-- Ảnh mặt sau CMTND --></label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        <label >
+                                            <input
+                                                type="file"
+                                                nv-file-select
+                                                uploader="uploaderCMNDAfter"
+                                                    ><i></i> 
+                                        </label>
+                                        <p ng-if="loading.cmnd_after"><i class="fa fa-spinner fa-spin"></i> {{'ACCOUNT_DangTaiLen' | translate}}<!-- Đang tải lên --></p>
+                                        <a href="{{ApiStorage + vimo.cmnd_after_image}}" target="_blank" ng-if="vimo.cmnd_after_image">
+                                        <span class="text-info">{{'ACCOUNT_XemAnh' | translate}}</span></a>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0px;">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">&nbsp;</label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        
+                                        <p ng-if="vimo.id && vimo.active == 0" class="text-info"><strong>{{'ACCOUNT_DangChoXacThucSC' | translate:{isShipchung : isShipchung} }}<!-- Đang chờ xác thực từ Shipchung.vn --></strong></p>
+                                        <p ng-if="vimo.id && vimo.active == 1" class="text-success"><strong>{{'ACCOUNT_DaXacThuc' | translate}}<!-- Đã xác thực --></strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">&nbsp;</label>
+                                    <div class="col-sm-9 col-md-9 col-lg-5">
+                                        <div class="checkbox">
+                                            <label class="i-checks" ng-init="_checkbox = true">
+                                                <input
+                                                    type="checkbox"
+                                                    ng-checked="true"
+                                                    ng-model="_checkbox"
+                                                    name="check"
+                                                    required
+                                                        ><i></i> {{'ACCOUNT_ToiDongYNhung' | translate}}<!-- Tôi đồng ý và chấp nhận những --> <a href="https://www.shipchung.vn/thong-bao-ap-dung-hinh-thuc-thanh-toan-tien-thu-ho-cod-truc-tiep-qua-tai-khoan-ngan-hang-cua-nguoi-gui-tu-ngay-162015/" target="_blank"><span class="text-info">{{'ACCOUNT_DieuKhoanTT' | translate}}<!-- điều khoản thanh toán --></span></a> {{'ACCOUNT_Cua' | translate}} Shipchung.vn.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                                    <div class="col-sm-4 col-md-4 col-lg-2">
+                                        <div ng-mouseover="hover_check()">
+                                            <button ng-disabled="form_vimo.$invalid || !vimo.cmnd_before_image || !vimo.cmnd_after_image || fsubmit" type="submit" class="btn btn-info btn-sm">
+                                        {{'Btt_update' | translate}}<!-- Cập nhật --></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group" ng-if="savedVimo" >
+                                <span class="col-sm-12">
+                               {{'ACCOUNT_ChungToiDaGuiMotEmail' | translate}}<!--  Chúng tôi đã gửi một email xác nhận cấu hình tài khoản ngân hàng tới địa chỉ  --><strong>{{user_info.email}}</strong>{{'ACCOUNT_CuaBan' | translate}} <!-- của bạn. --> <br/> 
+                               <!-- Xin vui lòng kiểm tra hòm thư để hoàn tất việc xác nhận thông tin trên. -->
+                               {{'ACCOUNT_XinVuiLongKTEmail' | translate}}
+                                <span>
+                            </div>
+                            
+
+                        </div>
+                </form>
+
+                <form class="form-horizontal form-validation" name="form_vimo1" ng-submit="save(user_info.priority_payment,'priority_payment')" role="form">
+                        <div class="panel-heading font-bold" tour-step order="13" content="Tài khoản ngân hàng để phục vụ việc thanh toán" placement="top" on-next="onTourEnd()" >
+                        {{'ACCOUNT_ChonPhuongThucThanhToan' | translate}}<!-- Chọn phương thức thanh toán mặc định --></div> 
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                                <div class="col-sm-9 col-md-9 col-lg-5">
+                                    <div class="radio">
+                                      <label class="i-checks">
+                                        <input type="radio" name="priority_payment" value="2"  ng-model="user_info.priority_payment">
+                                        <i></i>
+                                        <!-- Nhận tiền thu hộ qua Ngân Lượng -->
+                                        {{'ACCOUNT_NhanTienThuHoQuaNL' | translate}}
+                                      </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                                <div class="col-sm-9 col-md-9 col-lg-5">
+                                    <div class="radio">
+                                      <label class="i-checks">
+                                        <input type="radio" name="priority_payment" value="1" disabled ng-disabled="!vimo.id" ng-model="user_info.priority_payment">
+                                        <i></i>
+                                        {{'ACCOUNT_NhanTienThuHoQuaNH' | translate}}
+                                        <!-- Nhận tiền thu hộ trực tiếp vào tài khoản Ngân hàng -->
+                                      </label>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                                <div class="col-sm-4 col-md-4 col-lg-2">
+                                    <button ng-disabled="form_vimo1.$invalid || fsubmit" type="submit" class="btn btn-info btn-sm">{{'Btt_update' | translate}}<!-- Cập nhật --></button>
+                                </div>
+                            </div>
+                        </div>
+                </form>
+
+
+
+
+            </div> <!--/ Panel -->
+
+        <form class="form-horizontal form-validation" name="freeze" ng-submit="save(user_info.freeze_money,'freeze_money')" role="form">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">{{'ACCOUNT_SoDuToiThieuTrongTK' | translate:{isShipchung : isShipchung} }} <!-- Số dư tối thiểu trong tài khoản Shipchung --></div>
+                <div class="panel-body">
+                    <span class="text-xs">
+                    <!-- Đây là số tiền hệ thống sẽ giữ lại để khách hàng duyệt các đơn hàng tiếp theo. Số tiền này được ghi nhận vào số dư của quý khách hàng hiển thị trên thông tin tài khoản. -->
+                    {{'ACCOUNT_DayLaSoTienHeThongSeGiuLai' | translate}}</span>
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label">{{'ACCOUNT_SoDuToiThieu' | translate}}<!-- Số dư tối thiểu --></label>
+                        <div class="col-sm-9 col-md-9 col-lg-5">
+                            <input  class="form-control" placeholder="vnđ"
+                                    ng-model="user_info.freeze_money"
+                                    fcsa-number="{ min: 200000 }"
+                                    name="numberMin"
+                                    ng-disabled="user_info.check_all == 1" >
+                            <div class="checkbox">
+                                <label class="i-checks">
+                                    <input
+                                        type="checkbox"
+                                        ng-true-value="1"
+                                        ng-false-value="0"
+                                        ng-model    ="user_info.check_all"
+                                        ng-checked  ="user_info.freeze_money == 0"
+                                        ng-change="change_check_all(user_info.check_all)"
+                                            ><i></i> {{'ACCOUNT_ToiMuonRutTatCaTien' | translate}}<!-- Tôi muốn rút tất cả tiền về tài khoản đã cấu hình nhận tiền ở trên -->
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 col-md-3 col-lg-2 control-label"></label>
+                        <div class="col-sm-4 col-md-4 col-lg-2">
+                            <button ng-disabled="(freeze.numberMin.$invalid && (user_info.check_all == 0)) || fsubmit" type="submit" class="btn btn-info btn-sm">
+                            {{'Btt_update' | translate}}<!-- Cập nhật --></button>
+                        </div>
+                    </div>
+                </div>
+            </div> <!--/ Panel -->
+        </form>
+
+        <script id="ModalSecurity.html" type="text/ng-template">
+            <div ng-include="'tpl/config/modal.form.security.html'"></div>
+        </script>
+
+    </div>
+    <!--/ Content-->
+</div>

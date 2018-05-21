@@ -1,0 +1,399 @@
+<style>
+@media (max-width: 768px) {
+	.productListv2 .input-group  {
+		margin-left: 15px;
+	}
+	
+}
+.proV2Mar15 {
+		margin-bottom: 15px !important;
+	}
+	
+.productListv2 .dropdown-menu, .productListv2 .ui-select-search{
+	min-width: 210px !important;
+}
+.table_products, .table_products > tbody > tr > td, .table_products > tbody > tr > th, .table_products > tfoot > tr > td, .table_products > tfoot > tr > th, .table_products > thead > tr > td, .table_products > thead > tr > th {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+.form-inline .list_store .form-control.ui-select-toggle{
+	width: 150px;
+}
+</style>
+<div id="listProduct" ng-controller="ListProductsV2Controller" ng-init="search.condition.inventory_check = 1; search.proceed(); list();">
+	<div class="wrapper-md bg-light b-b" style ="">
+		<div class="row" style="padding-left:5px">
+			<h1 class="m-n font-thin h3 inline">{{'PROV2_h1' | translate }}<!-- Danh sách sản phẩm --></h1>
+			<div class="pull-right" style="margin-right: 5px;">
+		        <button class="btn m-b-xs btn-success" ui-sref="product.addnew">{{'PROV2_btt_add' | translate }}<!-- Thêm sản phẩm --></button>
+	        	<button class="btn m-b-xs btn-default" ui-sref="product.upload">{{'PROV2_btt_add_ex' | translate }}<!-- Thêm nhiều sản phẩm (Excel) --></button>
+       		</div>
+		</div> 
+	</div>
+	<div class="hbox hbox-auto-xs hbox-auto-sm">
+		<div class="col wrapper-sm">
+			<div class="clearfix m-b">
+				<div class="panel panel-default">
+						<div class="panel-body productListv2">
+						<!-- Form get datat -->
+							<div class="col-md-12">
+								<form name="frmUpdateByFilter1" role="form" class="form-inline" boxme-action="{{exportUrl1}}" method="post" target="_blank" boxme-submit-trigger="#exportTrigger1">
+					              <div class="row" >
+									<div class="form-group proV2Mar15">
+										<input style="min-width: 210px" type="text" boxme-click-select typeahead-on-select="loadProductByName($item, $model, product)"
+											   
+											   ng-model="search.condition.key" class="form-control" placeholder="{{'PRO_input_placeholder_name' | translate }}"  typeahead-template-url="tpl/product/product_search.html">
+									</div>	
+									<div class="form-group proV2Mar15">
+				                         <!-- <ui-select ng-disabled="disableAdress" ng-model="order.Config.inventory_id" ng-change="checkserviceCacuteLading()" required id="service_select">
+				                             <ui-select-match style="min-width: 210px" placeholder="{{'PROV2_Chonkho' | translate }}"> {{$select.selected.name}}</ui-select-match>
+				                             <ui-select-choices ui-disable-choice="value.inventory_id === 'BOXME'" repeat="value.id as value in listStore | filter: $select.search">
+				                             	<span>	{{value.Name}} </span> disabled
+				                             </ui-select-choices>
+				                         </ui-select> -->
+										 <select style="min-width: 210px" class="form-control" ng-model="search.condition.inventory_id" ng-change="changeWarehouse(search.condition.inventory_id);search.condition.page=1;search.proceed()">
+											<option value="BOXME"  style="font-weight: bold;">{{'PROV2_select_status_all' | translate }}</option>
+											<option ng-repeat="store in listWarehouseBomxe" value="{{store.IdInevent}}">&nbsp;&nbsp;&nbsp;{{store.Name}}</option>
+											<option value="ENTERPRISE"  style="font-weight: bold;">{{'PROV2_select_status_all1' | translate }}</option>
+											<option ng-repeat="store in listWarehouseENTERPRISE" value="{{store.InventoryId}}">&nbsp;&nbsp;&nbsp;{{store.Name}}</option>
+										</select> 
+									</div>
+									
+									<div class="form-group proV2Mar15">
+										<select style="min-width: 210px"  ng-model="search.condition.active" class="form-control" ng-change="search.set_acive();search.condition.page=1;search.proceed();">
+											<option value="">{{'PRO_select_status_all' | translate }}</option>
+											<option value="1">{{'PRO_select_status_1' | translate }}</option>
+											<option value="0">{{'PRO_select_status_2' | translate }} </option>
+										</select>
+									</div>
+									<div class="form-group proV2Mar15 list_store">
+										<div>
+											<ui-select ng-model="search.store_id" ng-disabled="disabled" required>
+												<ui-select-match placeholder="{{'ORDERL_Shopbanhang' | translate}}">{{$select.selected.store_name ? $select.selected.store_name : $select.selected.user_name }}</ui-select-match>
+												<ui-select-choices group-by="'platform'" refresh-delay="300" repeat="value.id as value in list_store | filter: $select.search">
+													{{value.store_name ? value.store_name : value.user_name}}
+												</ui-select-choices>
+											</ui-select>
+										</div>
+									</div>
+				              		<div class="form-group proV2Mar15" >
+												<button class="btn btn-info" ng-click="search.proceed()">
+												<i class="fa fa-search"></i>&nbsp;{{'Btt_search' | translate }}<!-- Tìm kiếm -->
+												</button>
+												<button type="button" id="exportTrigger1" class="btn btn-default" >
+												<i class="fa fa-file-excel-o"></i>&nbsp;{{'Btt_excel' | translate}} 
+												</button>
+									</div>
+									
+									
+					              	</div>
+			              			<div class="row"   ng-hide="disableCheckbox">
+										<div class="form-group proV2Mar15" style="min-width: 210px">
+											<label class="i-checks i-checks-sm ng-binding">
+												<input type="checkbox" ng-model="search.condition.inventory_check" ng-checked="search.condition.inventory_check == 1" ng-false-value="0" ng-true-value="1" ng-change="check_inventory_check()" class="ng-pristine ng-valid">
+												<i></i>
+													{{'PROV2_lable_stock' | translate }} <!-- Các sản phẩm còn hàng -->
+											</label>
+										</div>
+										<div class="form-group proV2Mar15" style="min-width: 210px">
+											<label class="i-checks i-checks-sm ng-binding" ng-hide="check_inventory">
+												<input  type="checkbox" ng-model="search.condition.limit_alert" ng-checked="search.condition.limit_alert == 1" ng-false-value="0" ng-true-value="1" ng-change="check_limit_alert()" class="ng-pristine ng-valid">
+												<i></i>
+													{{'PROV2_lable_noStock' | translate }} <!--  -->
+											</label>
+										</div>
+										<div class="form-group proV2Mar15" style="min-width: 210px">
+											<label class="i-checks i-checks-sm ng-binding" ng-hide="check_inventory">
+												<input  type="checkbox" ng-model="search.condition.not_enough" ng-checked="search.condition.not_enough == 1" ng-false-value="0" ng-true-value="1"  ng-change="check_not_enough()" class="ng-pristine ng-valid">
+												<i></i>
+													{{'PROV2_Dangthieuhang' | translate }} <!--  -->
+											</label>
+										</div>
+										<div class="form-group proV2Mar15">
+											<label class="i-checks i-checks-sm ng-binding text-danger font-bold" ng-hide="check_inventory">
+												<input  type="checkbox" ng-model="search.condition.over_time" ng-checked="search.condition.over_time == 1" ng-false-value="0" ng-true-value="1"  ng-change="check_time_oubound()" class="ng-pristine ng-valid">
+												<i></i>
+													{{'PROV2_luukholau' | translate }} <!--  -->
+											</label>
+										</div>
+									</div>    
+						            <input class="hidden" type="text" ng-model="search.condition.active" name="active" >
+									<input class="hidden" type="text" ng-model="search.condition.not_enough" name="type">
+									<input class="hidden" type="text" ng-model="search.condition.limit_alert" name="limit_alert">
+									<input class="hidden" type="text" ng-model="search.condition.inventory_check" name="inventory_check">
+									<input class="hidden" type="text" ng-model="search.condition.inventory_id" name="inventory_id">
+									<input class="hidden" type="text" ng-model="search.condition.key"  name="key" >
+									<input class="hidden" type="text" ng-model="userInfo.token"  name="token" > 
+					          </form>
+							</div>
+							
+							<div class="">
+								<label class=" i-checks-sm ng-binding">
+									<!-- Bạn đang chọn {{soluong}} mã SKU --> {{'PRO_lable_select' | translate: {param:soluong } }} &nbsp;&nbsp;
+								<div class="btn-group dropdown ">
+							          <li class="btn btn-default dropdown-submenu" style="list-style:none">
+					                    <a href="javascript:;" class="dropdown-toggle ng-scope" data-toggle="dropdown" aria-expanded="false">  
+					                    <span class="ng-binding">{{'PRO_lable_action' | translate }} &nbsp;&nbsp;<span class="caret"></span>   </span> 
+					                    <!-- <span  class="hidden-md hidden-sm" ng-if="$state.includes('order.management')"><i class="fa fa-search"></i> Tìm kiếm nâng cao</span>  -->
+					                    </a><!-- end ngIf: !$state.includes('order.management') -->
+					                    <ul class="dropdown-menu left-none" role="menu">
+					                        <li >
+												<a href="javascript:void(0)" ng-click="transfer.toBoxme(filterSelected())">{{'PRO_lable_action_1' | translate }}<!-- Chuyển <span ng-show="search.condition.type=='BOXME'"> thêm</span> hàng về kho {{app.name}} --></a>
+											</li>
+											<li >
+												<a href="javascript:void(0)" ng-click="setInactive(filterSelected())">{{'PRO_lable_action_3' | translate }}<!-- Chuyển <span ng-show="search.condition.type=='BOXME'"> thêm</span> hàng về kho {{app.name}} --></a>
+											</li>
+											<li >
+												<a href="javascript:void(0)" ng-click="setActive(filterSelected())">{{'PRO_lable_action_4' | translate }}<!-- Chuyển <span ng-show="search.condition.type=='BOXME'"> thêm</span> hàng về kho {{app.name}} --></a>
+											</li>
+											<li >
+												<a href="javascript:void(0)" ng-click="CreateOutStock(filterSelected())">{{'PRO_XuatHangKhoKho' | translate }}<!-- Chuyển <span ng-show="search.condition.type=='BOXME'"> thêm</span> hàng về kho {{app.name}} --></a>
+											</li>
+											<li >
+												<a href="javascript:void(0)" ng-click="SyncInventory(filterSelected())"><i ng-if="waiting_sync_inventory" class="fa fa-spin fa-spinner text-1x"></i><i ng-if="!waiting_sync_inventory" class="fa fa-refresh"></i>&nbsp;{{'Btt_sysnc_inventory' | translate }}<!-- Sync inventory --><!-- Chuyển <span ng-show="search.condition.type=='BOXME'"> thêm</span> hàng về kho {{app.name}} --></a>
+											</li>
+											<li >
+												<a href="javascript:void(0)" ng-click="SyncProductZalo(filterSelected())"><i ng-if="waiting_sync_product_zalo" class="fa fa-spin fa-spinner text-1x"></i><i ng-if="!waiting_sync_product_zalo" class="fa fa-refresh"></i>&nbsp;{{'Btt_sysnc_product_zalo' | translate }}<!-- Sync inventory --><!-- Chuyển <span ng-show="search.condition.type=='BOXME'"> thêm</span> hàng về kho {{app.name}} --></a>
+											</li>
+					                    </ul>
+					               		 </li>
+							        </div> 
+									
+								</label>
+							</div>
+						
+						<!-- End form get data -->
+						<!-- danh sach san pham dc chon -->
+						<!-- SHOW DATA SELECTED -->
+					
+					<div class="product-table-outter" ng-show="show_product_selected" ng-if="sp_sellected.length >=1" >
+						<h3>{{'PRO_h3' | translate }}<!-- Danh Sách sản phẩm đã chọn --></h3>
+						<table style="border: medium none;"  class="table table-condensed table-hover" ng-class="{'table-striped':search.condition.type == 'ENTERPRISE'}">
+							<thead>
+							<tr>
+								<th>{{'PROV2_table_No' | translate }}<!-- STT --></th>
+								<th>{{'PROV2_Hinh' | translate }}<!-- Hình --></th>
+								<th style="max-width:110px">{{'PROV2_Mamathang' | translate }} <!-- Mã của bạn --></th>
+								<th style="max-width:110px">{{'PROV2_MaBSIN' | translate }}<!-- Mã lưu kho --></th>
+								<th>{{'PROV2_Tensanpham' | translate }}<!-- Tên sản phẩm --></th>
+								<th>{{'PROV2_Khohang' | translate }}<!-- Kho hàng --></th>
+								<th>{{'PROV2_table_price' | translate }} ({{ CurrencyCode || 'đ'}})<!-- Giá bán (vnđ) --></th>
+							</tr>
+							</thead>
+							<tbody infinite-scroll='loadMore()' class="animated" style="border:none !important;">
+							<tr ng-repeat="product in sp_sellected"
+								ng-class="{'alert-danger alert-dismissable': product.Quantity<product.Alert && search.condition.type == 'BOXME'}">
+								
+								<td class="text-center v-middle">{{ $index + 1}}</td>
+								<td class="text-center v-middle"><img class="img-reponsive" style="max-width:64px; max-height:64px;" ng-src="{{product.ProductImages[0] || 'img/logo.png'}}"/></td>
+								<td class="text-center v-middle" style="max-width:110px">
+									<a style="color: #428bca;" href="javascript:void(0)" ui-sref="product.edit({code:product.ProductId})">{{product.SellerSKU}}</a>
+								</td>
+								<td class="text-center v-middle" style="max-width:110px">
+									<a style="color: #428bca;" href="javascript:void(0)" ui-sref="product.edit({code:product.ProductId})">{{product.wmsSKU}}</a>
+								</td>
+								</td>
+								<td class="text-left v-middle">{{product.Name}}</td>
+								<td class="text-center v-middle">{{product.InventoryName}}</td>
+								<td class="text-right v-middle">{{product.SalePrice | number}}
+								</td>
+							</tr>
+							<tr>
+								<td class="text-center" colspan="13" ng-show="search.loading"><i class="fa fa-spin fa-spinner text-3x"></i></td>
+							</tr>
+							<tr ng-if="!products._embedded.product.length"><td class="text-center v-middle" colspan="13"><em>{{'ERR_search_null' | translate }}<!-- Không có kết qủa nào được tìm thấy --></em></td></tr>
+							</tbody>
+						</table>
+						
+					</div>
+				<!-- END SHOW -->
+						<!-- end danh sach san pham duoc chon -->
+						<!--table data -->
+						<div class="product-table-outter">
+							<h3 ng-show="show_product_selected">{{'PROV2_h1' | translate }}<!-- Danh Sách sản phẩm --></h3>
+							<table style="border: 0 solid #ddd !important;" class="table table-bordered b-t b-light table_products" ng-class="{'table-striped':search.condition.type == 'ENTERPRISE'}">
+								<thead>
+								<tr>
+									<th style="width: 20px;" class="text-center v-middle hidden-md hidden-sm hidden-xs">
+										<!-- {{'PROV2_table_No' | translate }} <br> -->
+										<label class="i-checks i-checks-sm">
+											<input type="checkbox" ng-disabled="products.totalItems() < 1" ng-model="seleectalll" ng-click="checkboxAll()">
+											<i></i>
+										</label>
+									</th>
+									<th class="text-center v-middle">{{'PROV2_Hinh' | translate }}<!--  --></th>
+									<th class="text-center v-middle">{{'PROV2_Mamathang' | translate }}<!-- STT --></th>
+									<th class="text-center v-middle">{{'PROV2_MaBSIN' | translate }}<!--  --></th>
+									<th class="text-center v-middle" style="max-width:110px">{{'PROV2_Tensanpham' | translate }}<!--  --></th>
+									<th class="text-center v-middle" style="max-width:110px">{{'PROV2_Khohang' | translate }}<!--  --></th>
+									<th class="text-center v-middle" style="max-width:120px"><label tooltip="{{'PROV2_Giabansanpham' | translate }}">{{'PROV2_table_price' | translate }}({{ CurrencyCode || 'đ'}})</label></th>
+									<th class="text-center v-middle" style="max-width:110px"><label tooltip="{{'PROV2_MuctonkhoTooltop' | translate }}">{{'PROV2_Muctonkhotoithieu' | translate }}&nbsp;<i class="fa fa-question"></i></label></th>
+									<th class="text-center v-middle"  style="max-width:120px" ng-hide="disableCheckbox" ><lable tooltip="{{'PROV2_Thieuhantooltip' | translate }}">{{'PROV2_Soluongthieuhang' | translate }}&nbsp;<i class="fa fa-question"></i></lable> </th>
+									<th class="text-center v-middle" ng-hide="disableCheckbox" style="max-width:110px"><label tooltip="{{'PROV2_DangnhapthemTooltop' | translate }}">{{'PROV2_Dangnhapthem' | translate }}&nbsp;<i class="fa fa-question"></i></label></th>
+									<th class="text-center v-middle" ng-hide="disableCheckbox" style="max-width:140px"><label tooltip="{{'PROV2_ChoXuatKhoTooltip' | translate }}"> {{'PROV2_Choxuatkho' | translate }} &nbsp;<i class="fa fa-question"></i></label></th>
+									<th class="text-center v-middle" ng-hide="disableCheckbox" style="max-width:120px"><lable tooltip="{{'PROV2_DangtonkhoTooltip' | translate }}">{{'PROV2_Dangtonkho' | translate }}&nbsp;<i class="fa fa-question"></i></lable></th>
+									
+								</tr>
+								<tr>
+									<td class="text-center" colspan="13" ng-show="search.searching"><i class="fa fa-spin fa-spinner text-3x"></i></td>
+								</tr>
+								</thead>
+								<tbody infinite-scroll='loadMore()' class="animated" ng-class="{'fadeIn': !search.searching, 'fadeOut': search.searching}">
+								<tr ng-repeat="product in products._embedded.product"
+									ng-class=" product.lack_outbound >= 1 ? 'alert-danger' : product.maybe_outbound < product.inventory_limit ? 'alert-warning alert-dismissable'  : '' ">
+									<td class="text-center v-middle hidden-md hidden-sm hidden-xs">
+									{{(search.condition.page - 1) * search.condition.page_size + $index + 1}} <br>
+										<label class="i-checks i-checks-sm">
+											<input type="checkbox" ng-model="product.selected" ng-change="checkboxOne(product)">
+											<i></i>
+										</label>
+									</td>
+									<td class="text-center v-middle"><img class="img-reponsive" style="max-width:64px; max-height:64px;" ng-src="{{product.ProductImages[0] || 'img/logo.png'}}"/></td>
+									<td class="text-center v-middle" style="max-width:110px">
+										<a style="color: #428bca;" href="javascript:void(0)" ui-sref="product.editnew({code:product.ProductId})">{{product.SellerSKU}}</a>
+									</td>
+									<td class="text-center v-middle" style="max-width:110px">
+										<a style="color: #428bca;" href="javascript:void(0)" ui-sref="product.edit({code:product.ProductId})">{{product.wmsSKU}}</a>
+									</td>
+									<td class="text-left v-middle">{{product.Name}}</td>
+									<td class="text-center v-middle">{{product.InventoryName}}</td>
+									<td class="text-right v-middle" style="color:black;margin-right: 8px;" ng-init="product.SalePrice_curernt_2 = convert_currency(product.SalePrice).toFixed(2)">
+										<a ng-if="ViewHomeCurrency == viewCurrency" href="javascript:;"  editable-text="product.SalePrice"  onbeforesave="updateProductSale(product,$data,1)">
+				                            {{product.SalePrice || '' |  vnNumber}} <i class="fa fa-edit"></i>
+				                        </a>
+				                        <a ng-if="ViewHomeCurrency != viewCurrency"  href="javascript:;"  editable-text="product.SalePrice_curernt_2"  onbeforesave="updateProductSale(product,$data,2)">
+				                            {{product.SalePrice_curernt_2 || '' | usdNumber }}{{viewCurrency}}<i class="fa fa-edit"></i>
+				                        </a>
+									</td>
+									<td class="text-right v-middle">
+										<a  href="javascript:;"  editable-text="product.inventory_limit"  onbeforesave="updateProductlimit_alert(product,$data)">
+				                            {{product.inventory_limit || '0'  }}<i class="fa fa-edit"></i>
+				                        </a>
+									</td>
+									<td  class="text-right v-middle" ng-hide="disableCheckbox">{{product.lack_outbound}}</td>
+									<td class="text-right v-middle" ng-hide="disableCheckbox">{{product.plan_inbound}}</td>
+									<td class="text-right v-middle" ng-hide="disableCheckbox">
+										<a ng-if="product.wating ==0">{{product.wating}}</a>
+										<a ng-if="product.wating >=1" style="color: #428bca;" ng-click="open(product)">{{product.wating}}</a></td>
+									<td  class="text-right v-middle" ng-hide="disableCheckbox">{{product.maybe_outbound}}</td>
+									
+								</tr>
+								<tr>
+									<td class="text-center" colspan="13" ng-show="search.loading"><i class="fa fa-spin fa-spinner text-3x"></i></td>
+								</tr>
+								<tr ng-if="!products._embedded.product.length"><td class="text-center v-middle" colspan="13"><em>{{'ERR_search_null' | translate }}<!-- Không có kết qủa nào được tìm thấy --></em></td></tr>
+								</tbody>
+							</table>
+						
+						</div>
+						<!-- End table data -->
+						<div class="col-lg-12 panel-footer text-center list-data" style="padding-top: 5px;border:None">
+						
+							<small ng-if="products.total_items" class="text-muted inline m-t-sm m-b-sm">
+								<!-- Hiển thị từ	{{(search.condition.page - 1) * search.condition.page_size + 1}} - {{(search.condition.page - 1) * search.condition.page_size + products._embedded.product.length}} của {{products.totalItems()}} bản ghi -->
+								{{ 'Pagegin' | translate: {from: ((search.condition.page - 1) * search.condition.page_size + 1), to: (search.condition.page - 1) * search.condition.page_size + products._embedded.product.length, total: products.total_items} }}
+							</small>
+							<div class="pull-right">
+								<pagination class="pagination-sm" total-items="products.total_items" ng-if="products.total_items > 0"
+								max-size="5" items-per-page="search.condition.page_size" ng-model="search.condition.page"
+								ng-change="search.proceed();" boundary-links="false" rotate="false"></pagination>
+							</div>
+							</div>
+						</div>
+						<script id="template/pagination/pagination.html" type="text/ng-template">
+			<ul class="pagination m-t-none">
+				<li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(1)" title="First Page"> <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+				<li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1)" title="Previous Page"><span class="fa fa-chevron-left"></span></a></li>
+				<li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+				<li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1)" title="Next Page"><span class="fa fa-chevron-right"></span></a></li>
+				<li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages)" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span> </a></li>
+			</ul>
+		</script>
+				</div>		
+			</div>
+		</div>
+	</div>
+	<script type="text/ng-template" id="thongbao1.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-11 pull-left no-padder" style="text-align: center;">
+                    <h4 class="modal-title">Thông báo</h4>
+               	</div>
+               	<button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+          	 </div>
+        </div>
+   	</div>
+	<div class="modal-body wrapper-md text-base">
+		<div style="border-bottom: 1px solid #dee5e7;margin-bottom:10px;">
+		<p>Bạn chưa đăng kí dịch vụ fulfillment</p>
+		<p>Liên hệ với chúng tôi ngay để xử dụng ngay với nhiều tiện ích:</p>
+		<p>-Sử dụng kho hàng boxme/shipchung trên toàn quốc</p>
+		<p>- Tạo ngay đơn hàng từ sản phẩm trong kho</p>
+		<p> Mọi góp ý cho BoxMe.vn, quý khách vui lòng gưi về email hotro@boxme.vn.</p>
+		</div>
+	
+	<button class="btn btn-success" ng-click="cancel()">Tôi đã hiểu</button>
+	
+	</div>
+	</script>
+	<script type="text/ng-template" id="item_order.html">
+		<div class="modal-header" ng-if="items.status_check == undefined">
+        		<div class="row">
+            		<div class="col-md-12">
+                	<div class="col-md-11 pull-left no-padder" >
+                    	<h4 class="modal-title">{{'PRO_aller_watting_h1' | translate }}</h4>
+               		 </div>
+					<button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+          	  		</div>
+        			</div>
+   			 </div>
+		<div class="modal-body scroll_doc" ng-if="items.status_check == undefined" >
+			<p> {{'PRO_aller_lable_name' | translate }} {{productname}} ({{'PRO_aller_lable_code' | translate }} {{productsku}}, {{'PRO_aller_lable_invent' | translate}} {{productwms}})</p>
+			<table class="table table-bordered table-striped b-t b-light">
+				<thead>
+					<tr>
+						<th class="text-left v-middle" >{{'PRO_aller_table_order' | translate }}</th>
+						<th class="text-left v-middle" >{{'PROV2_MaBSIN' | translate }}</th>
+						<th class="text-left v-middle" >{{'PROA_Soluong' | translate }}</th>
+						<th class="text-left v-middle" >{{'PRO_aller_table_stt' | translate }}</th>
+					</tr>
+				</thead>
+				<tbody  class="animated" >
+					<tr ng-repeat="item in items" ng-if="items.length>=1">
+						<td class="text-left v-middle">
+						<a href="/#/order/{{ item.order_id }}" style="color: #428bca;" target="_blank">{{item.Tracking_code}}</a>
+						<p>{{item.Create ? (item.Create * 1000 | date: 'dd/MM/yyyy HH:mm') : '' }}</p>
+						</td>
+						<td class="text-left v-middle">{{item.SKU}}</td>
+						<td class="text-left v-middle">{{item.Quantity}}</td>
+						<td class="text-left v-middle">{{item.Status}}</td>
+					</tr>
+					<tr ng-if="items.length == 0">
+						<td class="text-center v-middle" colspan="4"><em >{{'ERR_search_null' | translate }}</em></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<form ng-if="!items || items.status_check ==1" name="FormCreate" class="form-horizontal form-validation ng-scope ng-pristine ng-invalid ng-invalid-required" ng-submit="save(data)" role="form">
+    		<div class="modal-header">
+        		<div class="row">
+            		<div class="col-md-12">
+                	<div class="col-md-11 pull-left no-padder" style="text-align: center;">
+                    	<h4 class="modal-title">{{'PRO_Dulieudangcapnhat' | translate}}</h4>
+               		 </div>
+               		 <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+
+          	  		</div>
+        			</div>
+   			 </div>
+			<div class="modal-body wrapper-md text-base">
+       			<p>{{'PRO_Banvuilongdoiitphut' | translate }}</p>
+			</div>
+		</form>
+		</div>
+	</script>		
+</div>	
+	

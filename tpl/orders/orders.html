@@ -1,0 +1,240 @@
+<div ng-controller="OrderCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2 title-page"><i class="fa fa-inbox text-info"></i> {{'ORDERC_H1_quanlydonhang' | translate}}<!-- Quản lý đơn hàng --></span>
+        <div class="pull-right">
+           
+            <a class=" btn btn-success"  ng-if="userInfo.fulfillment == 1" id="checkpanel" ui-sref="order.create_once_global_bm" ><i class="fa fa-plus"></i>
+                <span ng-if="windowWith > 360 "> {{'ORDERC_taodonhang' | translate}}<!-- Tạo đơn hàng --></span>
+            </a>
+
+            <a class=" btn btn-success" ng-if="userInfo.fulfillment == 0" id="checkpanel" ui-sref="order.create_once_global_new" ><i class="fa fa-plus"></i>
+                <span ng-if="windowWith > 360 "> {{'ORDERC_taodonhang' | translate}}<!-- Tạo đơn hàng --></span>
+            </a>
+
+            <a class=" btn btn-default m-r-xs" id="checkpanel" ui-sref="order.upload1" ><i class="fa fa-file-excel-o"></i>
+                <span ng-if="windowWith > 360 "> {{'ORDERC_taodonhangexcel' | translate}} <!-- Tạo nhiều đơn hàng (Excel) --></span>
+            </a>
+        </div>
+        <!-- {{ 1508304771 * 1000|date:"dd-MM-yyyy  HH:mm"}}
+        {{ 1507568400 * 1000|date:"dd-MM-yyyy  HH:mm"}} a -->
+    </div>
+    <div class="wrapper-sm">
+        <div style="margin:7px" class="alert alert-warning m-b-none text-base" ng-show="report_pickup['boxme.vn'] > 0">
+            <strong style="margin-bottom: 10px;">
+             <i class="fa fa-star-half-o fa-2x"></i> {{'ORDERC_thongbao' | translate}} </strong>
+             <!-- Bạn đang có -->{{'ORDERC_BanDangCo' | translate}}
+             <span ng-show="(report_pickup['all'] - report_pickup['boxme.vn']) > 0">
+                 {{(report_pickup['all'] - report_pickup['boxme.vn'])}}/{{report_pickup['all']}} đơn chờ giao bưu tá và 
+             </span> {{report_pickup['boxme.vn']}} đơn Boxme đang xuất hàng.
+         </div>
+
+        <!--<div style="margin:7px" class="alert alert-warning m-b-none text-base">
+        <strong style="margin-bottom: 10px;">
+            <i class="fa fa-star-half-o fa-2x"></i> {{'ORDERC_thongbao' | translate}} </strong>
+        Nhập mã coupon GHTK20 để giao hàng liên tỉnh chỉ 20.000đ
+        <a class="text-info"  target="_blank" href="https://www.shipchung.vn/van-chuyen-lien-tinh-chi-20k-voi-giaohangtietkiem-qua-shipchung/">
+            Xem chi tiết>> </a>
+        </div>-->
+
+            <div class="hbox hbox-auto-xs hbox-auto-sm">
+                <div class="col wrapper-sm">
+                    <div class="clearfix m-b">
+                        <!-- Nav tabs -->
+                        <select ng-model="tabId" ng-init="tabId = 'ALL'" class="form-control tab_select_type"
+                        ng-change="change_tab(tabId,keyword)">
+                        <option value="ALL">{{'Label_All' | translate}}<!-- Tất cả -->
+                            <small>({{total}})</small>
+                        </option>
+                        <option value="{{item.id}}" ng-repeat="item in tab_status">{{item.name}}
+                            ({{(status_group[item.id] > 0) ? status_group[item.id]: 0}})
+                        </option>
+                    </select>
+
+
+                    <tabset class="tab-container tab_type tab-inside h60 text-sm" justified="true">
+                        <tab ng-if="tab_status.length" ng-click="change_tab('ALL',keyword)">
+                            <tab-heading>{{'Label_All' | translate}}<!-- Tất cả -->
+                                <small>({{total}})</small>
+                            </tab-heading>
+                        </tab>
+
+                        <tab ng-repeat="item in tab_status" ng-click="change_tab(item.id,keyword)">
+                            <tab-heading>{{item.name}}
+                                <small ng-if="status_group[item.id] > 0">({{status_group[item.id]}})</small>
+                                <small ng-if="!status_group[item.id]">(0)</small>
+                            </tab-heading>
+                        </tab>
+                    </tabset>
+                    <div class="tab-container">
+                        <div class="tab-content tab-fake">
+                            <!--Tab content-->
+
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4" ng-if="show_list">
+                                    <div class="input-group m-b-sm">
+                                        <input class="form-control" ng-model="keyword"
+                                        placeholder="{{'ORDERC_Madonhang_email_sdt' | translate}}"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button"
+                                            ng-click="change_tab(status,keyword)">{{'Btt_search' | translate}}<!-- Tìm kiếm -->
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="m-t-sm m-b-sm" ng-if="orders.length && !waiting">
+                                    <label class="i-checks i-checks-sm">
+                                        <input type="checkbox"
+                                        ng-change="toggleSelectionAll(checkall)"
+                                        ng-checked="true"
+                                        ng-true-value="1"
+                                        ng-false-value="0"
+                                        ng-model="checkall"
+                                        /><i></i>
+                                        {{'ORDERC_chontatca' | translate}}
+                                    </label>
+
+                                    <div class="btn-group pull-right">
+                                        <button ng-if="status == 12" ng-click="action_multi(21)" type="button"
+                                        ng-dissabled="wating_status" class="btn btn-success btn-xs">
+                                        <i ng-show="wating_status" class="fa fa-spinner"></i> {{'ORDERC_duyetnhieu' | translate }}
+                                    </button>
+                                    <button ng-if="status == 12" ng-click="action_multi(22)" type="button"
+                                    ng-dissabled="wating_status" class="btn btn-danger btn-xs">
+                                    <i ng-show="wating_status" class="fa fa-spinner"></i> {{'ORDERC_huynhieu' | translate }}<!-- Hủy nhiều -->
+                                </button>
+                                <button ng-if="[14,15].indexOf(status) != -1" ng-click="action_multi(28)" type="button"
+                                ng-dissabled="wating_status" class="btn btn-danger btn-xs">
+                                <i ng-show="wating_status" class="fa fa-spinner"></i> {{'ORDERC_baohuynhieu' | translate }} <!-- Báo hủy nhiều -->
+                            </button>
+                            <a
+                            class="btn bg-orange btn-xs"
+                            ui-sref="print_new({code:check_box.toString()})"
+                            target="_blank"
+                            >
+                            {{'ORDERC_indonhang' | translate}}
+                        </a>
+                    </div>
+                </div>
+                <div class="text-center" ng-show="!orders.length && waiting">
+                    <i class="fa-3x fa fa-spinner fa-spin"></i>
+                </div>
+
+                <form class="form-horizontal text-base" ng-if="orders.length && !waiting">
+                    <div class="panel panel-info m-b-sm pointer fade-in-up"
+                    ng-repeat="order in orders"
+                    ng-class="{'b-l-m' : $stateParams.code == order.tracking_code}"
+                    ng-animate="{enter: 'enter', leave: 'leave'}" class="fade-in-right ">
+                    <div class="panel-body padder-tb">
+                        <div class="form-group m-b-none">
+                            <div class="col-sm-1 col-xs-1 checkbox">
+                                <label class="i-checks">
+                                    <input type="checkbox"
+                                    ng-model="check"
+                                    ng-change="toggleSelection(order.tracking_code)"
+                                    ng-checked="check_list(order.tracking_code)"
+                                    />
+                                    <i></i>
+                                </label>
+                            </div>
+                            <div class="col-sm-9 col-xs-9" ng-click="gotoDetail(order)">
+                                <div class="font-bold"></i>{{order.tracking_code}}</div>
+                                <div class="info"><i class="fa fa-user"></i> {{order.to_name |
+                                    limitTo : 25}} &nbsp;&nbsp;<i class="fa fa-phone"></i>
+                                    {{order.to_phone | limitTo : 25}}
+                                </div>
+                                <!-- <div class="info"><i class="fa fa-phone"></i> {{order.to_phone | limitTo : 25}}</div> -->
+
+                                <div class="price" ng-if="order.order_code"><i
+                                    class="fa fa-bookmark-o"></i> {{order.order_code}}</i>
+                                </div>
+
+                                <div class="price" tooltip="{{order.product_name}}"><i
+                                    class="fa fa-shopping-cart"></i> {{order.product_name |
+                                    limitTo: 25}} <span ng-if="order.product_name.length >= 25">...</span>
+                                </div>
+                                <div class="price"><i class="fa fa-money"></i> 
+                                                        	<!-- <strong style="color:orange;font-weight:bold">{{order.order_detail.money_collect || '0' | vnNumber}}{{ViewHomeCurrency}}</strong>
+                                                        	<strong style="color:orange;font-weight:bold" ng-if="convert_currency(order.order_detail.money_collect)">({{convert_currency(order.order_detail.money_collect) || '' | number:4 }} {{viewCurrency}})</strong>
+                                                        -->
+                                                        <!-- <covert-currency home-currency="11"></covert-currency> -->
+                                                        <convert-currency style="color:orange;font-weight:bold"  strong="1" home-currency="order.order_detail.money_collect"></convert-currency>
+                                                    </div>
+                                                    
+                                                    <div class="price"><i class="fa fa-plane"></i>
+                                                        {{order.courier.name}}
+                                                    </div>
+
+                                                    <div><i class="fa fa-globe"></i> {{order.domain ||
+                                                        'shipchung.vn'}} &nbsp; <span
+                                                        tooltip="{{order.time_create * 1000   | date:'HH:mm:ss dd-MM-yyyy'}}"><i
+                                                        class="fa  fa-clock-o"></i> {{order.time_create_before || 'Toaster_1Phut' | translate}} {{keyLang=='vi' ? 'trước' : 'ago'}}</span>
+                                                        <i ng-if="order.verify_id > 0" tooltip="Đã đôi soát"
+                                                         class="fa fa-lock"></i></div>
+
+                                                         <p ng-if="order.time_update">
+
+                                                            <strong style="color:rgb(255, 97, 97)"
+                                                            ng-if="order.time_update && processTimer(order).isExpired && list_status[order.status] == 18"
+                                                            tooltip="{{'ORDERC_SCsetudongduyetchuyenhoan' | translate :{isShipchung : isShipchung} }}">
+                                                            <!-- Đã quá hạn xử lý đơn hàng -->{{'ORDERC_daquahanxulydonhang' | translate}}&nbsp;
+                                                            <i class="fa fa-question-circle"></i></strong>
+
+                                                            <strong style="color:rgb(255, 97, 97)"
+                                                            ng-if="order.time_update && processTimer(order).isExpired && list_status[order.status] == 15"
+                                                            tooltip="{{'ORDERC_SCsetudonghuydonhang' | translate :{isShipchung : isShipchung} }}">
+                                                            {{'ORDERC_daquahanxulydonhang' | translate}}&nbsp;
+                                                            <i class="fa fa-question-circle"></i></strong>
+                                                            <strong style="color:rgb(255, 97, 97)"
+                                                            ng-if="!processTimer(order).isExpired && list_status[order.status] == 15 "
+                                                            tooltip="{{'ORDERC_Banco24hdexulydonhang' | translate:{isShipchung : isShipchung} }}">
+                                                            <!-- Còn {{processTimer(order).diff}}h nữa để xử lý -->
+                                                            {{'ORDERC_Con_time_nuadexuly' | translate : { param: processTimer(order).diff } }} !&nbsp;
+                                                            <i class="fa fa-question-circle"></i>
+                                                        </strong>
+                                                    </p>
+
+                                                    <span ng-if="order.verify_id > 0"
+                                                      style="position: absolute;bottom: 0;right: 0px;width: 0px;">
+                                                      <img class="max-height-none" ng-src="img/doi-soat-ok.png"
+                                                      alt="Đã đối soát" style="width:70px;"/><br/>
+<!--                                                             <a class="text-info" ui-sref="order.verify({id: item.verify_id})" target="_blank" tooltip="Xem chi tiết bản kê"><i class="fa fa-file-text"></i> Chi tiết</a>
+-->                                                        </span>
+</div>
+<div class="col-sm-2 col-sx-2 pull-right">
+    <span class="label text-xs pull-right {{list_color[list_status[order.status]]}}" ng-if="order.status !== 120">
+        {{list_group[list_status[order.status]]}}
+    </span>
+    <span class="label text-xs pull-right bg-info" ng-if="order.status == 120">
+        {{list_group[list_status[order.status]]}}
+    </span>
+</div>
+</div>
+</div>
+</div>
+</form>
+<div class="text-right text-center-xs pull-left m-l-sm" ng-if="orders.length">
+    <pagination total-items="totalItems" ng-model="Page" data-max-size="maxSize"
+    items-per-page="{{item_page}}"
+    ng-change="change_tab(status,keyword,Page)"></pagination>
+</div>
+</div>
+<!-- ENDĐ -->
+
+<div class="col-lg-8 col-md-8 col-sm-8" ng-if="show_detail">
+    <div ui-view id="detail_order">
+        <div class="text-center">
+            <i class="fa-2x fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
+</div>
+</div>
+<!-- / Row -->
+<div class="clearfix"></div>
+<!--/ Tab content-->
+<p ng-if="!orders.length" style="text-align: center;">{{'ORDERC_banchuacodonhangnaotrong1' | translate}} {{ keyLang == 'vi' ? list_time[time_start] : list_time_en[time_start]}}. <a class="text-info" ui-sref="order.create_once_global_new">{{'ORDERC_banchuacodonhangnaotrong2' | translate}}</a> {{'ORDERC_banchuacodonhangnaotrong3' | translate}}.</p>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>

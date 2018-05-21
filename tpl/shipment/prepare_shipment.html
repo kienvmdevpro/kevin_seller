@@ -1,0 +1,38 @@
+<!--Tab content-->
+<div class="tab-container tab-inside">
+    <div class="tab-content">
+        <form name="frmPrepareShipment">
+            <h3>{{'SHIPC_tab4_h3_Buoc4' | translate:{param:step4.shipment.RequestCode} }}<!--  Bước 4: Chuẩn bị giao kiện hàng {{step4.shipment.RequestCode}} --></h3>
+        <h4 ng-if="step2.shipment.TypeTransport == 1" translate>SHIPC_tab4_btt_Taomavandon</h4>
+		<div class="shipment_bb clearfix" ng-if="step2.shipment.TypeTransport == 1">
+			<p style="margin-top:15px;" translate>SHIPC_tab4_btt_1Neuquykhachdachuanbi</p>
+			<button class="btn btn-info" ng-click="step4.finish()" ng-disabled="step4.processing" style="margin-bottom: 10px;">
+				<i class="fa fa-truck"></i>&nbsp;{{'SHIPC_tab4_btt_Taomavandon' | translate }}
+			</button>
+			<p ng-show="show_print_shipmentrachking"> {{'SHIPC_tab4_p_2Quykhachdataomavandon' | translate:{param:step4.shipment.Tracking }  }}<!-- 2.  Quý khách đã tạo mã vận đơn {{step4.shipment.Tracking}} thành công, quý khách hãy ấn vào nút bên dưới để in phiếu gửi vận đơn nhập hàng vào kho. --></p>
+			<!-- <a ng-href="http://seller.shipchung.vn/#/print_hvc?code={{step4.shipment.Tracking}}"
+				target="_blank" class="btn m-b-xs w-xs btn-info m-r-xs" style="margin-left:-15px;">
+					In bảng kê
+			</a> -->
+			<button class="btn btn-info" ng-click="print_shipmentrachking()" ng-show="show_print_shipmentrachking">
+				<i class="icon-printer"></i>&nbsp;{{'SHIPC_tab4_btt_Inphieugui' | translate}}
+			</button>
+		</div>
+		<div class="shipment_bb clearfix" >
+			<p style="margin-top:15px;" translate>SHIPC_tab4_p_Saukhitaoma</p>
+			<p>{{'SHIPC_tab4_p_Manhapkho' | translate: {param :step4.shipment.RequestCode} }}<!-- - Mã nhập kho: {{step4.shipment.RequestCode}} --></p>
+			<p>{{'SHIPC_tab4_p_Diachi' | translate:{address:step4.shipment.ShipToAddress.Name,address1: step4.shipment.ShipToAddress.Name} }}<!-- - Địa chỉ: {{step4.shipment.ShipToAddress.Name}} - {{step4.shipment.ShipToAddress.AddressLine1}} --></p>
+			<p>{{'SHIPC_tab4_p_sdt' | translate: {param :step4.shipment.ShipToAddress.phone} }}</p>
+			<p translate>SHIPC_tab4_p_Sokien</p>
+			<p><b translate>SHIPC_tab4_p_Luuyquantrong</b></p>
+		</div>
+        <!-- <div class="col-lg-12 m-b-md">
+            <label>
+                Vui lòng click hoàn thành nếu kiện hàng đã chuẩn bị xong.
+            </label> ui-sref="product.shipment"
+            <p>Bạn cần yêu cầu bưu tá kiểm tra số lượng và ký trên bảng kê. Trường hợp nhập hàng số lượng không chính xác so với bảng kê nhưng chưa có ký nhận của bưu tá thì {{app.name}} sẽ được phép miễn trách nhiệm bồi thường do chưa đủ điều kiện nhập hàng.</p>
+        </div> -->
+        <button type="button" ng-click="step4.finished()" class="btn m-b-xs btn-lg btn-success" translate>SHIPC_tab4_btt_Hoanthanh</button>
+        </form>
+    </div>
+</div>

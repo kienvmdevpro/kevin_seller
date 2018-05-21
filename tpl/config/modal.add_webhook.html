@@ -1,0 +1,31 @@
+<form name="myForm" class="form-validation">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-12">
+                <strong>{{'Api_CauHinhApi' | translate}}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body wrapper-md">
+        <p>{{'Api_CauHinhApi5' | translate}} :</p>
+        <div class="form-group"><p><b>{{'Api_CauHinhApi6' | translate}} 1: {{'Api_CauHinhApi_upload' | translate}} </b> <a target="_blank" ng-click="download()" style="color: #23b7e5;" >{{'Api_CauHinhApi4' | translate}}</a> {{'Api_CauHinhApi8' | translate}} :  
+        <span class="verif-inst-file-name"> [{{google_verify.filename}}] </span></p>
+    
+    <p><b>{{'Api_CauHinhApi6' | translate}} 2: {{'Api_CauHinhApi_confirm' | translate}} </b> {{'Api_CauHinhApi2' | translate}} <a target="_blank" style="color: #23b7e5;"  href="{{(frm.link | extractHostname) || 'http://your-domain'}}/{{google_verify.filename}}"> {{(frm.link | extractHostname) || 'http://your-domain'}}/{{google_verify.filename}} </a> {{'Api_CauHinhApi3' | translate}}.</p>
+        </div>
+        <p><b>{{'Api_LastStep' | translate}}:</b> {{'Api_CauHinhApi7' | translate}} :</p> 
+        
+            <div class="form-group">
+                <input type="url" class="form-control" ng-model="frm.link" placeholder="Link get api" required="">
+            </div>
+        
+        <p><i><small>{{'Api_Vidu' | translate}} : http://abc.com/receive-tracking-status </small></i></p>
+        <p><i><small>( * ) {{'Api_CauHinhApi9' | translate}} </small></i></p>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-disabled="submit_loading || myForm.$invalid" ng-click="accept(frm)"><i ng-if="submit_loading" class="text-1x fa fa-spinner fa-spin"></i> {{'Btt_update_verify' | translate}}</button>
+        <button type="button" class="btn btn-default" ng-click="cancel()">{{'Btt_close' | translate}}</button>
+    </div>
+</form>

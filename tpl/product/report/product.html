@@ -1,0 +1,133 @@
+<div ng-controller="ReportSkuController" ng-init="search.getWarehoure()">
+    <div boxme-header="header" app="app" ng-init="search.proceed()">
+        {{$parent.$parent.$parent.condition.wms}}{{$parent.$parent.condition.wms}}{{$parent.$parent.$parent.$parent.condition.wms}}
+        <form name="frmFilter" class="navbar-form form-validation inline" role="form" boxme-action="{{exportUrl}}" target="_blank" method="post" boxme-submit-trigger="#exportTrigger">
+            <div class="form-group">
+                <input type="text" ng-model="search.condition.sku" class="form-control" placeholder="{{'report_qsku' | translate }}" name="sku">
+            </div>
+            <div class="form-group" ng-init="">
+                <select ui-select2 data-placeholder="{{'RETPRO_placeholder_wh' | translate }}" ng-model="search.condition.wms" class="form-control"
+                    style="width: 175px;"  >
+                <option value="all" translate>Label_All</option>
+                <option value="{{warehouse.Code}}" ng-repeat="warehouse in warehouses">{{warehouse.Code}} - {{warehouse.Name}}</option>
+				</select>
+            </div>
+			<!-- <div class="form-group">
+                <select ui-select2 data-placeholder="{{ 'common.option' | translate }}" ng-model="search.condition.key" class="form-control"
+                        style="width: 175px">
+                    <option value="" translate>Label_All</option>
+                    <option value="{{key.key}}" ng-repeat="key in keys">{{key.text}}</option>
+                </select>
+            </div> -->
+            <div class="input-group">
+                <input type="text" placeholder="{{'Label_placeholder_from' | translate }}" class="form-control" datepicker-popup="{{format}}" ng-model="dt1.value" is-open="dt1.opened" datepicker-options="{}" close-text="Close" style="width: 150px" required>
+				<span class="input-group-btn">
+					<button type="button"  class="btn btn-default" ng-click="dt1.open($event);dt2.close()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+            </div>
+            <div class="input-group">
+                <input type="text" placeholder="{{'Label_placeholder_to' | translate }}" class="form-control" datepicker-popup="{{format}}" ng-model="dt2.value" is-open="dt2.opened" datepicker-options="{}" close-text="Close" style="width: 150px" required>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="dt2.open($event);dt1.close()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+            </div>
+			<input type="text" class="hidden" name="key" ng-model="search.condition.key">
+			<input type="text" class="hidden" name="wms" ng-model="search.condition.wms">
+            <input type="text" class="hidden" name="from" ng-model="search.condition.from">
+            <input type="text" class="hidden" name="to" ng-model="search.condition.to">
+            <input type="text" class="hidden" name="token" ng-model="userInfo.token">
+			
+            <div class="form-group">
+                <button type="submit" ng-click="search.proceed()" ng-disabled="loaddingExport" class="btn btn-info" translate>Btt_search</button>
+            </div>
+        </form>
+    </div>
+
+    <boxme-content>
+        <div class="wrapper-md bg-light b-b">
+            <h1 class="m-n font-thin h3 inline" translate>RETPRO_h1</h1>
+            <button id="exportTrigger" type="button" class="btn btn-link btn-md inline" translate>
+                <i class="fa fa-file-o"></i>
+                Btt_download
+            </button>
+			<!-- <h5>Ghi chú: Dữ liệu tồn kho ngày <label ng-bind="dt3 | date:'dd/MM/yyyy'"></label> sẽ được thống kê vào hôm sau</h5> -->
+			<h5>{{'RETPRO_notifi' | translate: {param: dt3 ? (dt3 | date: 'dd/MM/yyyy') : ''} }}</h5>
+			
+			<span ng-show="loaddingExport">
+				<i class="fa-2x fa fa-spinner fa-spin"></i>
+			</span>
+        </div>
+
+        <div class="hbox hbox-auto-xs hbox-auto-sm">
+            <div class="col wrapper-sm">
+                <div class="clearfix m-b">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="text-center" ng-show="search.searching">
+                                <i class="fa-2x fa fa-spinner fa-spin"></i>
+                            </div>
+                            <table class="table b-a b-light text-xs scroll-x" ng-show="!search.searching">
+                               <thead>
+                                    <tr>
+                                        <th class="text-center v-middle b-r" translate>report.inventory.table.date</th>
+                                        <th class="text-center v-middle b-r" translate>BSIN</th>
+                                        <th class="text-center v-middle b-r" translate>Name</th>
+                                        <th class="text-center v-middle b-r" translate>ORDERC_inventory</th>
+                                        <th class="text-center v-middle b-r" translate>report.inventory.table.beginning</th>
+                                        <th class="text-center v-middle b-r alert-success"  translate>report.inventory.table.inbound</th>
+                                        <th class="text-center v-middle b-r alert-danger" translate>report.inventory.table.return</th>
+                                        <!-- <th class="text-center v-middle b-r alert-warning" translate>report.inventory.table.outbound_waiting</th> -->
+                                        <th class="text-center v-middle b-r alert-info" translate>report.inventory.table.outbound</th>
+                                        <th class="text-center v-middle b-r alert-warning" translate>report.inventory.table.inventory</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="animated" ng-class="{'fadeIn': !search.searching, 'fadeOut': search.searching}">
+                                    <tr ng-show="products.listOf('data').length" ng-repeat="x in products.listOf('data')">
+                                        <td class="text-center v-middle hidden-md hidden-sm hidden-xs b-r">
+                                            {{ products.listOf('data')[$index].Date? (products.listOf('data')[$index].Date | date:'dd/MM/yyyy'):'' }}
+                                        </td>
+                                        <td class="text-center v-middle b-r">{{x.Bsin}}</td>
+                                        <td class="text-center v-middle b-r">{{x.NameProduct}}</td>
+                                        <td class="text-center v-middle b-r">{{x.Warehouse}}</td>
+                                        <td class="text-right v-middle b-r">{{x.InventoryBegin}}</td>
+                                        <td class="text-right v-middle b-r">{{x.Inbound}}</td>
+                                        <td class="text-right v-middle b-r">{{x.Return}}</td>
+<!--                                         <td class="text-right v-middle b-r">{{x.Outbound_Waiting}}</td> -->
+                                        <td class="text-right v-middle b-r">{{x.Outbound}}</td>
+                                        <td class="text-right v-middle b-r">{{x.Inventory}}</td>
+                                    </tr>
+                                    <tr ng-if="!products.listOf('data').length"><td class="text-center v-middle" colspan="18">
+                                    <em >{{'ERR_search_null' | translate}}</em></td></tr>
+                                </tbody>
+                            </table>
+
+                            <div class="col-lg-12 text-center list-data" ng-show="!search.searching" style="padding-top: 5px;">
+                                <small ng-if="products.totalItems() > 0" class="text-muted inline m-t-sm m-b-sm">
+									<!-- Hiển thị từ {{(search.condition.page-1) * search.condition.page_size + 1}} - {{(search.condition.page-1) * search.condition.page_size + products.listOf('data').length}} của {{products.totalItems()}} bản ghi -->
+									{{ 'Pagegin' | translate: {from: (((search.condition.page-1) * search.condition.page_size + 1) * search.condition.page_size + 1), to: ((search.condition.page-1) * search.condition.page_size + products.listOf('data').length), total: products.totalItems()} }}
+								</small>
+								<div class="pull-right">
+									<pagination class="pagination-sm" total-items="products.totalItems()" max-size="5"
+									ng-if="products.totalItems() > 0" items-per-page="search.condition.page_size"
+									ng-model="search.condition.page" ng-change="search.proceed()" boundary-links="false"
+									rotate=false></pagination>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script id="template/pagination/pagination.html" type="text/ng-template">
+            <ul class="pagination m-t-none">
+                <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(1)" title="First Page"> <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+                <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1)" title="Previous Page"><span class="fa fa-chevron-left"></span></a></li>
+                <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+                <li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1)" title="Next Page"><span class="fa fa-chevron-right"></span></a></li>
+                <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages)" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span> </a></li>
+            </ul>
+        </script>
+    </boxme-content>
+</div>

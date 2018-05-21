@@ -1,0 +1,191 @@
+<style>
+    @media (min-width: 767px) {
+         .ui-add-order-shopify .ui-select-choices-content{
+            z-index: 9999;
+            width: 344px;
+        }
+    }
+    .table > thead > tr > th {
+        background: #eaeff0;
+    }
+    .orderS{overflow-y: scroll;
+            max-height: 400px;
+    }
+    .orderS .table > tbody > tr >td {
+        max-height: 110px;;
+    }
+</style>    
+<div class="modal-header">
+<div class="row">
+    <div class="col-md-12">
+    <div class="col-md-11 pull-left no-padder" >
+        <h4>{{'Magento_ChonDonShopify' | translate}}</h4>
+        </div>
+    <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+    </div>
+    </div>
+</div>
+<div class="modal-body" ng-if="list_store_magento.length ==0">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center" style="font-size: 16px;font-weight: bolder;">
+                <p> {{'Magento_BanChuaCauHinh' | translate}}</p>
+            </div> 
+        </div>
+    </div>
+</div>
+<div class="modal-body" ng-if="list_store_magento.length>=1">
+    <div class="row">
+        <form class="form-validation form-horizontal"   ng-controller="OrderCreateV2GlobalCtrl" role="form" name="frmOrderCreate_{{$index}}">   
+            <div class="col-md-4" style="margin-bottom: -15px;">
+                <div class="form-group">
+                    <!-- <label  class="col-lg-4 col-md-4 control-label" for="buyer_name">{{'shopify_ChonShop' | translate}}</label> -->
+                     <div class="col-lg-12 col-md-12">
+                        <ui-select ng-model="Magento.Store"  required>
+                            <ui-select-match placeholder="{{'shopify_ChonShop' | translate }}">{{'shopify_ChonShop' | translate}} : {{$select.selected.store_name}}</ui-select-match>
+                            <ui-select-choices refresh-delay="300"  repeat="value  in list_store_magento | filter: $select.search | limitTo: 20 track by $index">
+                                {{value.store_name}} ({{'#'+value.id}})
+                            </ui-select-choices>
+                        </ui-select>
+                  </div> 
+                </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -15px;margin-left: -15px;">
+                <div class="form-group">
+                    <div class="col-lg-12 col-md-12">
+                        <ui-select ng-model="Magento.Date"  ng-change="get_order(Magento.Store.id)">
+                            <ui-select-match placeholder="{{'Magento_ChonThoiGian' | translate }}">{{keyLang=="en" ? $select.selected.text : $select.selected.text_th}}</ui-select-match>
+                            <ui-select-choices refresh-delay="300"  repeat="value  in list_date | filter: $select.search | limitTo: 20 track by $index">
+                               {{keyLang=="en" ? value.text : value.text_th}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4"  style="margin-bottom: -15px;">
+                <div class="form-group">
+                    <div class="input-group m-b-sm" style="margin-right: 15px;">
+                        <input class="form-control" ng-model="params_search.order_id"
+                        placeholder="{{'ORDERC_Mavandon' | translate}}"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"
+                            ng-click="search_order(params_search.order_id)">{{'Btt_search' | translate}}
+                            </button>
+                        </span>
+                    </div>    
+                </div>
+            </div>
+           
+        </form>
+        
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="orderS" >
+            
+            <table class="table table-bordered b-t b-light">
+                <thead>
+                    <tr>
+                        <th class="text-left v-middle" width="2%">
+                            <label class="i-checks m-b-none" ng-if="data_order.length > 0">
+                                <input type="checkbox" 
+                                 ng-change="toggleSelectionAll(checkall)"
+                                 ng-checked="false"
+                                 ng-true-value="1"  
+                                 ng-false-value="0"
+                                 ng-model="checkall"
+                                 /><i></i>
+                            </label>
+                        </th>
+                        <th class="text-left v-middle" translate>shopify_DonHang</th>
+                        <th class="text-left v-middle"><i class="fa fa-user"></i>&nbsp; {{'shopify_KhachHang' | translate}}</th>
+                        <!-- <th class="text-left v-middle"><i class="fa fa-gift"></i>&nbsp;{{'shopify_SanPham' | translate}}</th> -->
+                        
+                        <th class="text-left v-middle" translate>shopify_TienHangKhoiLuong </th>
+                        <th class="text-left v-middle" translate>shopify_HanhDong</th>
+                    </tr>
+                </thead>
+                <tbody class="animated driverTable fadeIn" ng-class="{'fadeIn': !search.searching, 'fadeOut': search.searching}">
+                    <tr ng-if="waiting">
+                        <td class="text-center" colspan="5" ><i class="fa fa-spin fa-spinner text-3x"></i></td>
+                    </tr>
+                    <tr ng-if="data_order.length==0 && !waiting">
+                        <td class="text-center" colspan="5" > {{'Magento_KhongTimThayDuLieu' | translate}}</td>
+                    </tr>
+                    <tr ng-repeat="(key,value)  in data_order" ng-if="!waiting">
+                        <td class="text-left v-middle" width="2%">
+                            <label class="i-checks m-b-none">
+                                    <input type="checkbox"
+                                        ng-model="check" 
+                                        ng-change="toggleSelection(key)" 
+                                        ng-checked="check_list(key)"
+                                     />
+                                    <i></i>
+                              </label>
+                        </td>
+                        <td class="text-left v-middle" >
+                            <a class="label bg-light text-base text-info ">
+                          {{value.Order.Order_code}}</a><br/>
+                            <span tooltip="{{'shopify_TimeCreate' | translate}}"></i>{{value.Order.Time_create}}</span>
+                        </td>
+                        <td class="text-left v-middle">
+                            <strong><i class="fa fa-user"></i>  :</strong>&nbsp;{{value.To.Name}}<br>
+                            <strong><i class="fa fa-phone"></i> :</strong>&nbsp;{{value.To.Phone}}<br>
+                            <!-- <strong><i class="fa fa-home"></i>  :</strong>&nbsp;{{value.To.Address}}{{value.To.Province ? ', ' : ''}}<br> -->
+                             <!-- {{value.To.Province}} {{value.To.City? (', ' + value.To.City):''}} {{value.To.Country}}/ <br> -->
+                            <strong><i class="fa fa-globe"></i> :</strong>&nbsp;{{value.To.Zipcode}}
+                  
+                        </td>
+                        
+                        <td class="text-left v-middle" >
+                            <span><i class="fa fa-won"></i>:&nbsp; {{value.Order.Weight || '0' |roundup | number}} gram</span><br>
+                            <span><i class="fa fa-tags"></i>:&nbsp;{{value.Order.Amount || '0' | number}} ({{value.Order.Currency}})</span>
+                        </td>
+                        <td class="text-left v-middle" >
+                            <button type="button" ng-if="list_store_magento.length >=1 && !value.waiting_items" ng-click="add_order(value)"  class="pull-right btn btn-info"  style="margin-right:10px" translate>{{'lazada_Import' | translate}}</button> 
+                            <p style="text-align: center;"><i ng-if="value.waiting_items" class="fa fa-spin fa-spinner text-2x"></i></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+
+            </div>  
+
+           
+            
+        </div>
+    </div>
+</div>
+<!--- bk -->
+
+<div class="modal-footer" ng-if="list_store_magento.length>=1">
+    <div class="row">
+         <div class="col-lg-12 text-center" style="margin-bottom: -20px;">
+			<div class="pull-left" style="margin-bottom: 17px;">
+                <div ng-if="!waiting_import_all && check_box.length > 0" class="btn btn-success" ng-click="ImportAll()">{{'lazada_ImportAll' | translate}}</div>
+                <div ng-if="!waiting_import_all && check_box.length > 0" class="btn btn-warning" ng-click="DownloadExcel()"><i class="fa fa-download"></i> Download Excel</div>
+                <i ng-if="waiting_import_all" class="fa fa-spin fa-spinner text-2x"></i>
+            </div>  
+             <small ng-if="data_order.length >=1" class="text-muted inline m-t-sm m-b-sm">
+                {{ 'Pagegin' | translate: {from: ((params.page - 1) * params.page_size + 1), to: (params.page - 1) * params.page_size + data_order.length, total: data_order.length} }}
+            </small>
+            <div class="pull-right">
+                <pagination class="pagination-sm" total-items="total" ng-if="total > 0"
+                max-size="5" items-per-page="params.page_size" ng-model="params.page"
+                ng-change="get_order();" boundary-links="false" rotate="false"></pagination>
+            </div>
+            </div>
+        </div>
+</div>
+<script id="template/pagination/pagination.html" type="text/ng-template">
+    <ul class="pagination m-t-none">
+        <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(1)" title="First Page"> <span class="glyphicon glyphicon-fast-backward"></span></a></li>
+        <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}"><a href ng-click="selectPage(page - 1)" title="Previous Page"><span class="fa fa-chevron-left"></span></a></li>
+        <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}"><a href ng-click="selectPage(page.number)">{{page.text}}</a></li>
+        <li ng-if="directionLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(page + 1)" title="Next Page"><span class="fa fa-chevron-right"></span></a></li>
+        <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}"><a href ng-click="selectPage(totalPages)" title="Last Page"><span class="glyphicon glyphicon-fast-forward"></span> </a></li>
+    </ul>
+</script>
+		
+

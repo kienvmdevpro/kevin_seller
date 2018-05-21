@@ -1,0 +1,134 @@
+<div ng-controller="ExchangeCtrl">
+    <div class="bg-light b-b">
+        <div class="row">
+            <div class="col-lg-5">
+                <img alt="Ship Chung" ng-src="img/logo.png" class="m-sm" src="img/logo.png">
+            </div>
+        </div>
+    </div>
+
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="tab-container">
+                        <div class="table-responsive" ng-show="exchange_id > 0">
+                            <div data-ng-include=" 'tpl/exchange/result.html' ">
+                                <!-- / navbar right -->
+                            </div>
+                        </div>
+                        <div class="table-responsive" ng-show="exchange_id == 0">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div style="position:absolute;left:50%;top:40%" ng-show="waiting_create">
+                                    <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                </div>
+                                <div class="panel panel-default" ng-class="{'opactity-7' : waiting_create}">
+                                    <div class="panel-body">
+                                        <div class="form-group input-group">
+                                            <input type="text" placeholder="Mã đơn hàng muốn đổi trả" ng-model="keyword" class="form-control" required>
+                                              <span class="input-group-btn">
+                                                <button type="button" ng-disabled="!keyword" ng-click="Search()" class="btn btn-info">Tìm kiếm</button>
+                                              </span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <textarea class="form-control" rows="8" placeholder="Nội dung yêu cầu ..." ng-model="note"></textarea>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <div class="b-a b-dashed m-b-sm" nv-file-drop="" uploader="uploader">
+                                                    <div nv-file-over="" uploader="uploader" over-class="another-file-over-class">
+                                                        <input type="file" class="w-full input-uploader" nv-file-select="" uploader="uploader" multiple />
+                                                        <span class="content-uploader"><i class="fa fa-picture-o fa-lg"></i> Kéo thả tối đa 5 ảnh (mỗi file nhỏ hơn 3mb) vào đây hoặc click để lựa chọn</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group text-xs m-b-none" ng-if="uploader.queue.length > 0">
+                                                <div class="col-sm-12">
+                                                    <table class="table m-b-none">
+                                                        <thead>
+                                                        <tr>
+                                                            <th width="50%">Tên</th>
+                                                            <th ng-show="uploader.isHTML5">Size</th>
+                                                            <th ng-show="uploader.isHTML5">Progress</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng-repeat="item in uploader.queue">
+                                                            <td><strong>{{ item.file.name }}</strong></td>
+                                                            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                                            <td ng-show="uploader.isHTML5">
+                                                                <div class="progress" style="margin-bottom: 0;">
+                                                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                                            </td>
+                                                            <td nowrap>
+                                                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                                    <span class="glyphicon glyphicon-trash"></span> Xóa
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <a href="javascript:;" ng-click="Action('return')" class="col-sm-6 b text-center bg-primary">
+                                                    <h5><i class="fa fa-share"></i> Trả hàng</h5>
+                                                </a>
+                                                <a href="javascript:;" ng-click="Action('exchange')" class="col-sm-6 b text-center bg-info ">
+                                                    <h5><i class="fa fa-retweet"></i> Đổi hàng</h5>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div style="position:absolute;left:50%;top:40%" ng-show="waiting">
+                                    <i class="fa-3x fa fa-spinner fa-spin"></i>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-body no-padder-l no-padder-r" ng-class="{'opactity-7' : waiting}">
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <center>
+                                                <strong class="text-size">Đổi trả sản phẩm</strong>
+                                            </center>
+
+                                            <p><strong>Mã đơn hàng :</strong> <a ng-href="#/detail/{{item.tracking_code}}" target="_blank"  class="label bg-light text-base text-info">{{item.tracking_code || ''}}</a></p>
+                                            <p><strong>Sản phẩm :</strong> {{item.product_name}} </p>
+                                            <p><strong>Nguời nhận :</strong> {{item.to_name}} <i class="fa fa-phone" ng-show="item.to_phone"></i>{{item.to_phone}}</p>
+                                            <br />
+
+                                            <strong>Hướng dẫn gửi yêu cầu đổi trả sản phẩm:</strong><br />
+                                            <strong>Cách 1:</strong> Gửi tin nhắn theo cú pháp "DT_SC123456789_lydo" và gửi tới 6566 (phí 500đ/sms).<br />
+                                            <strong>Cách 2:</strong> Truy cập website <a class="text-info pointer" href="#">http://seller.shipchung.vn/#/doi-tra/</a>
+                                            và nhập mã vận đơn <strong>SC123456789</strong> vào ô nhập mã vận đơn đổi trả và lí do đổi trả sản phẩm.<br/>
+                                            <br />
+                                            Sau một ngày làm việc hệ thống sẽ hồi đáp về kết quả xử lý yêu cầu đổi trả sản phẩm từ người bán qua
+                                            <strong>SMS</strong> và <strong>Email</strong>. <br /><br />
+                                            Nếu người gửi hàng(người bán hàng) đồng ý đổi trả sản phẩm, bạn vui lòng dán nhãn
+                                            <a href="#" class="text-info pointer">này</a> lên gói hàng đã được đóng gói cẩn thận và chờ nhân viên vận chuyển tới lấy hàng.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

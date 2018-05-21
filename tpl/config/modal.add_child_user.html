@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <strong><!-- Nhập email nhân viên -->{{'VER_NhapEmailNhanVien' | translate}}</strong>
+            <p class="text-info"><strong><!-- Lưu ý -->{{'Btt_note' | translate}}</strong>: 
+            {{'VER_TaiKhoanNhanVienPhaiDKy' | translate}}<!-- Tài khoản nhân viên phải được đăng ký trên hệ thống Shipchung trước khi cấu hình --></p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body wrapper-md">
+    <form>
+        <div class="form-group">
+            <input type="text" class="form-control" required ng-model="frm.email" placeholder="{{'VER_EmailDaDangKiShipChung' | translate}}">
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="accept(frm)">{{'SHIP_c_ask_cancel_yes' | translate}}</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">{{'Btt_close' | translate}}</button>
+</div>

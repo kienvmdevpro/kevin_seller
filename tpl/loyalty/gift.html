@@ -1,0 +1,33 @@
+<div class="tab-container">
+    <div class="streamline b-l b-info m-b padder-v">
+        <div class="sl-item b-primary b-l" ng-show="data['gift'].length == 0">
+            <div class="m-l">
+                <div class="text-md font-thin">Lịch sử đổi thưởng</div>
+                <div class="b-a bg-white m-t-xs m-b-xs">
+                    <div class="panel-body">
+                        {{userInfo.identifier || 'Quý khách'}} chưa có lịch sử đổi thưởng
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="sl-item" data-ng-repeat="item in data['gift']">
+            <div class="m-l">
+                <div class="text-md font-thin">Đổi thưởng</div>
+                <div class="b-a bg-white m-t-xs m-b-xs">
+                    <div class="panel-body">
+                        <p>
+                            {{userInfo.identifier || 'Quý khách'}} vừa thực hiện đổi thưởng <a href class="text-info">{{item.get_campaign.name}}</a> với trị giá {{item.get_campaign.value | vnNumber}} vnđ.
+                        </p>
+                        <p>
+                            Dành cho khách hàng hạng <span class="label text-xs {{loyalty_level[item.level]['bg_color'] || ''}}">{{loyalty_level[item.level]['name']}}</span>
+                            sau khi quy đổi số điểm tích lũy tương ứng là {{item.get_campaign.point | vnNumber}}.
+                        </p>
+                    </div>
+                </div>
+                <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> {{item.time_create*1000 | date : "dd-MM-yyyy  HH:mm"}}</small>
+            </div>
+        </div>
+    </div>
+</div>

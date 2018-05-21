@@ -1,0 +1,153 @@
+<div ng-controller="WarehouseVerifyCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2"><i class="fa fa-check-square text-info"></i> {{'WareV_BangKeLuuKHo' | translate}}<!-- Bảng kê lưu kho --> <!-- Tiền thu hộ --></span>
+    </div>
+    <div class="wrapper-md">
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form class="form-validation" role="form" name="frmSearch">
+                        <div class="row m-b-sm">
+
+                            <div class="col-lg-3">
+                                    <input type="number" class="form-control" placeholder="{{'Ver_mabanke' | translate}}"
+                                           ng-model="search"
+                                    />
+                            </div>
+
+                            <div class="col-lg-3">
+                                  <input type="text" class="form-control" placeholder="{{'Ver_tungay' | translate}}"
+                                    ng-model="time_start"
+                                    datepicker-popup="dd-MM-yyyy"
+                                    is-open="time_start_open"
+                                    datepicker-options="dateOptions"
+                                    ng-required="true"
+                                    close-text="Close"
+                                    ng-click="time_start_open = true"
+                                   />
+                            </div>
+
+                            <div class="col-lg-3">
+                                  <input type="text" class="form-control" placeholder="{{'Ver_denngay' | translate}}"
+                                    datepicker-popup="dd-MM-yyyy"
+                                    is-open="time_end_open"
+                                    datepicker-options="dateOptions"
+                                    date-disabled="disabled(date, mode)"
+                                    close-text="Close"
+                                    ng-model="time_end"
+                                    ng-click="time_end_open = true"
+                                  />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <button class="btn btn-info" ng-disabled="frmSearch.$invalid" ng-click="setPage()" type="button"><i class="glyphicon glyphicon-search"></i>{{'Btt_search' | translate}} <!-- Tìm kiếm --></button>
+                            </div>
+                            <div class="col-lg-3 col-lg-offset-6">
+                                <a ng-href="{{exportExcel()}}" ng-disabled="frmSearch.$invalid" class="btn m-b-xs btn-success pull-right"><i class="fa fa-file-excel-o"></i> {{'Btt_excel' | translate}}</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+                        <div class="table-responsive">
+                        <table class="table-condensed table-hover col-md-12">
+                            <thead>
+                                <th>#</th>
+                                <th>
+                                   {{'Ver_mabanke' | translate}} <!-- Mã bảng kê -->
+                                </th>
+                                <th class="text-right">
+                                {{'WareV_LoaiHinhLuuKho' | translate}}
+                                   <!--  Loại hình lưu kho -->
+                                </th>
+                                <th class="text-right">
+                                   {{'WareV_PhiLuuKho' | translate}}<!--  Phí lưu kho -->
+                                </th >
+                                <th class="text-right">
+                                    <!-- Giảm phí lưu kho -->
+                                     {{'WareV_GiamPhiLuuKho' | translate}}
+                                </th>
+                                <th class="text-right">
+                                    {{'WareV_TongUIDDangLuuKho' | translate}}<!-- Tổng UID đang lưu kho -->
+                                </th>
+                                <th class="text-right">
+                                    <!-- Tổng SKU -->
+                                     {{'WareV_TongSKU' | translate}}
+                                </th>
+                                <th class="text-right">
+                                    <!-- Trạng thái -->
+                                    {{'WareV_TrangThai' | translate}}
+                                </th>
+
+                            </thead>
+                            <tbody ng-repeat="item in list_data">
+                                <td>
+                                    {{$index + 1}}
+                                </td>
+                                <td>
+                                    <a href="javascript:;" class="text-info"
+                                        ng-click="show_detail(item)"
+                                        tooltip="{{'Btt_xemchitiet' | translate}}"
+                                            >
+                                        <i class="fa fa-file-text"></i>
+                                        {{item.id}}
+
+                                    </a>
+                                    <br />
+                                    {{item.time_create * 1000 | date:"dd-MM-yyyy  HH:mm"}}
+                                </td>
+                                <td class="text-right">
+                                    <span class="label bg-info">{{list_type[item.type]}}</span>
+                                </td>
+                                <td class="text-right">
+                                    <convert-currency home-currency="item.warehouse_fee"></convert-currency>
+                                </td>
+                                <td class="text-right">
+                                    <convert-currency home-currency="item.discount_warehouse"></convert-currency>
+                                </td>
+                                <td class="text-right">
+                                    {{item.total_uid_storage || '0' | vnNumber}}
+                                </td>
+                                <td class="text-right">
+                                    {{item.total_sku || '0' | vnNumber}}
+                                </td>
+                                <td class="text-right">
+                                    <span class="label {{list_status[item.status].bg}}">{{list_status[item.status].name}}</span>
+                                </td>
+                            </tbody>
+                            <tbody ng-if="!list_data.length && !waiting">
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        {{'Ver_KhongCoDuLieu' | translate}}<!-- Không có dữ liệu -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="waiting">
+                                <tr>
+                                    <td colspan="10" class="text-center">
+                                        <i class="text-3x fa fa-spinner fa-spin"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row" ng-show="list_data.length">
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage()"></pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

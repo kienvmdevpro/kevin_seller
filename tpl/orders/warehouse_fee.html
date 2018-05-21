@@ -1,0 +1,428 @@
+<div ng-controller="WarehouseFeeCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2"><i class="fa fa-inbox text-info"></i> {{'WH_Name' | translate}}</strong></span>
+    </div>
+
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form class="form-validation form-horizontal" ng-submit="setPage(1)" name="frmSearch">
+                        <div class="row">
+                           
+
+                            <div class="col-md-3">
+                                <select class="form-control" ng-model="frm.warehouse">
+                                    <option value="">{{'WH_WH' | translate}}</option>
+                                    <option ng-repeat="item in warehouse_warehouse" value="{{item.code}}">{{item.name}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <select class="form-control" ng-model="frm.payment_type">
+                                    <option value="">{{'WH_PaymentType' | translate}}</option>
+                                    <option ng-repeat="(key,item) in list_config" value="{{key}}">{{item}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group controls input-group">
+                                    <input type="text" class="form-control" placeholder="{{'Ver_tungay' | translate}}"
+                                        ng-model="time.create_start"
+                                        datepicker-popup="dd-MM-yyyy"
+                                        is-open="time_start_open"
+                                        datepicker-options="dateOptions"
+                                        ng-required="true"
+                                        close-text="Close"
+                                        ng-click="time_start_open = true"
+                                       />
+                                    <span class="input-group-btn icon-input">
+                                    <i class="btn fa fa-calendar "></i>
+                                  </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group controls input-group">
+                                    <input type="text" class="form-control" placeholder="{{'Ver_denngay' | translate}}"
+                                        datepicker-popup="dd-MM-yyyy"
+                                        is-open="time_end_open"
+                                        datepicker-options="dateOptions"
+                                        date-disabled="disabled(date, mode)"
+                                        close-text="Close"
+                                        ng-model="time.create_end"
+                                        ng-click="time_end_open = true"
+                                      />
+                                    <span class="input-group-btn icon-input">
+                                    <i class="btn fa fa-calendar "></i>
+                                  </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group controls padder">
+                                    <input type="text" class="form-control" placeholder="{{'WH_Id' | translate}}" ng-model="frm.log_id" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <button type="submit" class="btn btn-info" ng-disabled="frmSearch.$invalid"><i class="fa fa-search"></i> {{'WH_Search' | translate}}</button>
+                            </div>
+                            <div class="col-lg-3 col-lg-offset-6 btn-group">
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn m-b-xs btn-success" ng-disabled="waiting_export" ng-click="exportExcel('export')">
+                                        <i ng-show="!waiting_export" class="fa fa-file-excel-o"></i>
+                                        <i ng-show="waiting_export" class="fa fa-spinner"></i>
+                                        {{'WH_Xuat' | translate}} Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table-condensed w-full table-hover">
+                            <thead>
+                                <th>
+                                    #
+                                </th>
+
+                                <th>
+                                    {{'WH_Id' | translate}}
+                                </th>
+
+                               
+                                <th>
+                                    {{'WH_Time' | translate}}
+                                </th>
+
+                                <th>
+                                    {{'WH_PaymentType' | translate}}
+                                </th>
+
+                                <th width="10%">
+                                    {{'WH_WHCode' | translate}}
+                                </th>
+
+                                <th colspan="3">
+                                    {{'WH_Details' | translate}}
+                                </th>
+
+                                <th colspan="2">
+                                    {{'WH_CustomerFee' | translate}}
+                                </th>
+                                <th colspan="2">
+                                    {{'WH_PartnerFee' | translate}}
+                                </th>
+                                
+                                <th>{{'WH_Status' | translate}}</th>
+                                <th>{{'WH_TimeCreate' | translate}}</th>
+                            </thead>
+                            <thead>
+                                <th>
+                                </th>
+
+                               
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+
+                                <th>
+                                    Item (sp)
+                                </th>
+
+                                <th>
+                                    SKU
+                                </th>
+
+                                <th>
+                                    {{'WH_Floor' | translate}}
+                                </th>
+
+                                <th>
+                                    {{'WH_Fee' | translate}}
+                                </th>
+                                <th>
+                                    {{'WH_Discount' | translate}}
+                                </th>
+                                <th>
+                                    {{'WH_Fee' | translate}}
+                                </th>
+                                <th>
+                                    {{'WH_Discount' | translate}}
+                                </th>
+                            </thead>
+                            <style type="text/css">
+                                td.padding{
+                                    padding-right: 20px !important;
+                                    color: green;
+                                }
+                            </style>
+                            <tbody>
+                                <tr class="tr_total" ng-if="list_data.length" style="font-weight: bold">
+                                    <td>{{'WH_Sum' | translate}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="padding">{{data_total.total_item | vnNumber}}</td>
+                                    <td class="padding">{{data_total.total_sku | vnNumber}}</td>
+                                    <td class="padding">{{data_total.floor | vnNumber}}</td>
+                                    <td class="padding">{{data_total.total_fee | vnNumber}}</td>
+                                    <td class="padding">{{data_total.total_discount | vnNumber}}</td>
+                                    <td class="padding">{{data_total.partner_total_fee | vnNumber}}</td>
+                                    <td class="padding">{{data_total.partner_total_discount | vnNumber}}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-repeat="item in list_data">
+                                <tr>
+                                    <td>
+                                        {{item_stt + $index + 1}}
+                                    </td>
+
+                                    <td>
+                                        <a style="color:#23b7e5" ng-click="show_detail(item)">{{ item.id }}</a> <a ng-click="exportExcelDetail(item.id)"><i class="fa fa-print"></i></a>
+                                        <!--<a style="color:#23b7e5" ng-click="view_detail(item.id,item.date)">{{ item.id }}</a>-->
+                                    </td>
+
+                                  
+
+                                    <td>
+                                        {{item.date | distanceDate}}
+                                    </td>
+
+                                    <td>
+                                        {{list_config[item.payment_type] || ''}}
+                                    </td>
+
+                                    <td>
+                                        {{item.warehouse}}
+                                    </td>
+
+                                    <td>
+                                        {{item.total_item | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{ item.total_sku | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{ item.floor | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{ item.total_fee | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{item.total_discount | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{item.partner_total_fee | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{item.partner_total_discount | vnNumber}}
+                                    </td>
+
+                                    <td>
+                                        {{list_status[item.status]}}
+                                    </td>
+
+                                    <td>
+                                        {{item.date}}
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr ng-show="item.show" style="background: #dff0d8">
+                                    <td colspan="14">
+                                        <table class="table-condensed w-full table-hover">
+                                            <thead>
+                                                <th>
+                                                    {{'WH_Time' | translate}}
+                                                </th>
+
+                                                <th>
+                                                    {{'WH_Total' | translate}} Item
+                                                </th>
+
+                                                <th>
+                                                    {{'WH_Total' | translate}} SKU
+                                                </th>
+
+                                               
+                                                <th>
+                                                    {{'WH_WHCode' | translate}}
+                                                </th>
+
+                                            </thead>
+                                            <tbody ng-repeat="item2 in item.data">
+                                                <tr ng-class="{'success': item2.show}">
+                                                   
+                                                    <td>
+                                                        {{ item2.time_create * 1000 | date : "dd-MM-yyyy "}} <a ng-click="detail_of_day(item2,item.data_of_day_for_type,item.standar)"><i class="fa fa-eye"></i></a>
+                                                    </td>
+
+                                                    <td>
+                                                        {{item2.total_item | vnNumber}}
+                                                    </td>
+
+                                                    <td>
+                                                        {{item2.total_sku | vnNumber}}
+                                                    </td>
+
+
+                                                   
+                                                    <td>
+                                                        {{ item2.warehouse }}
+                                                    </td>
+
+                                                   
+
+                                                </tr>
+
+                                                <tr ng-show="item2.show_in_day" style="background: #fafbfc">
+                                                    <td colspan="4">
+                                                        <table class="table-condensed w-full table-hover">
+                                                            <thead>
+                                                                <th>
+                                                                {{'WH_SkuType' | translate}}
+                                                                </th>
+
+                                                                <th>{{'WH_SkuDangluukho' | translate}} (S)</th>
+
+                                                                <th>{{'WH_ItemDangluukho' | translate}} (l)</th>
+
+                                                                <th>
+                                                                    {{'WH_SkuToida' | translate}} (Maxl)
+                                                                </th>
+
+                                                                <th>
+                                                                    {{'WH_ItemToida' | translate}} (MaxS)
+                                                                </th>
+
+                                                               
+                                                                <th>
+                                                                    {{'WH_KhoangCanTheoSku' | translate}} (K1 = I/MaxI)
+                                                                </th>
+
+                                                                <th>
+                                                                    {{'WH_KhoangCanTheoItem' | translate}} (K2 = S/MaxS)
+                                                                </th>
+
+                                                                <th>
+                                                                    {{'WH_KhoangSuDung' | translate}} (K = Max (K1|K2))
+                                                                </th>
+                                                            </thead>
+                                                            
+                                                            <tbody>
+                                                                <tr ng-repeat="item3 in item2.data_detail_of_day_for_type">
+                                                                   
+                                                                    <td>
+                                                                        {{ item3.type_sku }}
+                                                                    </td>
+
+                                                                    <td>
+                                                                        {{item3.total_sku | vnNumber}}
+                                                                    </td>
+
+                                                                    <td>
+                                                                        {{item3.total_item | vnNumber}}
+                                                                    </td>
+
+                                                                    <td>{{ item.standar[item3.type_sku].standard_sku }}</td>
+
+                                                                    <td>{{ item.standar[item3.type_sku].standard_item }}</td>
+
+                                                                    <td>{{ item3.total_sku / item.standar[item3.type_sku].standard_sku  | roundup}}</td>
+                                                                   
+                                                                   <td>{{ item3.total_item / item.standar[item3.type_sku].standard_item  | roundup}}</td>
+                                                                   
+                                                                   <td>{{ ((item3.total_item / item.standar[item3.type_sku].standard_item  | roundup)+'-'+(item3.total_sku / item.standar[item3.type_sku].standard_sku  | roundup))  | comparefloor }}</td>
+                                                                
+                                                                </tr>
+                                                               
+                                                            </tbody>
+                                                            
+                                                            
+                                                        </table>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                            <tbody ng-show="!item.data.length && !item.waiting_detail">
+                                                <tr>
+                                                    <td colspan="30" class="text-center">
+                                                        {{'WH_NoData' | translate}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody ng-show="item.waiting_detail">
+                                                <tr>
+                                                    <td colspan="30" class="text-center">
+                                                        <i class="text-3x fa fa-spinner fa-spin"></i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                                
+
+
+                            
+                            <tbody ng-if="!list_data.length && !waiting">
+                                <tr>
+                                    <td colspan="30" class="text-center">
+                                        {{'WH_NoData' | translate}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="waiting">
+                                <tr>
+                                    <td colspan="30" class="text-center">
+                                        <i class="text-3x fa fa-spinner fa-spin"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row" ng-show="totalItems > 0 && !waiting">
+                        <div class="col-sm-3 wrapper-md pull-left">
+                            <strong>{{'WH_Total' | translate}}</strong> : <i class="text-danger">{{totalItems || '0'}}</i> {{'WH_Record' | translate}}
+                        </div>
+                        <div class="col-sm-4 text-right text-center-xs pull-right">
+                            <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage(currentPage)"></pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

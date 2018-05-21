@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="app" ng-controller="AppCtrl">
+
+<head>
+    <meta charset="utf-8" />
+    <title ng-if="isShipchung==1"> ShipChung.vn | {{'APP_Title' | translate }} </title>
+    <title ng-if="!isShipchung">Boxme.vn {{'APP_Title_BM' | translate }} </title>
+    <link rel="icon" href="/{{site.icon}}">
+    <meta name="description" content="Cổng giao nhận và vận chuyển hàng hóa shipchung.vn" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-itunes-app" content="app-id=1050902146">
+    <meta name="google-play-app" content="app-id=com.peacesoft.shipchung">
+    <meta name="google" content="notranslate" />
+    <style>
+        @import url(//fonts.googleapis.com/css?family=Roboto:400,300,500,700&subset=latin,latin-ext,vietnamese);
+    </style>
+    <link rel="stylesheet" href="css/app.css" type="text/css" />
+    <link rel="stylesheet" href="css/output.css" type="text/css" /> 
+    <link rel="stylesheet" href="js/angular/intl-tel-input/build/css/intlTelInput.css" type="text/css" /> 
+
+    <style>
+    .navi ul.nav li a{
+        padding: 8px 20px!important;
+    }
+    </style>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="/img/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+	<link rel="manifest" href="/img/favicon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="/img/favicon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+
+    <script type="text/javascript">
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(window.location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        if (getParameterByName('code') && getParameterByName('shop')==="") {
+             window.location = '/#/checkin';
+        };
+    </script>
+</head>
+
+<body >
+    <toaster-container toaster-options="{'position-class': 'toast-bottom-right', 'close-button':true}"></toaster-container>
+    <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
+    <script id="PopupRequestNL.html" type="text/ng-template">
+        <div ng-include="'tpl/modal.request_nl.html'"></div>
+    </script>
+    <script src="js/jquery/jquery.min.js"></script>
+    <script src="js/angular/angular.min.js"></script>
+    <script src="js/angular/angular-cookies.min.js"></script>
+    <script src="js/angular/angular-animate.min.js"></script>
+    <script src="js/angular/angular-ui-router.min.js"></script>
+    <script src="js/angular/angulartics.min.js"></script>
+    <script src="js/angular/angulartics-ga.min.js"></script>
+    <script src="js/angular/angular-google-analytics.js"></script>
+	<script src="js/modules/dropzone.js"></script>
+    <script src="js/libs/validators.phone.js"></script>
+    <script src="js/modules/FileSaver.js"></script>
+
+    <script src="js/angular/intl-tel-input/build/js/intlTelInput.js"></script>
+    <script src="js/angular/intl-tel-input/build/js/utils.js"></script>
+    <script src="js/angular/intl-tel-input/build/js/ng-intl-tel-input.js"></script>
+    <!-- đang nhap gg lib-->
+    <script src="js/libs/angularjs-social-login.js"></script>
+    <!-- đang nhap gg lib-->
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-M5M6WH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-M5M6WH');
+    </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-31776960-1', 'auto');
+      ga('create', 'UA-31776960-5', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    
+
+    
+    <script src="js/output.min.js"></script>
+	
+	
+	<!-- intercom -->
+	<script>
+	(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/o7ip98fj';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+	</script>
+	<!-- intercom -->
+    <script src="js/api.config.js?v=1412311136"></script>
+    <script src="js/app.js?v=1.01121111121"></script>
+    <script src="js/app.config.js?v=14123111111168"></script>
+    <script src="js/route.js?v=1.222222211121"></script>
+    <script src="js/services.js?v=1.012"></script>
+    <script src="js/controllers.js?v=1.01111"></script>
+    <script src="js/filters.js?v=1.111111"></script>
+    <script src="js/directives.js?v=1.02"></script>
+	<script src="js/libs/autonumber.js?v=1123141618"></script>
+    
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVq0iaE9V_JD9bTnaodJpCUMFcER6IVyA&signed_in=true&libraries=places&language=vi-VI"></script>
+    
+  <!--   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEBvCKIy71eeDMVBNDPNK-HHFQCwOgGQk&signed_in=false&libraries=places&language=vi-VI"></script> -->
+      
+    <script type="text/javascript"
+      src="//www.googleadservices.com/pagead/conversion_async.js">
+    </script>
+</body>
+
+</html>

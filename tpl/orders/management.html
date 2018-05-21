@@ -1,0 +1,397 @@
+<div ng-controller="ManagementCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2 title-page"><i class="fa fa-search text-info"></i> {{'ORDERL_Quanlyvandon' | translate}}<!-- Quản lý vận đơn --></span>
+        <div class="pull-right">
+            <a  ng-if="userInfo.fulfillment == 1" class=" btn btn-success" id="checkpanel" ui-sref="order.create_once_global_bm" ><i class="fa fa-plus"></i>
+                <span ng-if="windowWith > 360 "> {{'ORDERC_taodonhang' | translate}}</span>
+            </a>
+			<a  ng-if="userInfo.fulfillment == 0" class=" btn btn-success" id="checkpanel" ui-sref="order.create_once_global" ><i class="fa fa-plus"></i>
+                <span ng-if="windowWith > 360 "> {{'ORDERC_taodonhang' | translate}}</span>
+            </a>
+            <a class=" btn btn-default m-r-xs" id="checkpanel" ui-sref="order.upload1" ><i class="fa fa-file-excel-o"></i>
+                <span ng-if="windowWith > 360 "> {{'ORDERC_taodonhangexcel' | translate}}</span>
+            </a>
+        </div>
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="tab-container">
+                <div class="tab-content tab-fake">
+                    <div class="panel panel-default" style="border:none">
+                        <div class="panel-heading">
+                            <form class="form-validation" role="form" name="frmSearch">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control"
+                                           placeholder="{{'ORDERC_Madonhang_email_sdt' | translate}}"
+                                           ng-model="frm.search"
+                                        />
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="form-group controls">
+                                            <select class="form-control" ng-model="frm.to_city" ng-options="item.id as item.city_name for item in list_city">
+                                                <option value="">{{'ORDERL_Tinhthanhphonhan' | translate}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control" placeholder="{{'ORDERL_Taotungay' | translate}}"
+                                           datepicker-popup="dd-MM-yyyy"
+                                           is-open="time_create_start"
+                                           datepicker-options="dateOptions"
+                                           ng-required="true"
+                                           close-text="Close"
+                                           ng-model="time.time_create_start"
+                                           ng-click="time_create_start = true"
+                                           min-date="minDate"
+                                           max-date="maxDate"
+                                           required
+                                        />
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control" placeholder="{{'ORDERL_Taodenngay' | translate}}"
+                                               datepicker-popup="dd-MM-yyyy"
+                                               is-open="time_create_end"
+                                               datepicker-options="dateOptions"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               ng-model="time.time_create_end"
+                                               ng-click="time_create_end = true"
+                                               min-date="minDate"
+                                               max-date="maxDate"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-lg-3">
+                                        <div class="form-group controls">
+                                           
+                                            <ui-select ng-model="frm.courier" ng-if="keyLang !='en'">
+                                                <ui-select-match placeholder="{{'ORDERL_Hangvanchuyen' | translate}}">&nbsp; {{$select.selected.name }}</ui-select-match>
+                                                <ui-select-choices group-by="'group'"  repeat="value.id as value in list_courier | filter: $select.search">
+                                                        <span>{{value.name}} </san>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <ui-select ng-model="frm.courier" ng-if="keyLang =='en'">
+                                                    <ui-select-match placeholder="{{'ORDERL_Hangvanchuyen' | translate}}">&nbsp; {{$select.selected.name }}</ui-select-match>
+                                                    <ui-select-choices group-by="'group_en'"  repeat="value.id as value in list_courier | filter: $select.search">
+                                                            <span>{{value.name}} </san>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <div class="form-group controls">
+                                            <select
+                                                boxme-district-by-province
+                                                province-id="frm.to_city"
+                                                district-id="frm.to_district"
+                                                default-label="{{'ORDERL_quanhuyen' | translate}}"
+                                                ng-model="frm.to_district"
+                                                class="form-control">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control" placeholder="{{'ORDERL_layhangtungay' | translate}}"
+                                               datepicker-popup="dd-MM-yyyy"
+                                               is-open="time_accept_start"
+                                               datepicker-options="dateOptions"
+                                               close-text="Close"
+                                               ng-model="time.time_pickup_start"
+                                               ng-click="time_accept_start = true"
+                                               min-date="minDate"
+                                               max-date="maxDate"
+                                        />
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                            <input type="text" class="form-control" placeholder="{{'ORDERL_layhangdenngay' | translate}}"
+                                               datepicker-popup="dd-MM-yyyy"
+                                               is-open="time_accept_end"
+                                               datepicker-options="dateOptions"
+                                               close-text="Close"
+                                               ng-model="time.time_pickup_end"
+                                               ng-click="time_accept_end = true"
+                                               min-date="minDate"
+                                               max-date="maxDate"
+                                            />
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    
+                                     
+                                     <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                    ng-model    ="frm.inventory"
+                                                    >
+                                                <option value="0">{{'ORDERL_chonkhohang' | translate}} </option>
+                                                <option ng-repeat="item in list_inventory" value="{{item.id}}">{{item.user_name}} {{item.phone}}, {{item.address}} - {{item.ward.ward_name}} {{item.district.district_name}} {{item.city.city_name}}</option>
+                                            </select>
+                                        </div>
+                                     </div>
+
+                                     <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                    ng-model    ="frm.createby"
+                                                    >
+                                                <option value="">{{'ORDERL_nhanvien' | translate}} </option>
+                                                <option ng-repeat="item in child_users" value="{{item.user_id}}">{{item.user.fullname || ""}}</option>
+                                            </select>
+                                        </div>
+                                     </div>
+
+                                     <div class="col-lg-3">
+                                        <input type="text" class="form-control" placeholder="{{'ORDERL_thanhcongngay' | translate}}"
+                                           datepicker-popup="dd-MM-yyyy"
+                                           is-open="time_success_start"
+                                           datepicker-options="dateOptions"
+                                           ng-required="true"
+                                           close-text="Close"
+                                           ng-model="time.time_success_start"
+                                           ng-click="time_success_start = true"
+                                           min-date="minDate"
+                                           max-date="maxDate"
+                                        />
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <input type="text" class="form-control" placeholder="{{'ORDERL_duyetdenngay' | translate}}"
+                                               datepicker-popup="dd-MM-yyyy"
+                                               is-open="time_success_end"
+                                               datepicker-options="dateOptions"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               ng-model="time.time_success_end"
+                                               ng-click="time_success_end = true"
+                                               min-date="minDate"
+                                               max-date="maxDate"
+                                        />
+                                    </div>
+
+                                </div>
+							
+                                <div class="row">
+                                 	<div class="col-lg-12">
+                                 		<h5>{{'ORDERL_TrangThaiDon' | translate}}:</h5>
+                                 	</div>
+                                    <div class="col-lg-12">
+                                        <div class="checkbox">
+                                            <label class="i-checks padder-md padder-xs" ng-repeat="item in tab_status">
+                                                <input type="checkbox"
+                                                	   ng-checked="item.checked" 
+                                                       ng-model="check"
+                                                       ng-change="toggleSelection(item.id)" /><i></i>
+                                                {{item.name || 'Trạng thái'}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+							<div class="row">
+                                 	<div class="col-lg-12">
+                                 		<h5>{{'ORDERL_tienthuho' | translate}}:</h5>
+                                 	</div>
+                                    <div class="col-lg-12">
+                                    	<div class="checkbox">
+	                                 		<label class="i-checks i-checks-sm ng-binding" >
+													<input  type="checkbox" ng-model="check_verify_true" ng-checked="check_verify_true == 1" ng-false-value="0" ng-true-value="1"  ng-change="check_check_verify(1)" class="ng-pristine ng-valid">
+													<i></i>
+														{{'ORDERL_DaDoiSoat' | translate }} <!--  -->
+												</label>
+	                                           <label class="i-checks i-checks-sm ng-binding" >
+													<input  type="checkbox" ng-model="check_verify_false" ng-checked="check_verify_false == 1" ng-false-value="0" ng-true-value="1"  ng-change="check_check_verify(0)" class="ng-pristine ng-valid">
+													<i></i>
+														{{'ORDERL_ChoDoiSoat' | translate }} <!--  -->
+												</label>
+                                       </div>    
+                                 	</div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <button type="button" class="btn m-b-xs btn-info"   ng-click="setPage('')"><i class="fa fa-search"></i> {{'Btt_search' | translate}}</button>
+                                    </div>
+
+                                    <div class="col-lg-3 col-lg-offset-6">
+                                        <div class="btn-group m-b-sm pull-right">
+                                            <div class="btn-group dropdown" dropdown>
+                                                <button data-toggle="dropdown" dropdown-toggle class="btn bg-orange dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                                                    {{'PRO_lable_action' | translate }}<!-- Hành động -->
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-if="check_box.toString() == 12 && check_action"><a href="javascript:;" ng-click="action_multi(21)"><i class="fa fa-check"></i> {{'ORDERL_duyetdon' | translate}} </a></li>
+                                                    <li ng-if="check_box.toString() == 12 && check_action"><a href="javascript:;" ng-click="action_multi(22)"><i class="fa fa-times"></i> {{'ORDERL_huydon' | translate}} </a></li>
+                                                    <li><a ui-sref="print_new({code:check_box_order.toString()})" target="_blank"><i class="fa fa-print"></i> {{'ORDERL_indon' | translate}}</a></li>
+                                                    <li><a href="javascript:;" ng-click="exportExcel('export')"><i class="fa fa-file-excel-o"></i> {{'ORDERL_xuatexcel' | translate}}</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+
+                        <div class="panel-body" style="padding:0">
+                            <div class="tab-container">
+                                <div class="table-responsive">
+                                  <table class="table table-condensed table-hover">
+                                      <thead>
+                                          <th>
+                                              <label ng-show="list_data.length" class="i-checks i-checks-sm">
+                                                  <input type="checkbox"
+                                                     ng-change="toggleSelectionAll(checkall)"
+                                                     ng-checked="true"
+                                                     ng-true-value="1"
+                                                     ng-false-value="0"
+                                                     ng-model="checkall"
+                                                      /><i></i>
+                                              </label>
+                                          </th>
+                                          <th>
+                                             <i class="fa fa-barcode"></i>&nbsp;&nbsp;&nbsp;{{'ORDERL_mavandon' | translate}}
+                                          </th>
+                                          <th>
+                                              <i class="fa fa-clock-o"></i> {{'ORDERL_thoigian' | translate}}<!-- Thời gian -->
+                                          </th>
+                                          <th width="15%">
+                                              <i class="fa fa-home"></i>{{'ORDERL_noinhan' | translate}} <!-- Nơi nhận -->
+                                          </th>
+                                          <th>
+                                              <i class="fa fa-info"></i> {{'ORDERL_thongtinsanpham' | translate}}
+                                          </th>
+                                          <th>
+                                              <i class="fa fa-tags"></i> {{'ORDERL_phivanchuyen' | translate}}
+                                          </th>
+                                          <th>
+                                              <i class="fa fa-dollar"></i> {{'ORDERL_tienthuho' | translate}}
+                                          </th>
+                                      </thead>
+                                      <tbody>
+                                          <tr ng-if="waiting">
+                                              <td colspan="7" class="text-center">
+                                                      <i class="text-3x fa fa-spinner fa-spin"></i>
+                                              </td>
+                                          </tr>
+                                          <tr ng-if="!list_data.length && !waiting">
+                                              <td colspan="7" class="text-center">
+                                                  {{'ORDERL_khongcovandontimthay' | translate}}
+                                              </td>
+                                          </tr>
+                                          <tr ng-repeat="item in list_data" >
+                                              <td>
+                                                  <strong>{{item_stt + $index + 1}}</strong>
+                                                  <div class="checkbox">
+                                                      <label class="i-checks">
+                                                          <input type="checkbox"
+                                                                 ng-model="check"
+                                                                 ng-change="toggleSelectionOrder(item.tracking_code)"
+                                                                 ng-checked="check_list(item.tracking_code)"
+                                                                  />
+                                                          <i></i>
+                                                      </label>
+                                                  </div>
+                                              </td>
+                                              <td>
+                                                  <p>
+                                                      <a class="label bg-light text-base text-info" ui-sref="detail({code:item.tracking_code})" target="_blank">
+                                                      {{item.tracking_code}}
+                                                      </a>
+                                                  </p>
+                                                  <p>
+                                                      <i class="fa " ng-class="{'fa-truck': item.service.id == 1,'fa-plane': item.service.id != 1}"></i> {{courier[item.courier_id] || 'Hãng vận chuyển'}}
+                                                  </p>
+                                              </td>
+
+                                              <td>
+                                                  <p>{{ item.time_create > 0 ? (item.time_create * 1000  | date : "dd-MM-yyyy  HH:mm") : ''}}</p>
+                                                  <p>
+                                                      <span class="label text-xs {{list_color[list_status[item.status]]}}">
+                                                          {{item.meta_status.name}}
+                                                      </span>
+                                                  </p>
+                                              </td>
+                                              <td>
+                                                  {{item.to_name | limitTo : 30}} <br /> {{item.to_phone | phone}}<br />
+                                                  {{district[address[item.to_address_id].province_id] || 'Quận/Huyện'}}, {{city[address[item.to_address_id].city_id] || 'Tỉnh/Thành Phố'}}
+                                              </td>
+                                              <td>
+                                                  <span ><i class="fa fa-code" ></i> {{item.order_code || ''}}<br /></span>
+                                                  <i class="fa fa-shopping-cart"></i> {{item.product_name | limitTo : 30 || 'Tên sản phẩm'}}<br />
+
+                                                  <i class="fa fa-tags"></i><!-- {{item.total_amount | vnNumber}} {{ViewHomeCurrency || 'đ'}} -->
+                                                  		<convert-currency home-currency="item.total_amount"></convert-currency>
+                                                 	 	<br />
+                                                  <i class="fa fa-shopping-cart"></i> {{item.total_weight | vnNumber}} gram
+                                              </td>
+                                              <td ng-switch="item.status">
+                                                  <span ng-switch-when="66">
+                                                      {{'ORDERL_tongphi' | translate}} : <!-- {{1*item.order_detail.sc_pvc + 1*item.order_detail.sc_pch + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc || '0' | vnNumber}}{{ViewHomeCurrency || 'đ'}} -->
+                                                  	 <convert-currency home-currency="1*item.order_detail.sc_pvc + 1*item.order_detail.sc_pch + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc"></convert-currency>
+                                                  	 <!-- <span ng-if="convert_currency(1*item.order_detail.sc_pvc + 1*item.order_detail.sc_pch + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc)">
+								                           ({{convert_currency(1*item.order_detail.sc_pvc + 1*item.order_detail.sc_pch + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc) || '' | number:4 }} {{viewCurrency}})
+							                         </span>  -->
+                                                  </span>
+                                                  <span ng-switch-default>
+                                                       {{'ORDERL_tongphi' | translate}}: <!-- {{1*item.order_detail.sc_pvc + 1*item.order_detail.sc_cod + 1*item.order_detail.sc_pbh + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc - 1*item.order_detail.sc_discount_cod || '0' | vnNumber}}{{ViewHomeCurrency || 'đ'}} -->
+                                                  	 <convert-currency home-currency="1*item.order_detail.sc_pvc + 1*item.order_detail.sc_cod + 1*item.order_detail.sc_pbh + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc - 1*item.order_detail.sc_discount_cod"></convert-currency>
+                                                  	 <!-- <span ng-if="convert_currency(1*item.order_detail.sc_pvc + 1*item.order_detail.sc_cod + 1*item.order_detail.sc_pbh + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc - 1*item.order_detail.sc_discount_cod)">
+								                           ({{convert_currency(1*item.order_detail.sc_pvc + 1*item.order_detail.sc_pch + 1*item.order_detail.sc_pvk - 1*item.order_detail.sc_discount_pvc) || '' | number:4 }} {{viewCurrency}})
+							                         </span>  -->
+                                                  </span>
+                                              </td>
+                                              <td class="text-center">
+                                                  <!-- {{(item.status == 66) ? 0 : item.order_detail.money_collect || '0' | vnNumber}} {{ViewHomeCurrency || 'đ'}}  -->
+                                                 	 	<convert-currency home-currency="(item.status == 66) ? 0 : item.order_detail.money_collect"></convert-currency>
+                                                 	 <!-- 	<span ng-if="convert_currency(item.order_detail.money_collect) && item.status != 66 ">
+								                           ({{convert_currency(item.order_detail.money_collect) || '' | number:4 }}{{viewCurrency}})
+								                        </span>
+								                        <span ng-if="convert_currency(item.order_detail.money_collect) && item.status == 66 ">
+								                           (0{{viewCurrency}})
+								                        </span> -->
+                                                  
+                                                  <br />
+                                              <span ng-if="item.verify_id > 0">
+                                              <img  class="max-height-none" ng-src="img/doi-soat-ok.png" alt="Đã đối soát"/><br />
+                                              <a class="text-info" ui-sref="order.verify({id: item.verify_id})" target="_blank" tooltip="Xem chi tiết bản kê"><i class="fa fa-file-text"></i>{{'ORDERL_chitiet' | translate}} <!-- Chi tiết --></a>
+                                              </span>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <footer class="panel-footer">
+                          <div class="row" ng-show="list_data.length">
+                            <div class="col-sm-3 wrapper-md pull-left">
+                                <strong>{{'ORDERL_tongso' | translate}}</strong> : <i class="text-danger">{{totalItems || '0'}}</i> {{'ORDERL_vandon' | translate}}
+                            </div>
+                            <div class="col-sm-4 text-right text-center-xs pull-right">
+                                <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage('')"></pagination>
+                            </div>
+                          </div>
+                        </footer>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

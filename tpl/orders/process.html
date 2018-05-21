@@ -1,0 +1,142 @@
+<style>
+    
+    .popover{
+        max-width: 600px;
+    }
+</style>
+<div ng-controller="ProcessCtrl" class="ProcessCtrl">
+    <div class="wrapper-md bg-light b-b">
+        <span class="m-n h2"><i class="fa fa-star text-info"></i> Danh sách đơn hàng cần xử lý</span>
+    </div>
+    <div class="wrapper-sm">
+        <div  class="alert alert-info m-b-none text-base">
+            <strong><i class="fa fa-exclamation-triangle"></i> Thông báo</strong>: Quý khách hàng lưu ý, yêu cầu giao lại chỉ thực hiện được một lần duy nhất. Sau khi gửi yêu cầu giao lại nhân viên ShipChung sẽ thực hiện gửi yêu cầu giao lại sang hãng vận chuyển với những thông tin do khách hàng nhập và phản hồi thông tin trong hành trình xử lý <a href="https://www.shipchung.vn/huong-dan-xu-ly-don-hang-o-trang-thai-phat-khong-thanh-cong/" target="_blank"><span class="text-info">(xem quy định & hướng dẫn tại đây)</span></a> !
+        </div>
+    </div>
+
+
+    <div class="col-md-12 wrapper-sm" style="padding-bottom:0px;">
+        <select ng-model="tabId" ng-init="tabId = 41" class="form-control tab_select_type" ng-change="change_tab(tabId,'')">
+            <option value="41">Phát không thành công <small>({{total_group[41] || 0}})</small></option>
+            <option value="15">Lấy không thành công <small>({{total_group[15] || 0}})</small></option>
+            <option value="20">Chờ xác nhận chuyển hoàn <small>({{total_group[20] || 0}})</small></option>
+            <option value="OVERWEIGHT">Vượt cân <small>({{total_over_weight || 0}})</small></option>
+        </select> 
+    <!-- <tabset class="tab-inside m-t m-b-none"> -->
+        <tabset class="tab-container tab_type tab-inside text-sm" justified="true">
+            <tab ng-click="change_tab(41,'CONFIRM_DELIVERED')">
+                <tab-heading>Đã gửi yêu cầu giao lại 
+                    <small>( {{total_group['CONFIRM_DELIVERED'] || 0}} )</small></tab-heading>
+            </tab>
+            <tab ng-click="change_tab(41,'')">
+                <tab-heading>Phát không thành công <small>( {{total_group[41] || 0}} )</small>
+                    </tab-heading>
+            </tab>
+
+            <tab ng-click="change_tab(20,'')">
+                <tab-heading>Chờ xác nhận chuyển hoàn <small>( {{total_group[20] || 0}} )</small>
+                </tab-heading>
+            </tab>
+
+            <tab ng-click="change_tab('OVERWEIGHT','')">
+                <tab-heading>Vượt cân 
+                    <small>( {{total_over_weight || 0}} )</small></tab-heading>
+            </tab>
+            
+            <tab ng-click="change_tab(15,'')">
+            <tab-heading>Lấy không thành công <small>( {{total_group[15] || 0}} )</small>
+                </tab-heading>
+            </tab>
+            </tabset>
+    <!-- </tabset> -->
+    </div>
+    
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="tab-container">
+                <div class="tab-content tab-fake" style="border:none!important; padding:0px!important">
+                    <div class="panel panel-default">
+
+
+
+                        <div class="panel-body" style="border:none!important;">
+
+                            <button class="btn btn-primary pull-right" ng-click="change_tab(current_tab,'export')" ng-if="tab_options == '' || tab_options == 'export'">
+                              <i class="fa fa-excel"></i> Xuất Excel
+                            </button>
+                            <div class="clearfix"></div>
+
+                                
+                            <div class="tab-container">
+                                <!-- <div ng-if="windowWith <= 768" >
+                                  <p >Shipchung kính chào quý khách,<br/> <br/> Quý khách vui lòng sử dụng phiên bản trình duyệt cao hơn hoặc sử dụng trình duyệt web trên máy tính để thực hiện chức năng này. Chúng tôi xin lỗi về sự bất tiện này 
+                                  </p>
+                                  <p>Trân trọng !</p>
+                                </div> -->
+                                <div  ng-include="'tpl/orders/process.table.desktop.html'"></div>
+                            </div>
+                        </div>
+
+                        <footer class="panel-footer">
+                          <div class="row" ng-show="list_data.length">
+                            <div class="col-sm-3 wrapper-md pull-left">
+
+                                <button class='btn btn-success' ng-if="isTabOverweight" ng-disabled="mutil_accept_process == true || check_box_order.length == 0  " ng-click="mutil_accept_over_weight()">Xác nhận vượt cân {{check_box_order.length}} vận đơn đã chọn</button><div class="clearfix"></div>
+                                <strong>Tổng số</strong> : <i class="text-danger">{{totalItems || '0'}}</i> vận đơn
+                            </div>
+                            <div class="col-sm-4 text-right text-center-xs pull-right">
+                                <pagination total-items="totalItems" ng-model="currentPage" data-max-size="maxSize" items-per-page="{{item_page}}" ng-change="setPage(isTabOverweight, tab_options)"></pagination>
+                            </div>
+                          </div>
+                        </footer>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script id="PopupCreateTicket.html" type="text/ng-template">
+        <div ng-include="'tpl/ticket/modal.create.ticket.html'"></div>
+    </script>
+
+    <script type="text/ng-template" id="myPopoverTemplate.html">
+        <div class="form-group">
+            <table class="table table-striped m-b-none">
+              <thead>
+                <tr>
+                  <th width="110px">Thời gian</th>
+                  <th>Trạng thái</th>
+                  <th>Địa điểm</th>
+                  <th>Ghi chú </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr ng-repeat="item in popoverData">
+                  <td>
+                  {{item.time_create * 1000 | date:'dd-MM-yyyy  HH:mm'}}
+                  </td>
+                  <td>
+                  {{status[item.status]}}
+                  </td>
+                  <td>
+                  {{item.city_name}}
+                  </td>
+                  <td>
+                  {{item.note}}
+                  </td>
+                </tr>
+                <tr ng-if="popoverData.length == 0">
+                    <td colspan="4" class="text-center" ng-if="statusLoading"><i class="text-2x fa fa-spinner fa-spin"></i> <br/>Đang tải dữ liệu</td>
+                    <td colspan="4" class="text-center" ng-if="!statusLoading">Không có hành trình</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </script>
+    
+</div>

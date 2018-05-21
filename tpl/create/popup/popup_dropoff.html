@@ -1,0 +1,86 @@
+  <script src="js/angular/ui-bootstrap-tpls.min.js"></script>
+<div class="clearfix" xmlns="http://www.w3.org/1999/html">&nbsp;</div> 
+<style>
+.pac-container { z-index: 100000; }
+.post-office-list{
+        height:400px;
+        overflow-y:scroll;
+        overflow-x:hidden;
+    }
+</style>
+<div class="modal-header" >
+   	<div class="row">
+       	<div class="col-md-12">
+           	<div class="col-md-11 pull-left no-padder" >
+               	<h4 class="modal-title">{{'OderCDo_ChonBuuCucBanSeMangHangDen' | translate }}</h4>
+          	</div>
+				<button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+     	  </div>
+	</div>
+</div>
+<div class="modal-body " >
+<form class="form-validation ng-scope" role="form"  ng-submit="CreateOrder(OrderDetail,OrderFee)" name="frmOrderCreate">
+	<div class="row">
+		<form class="form-validation" name="frmAdd"> 
+             <div class="form-group col-md-12">
+                  <input type="text" placeholder="{{'PO_NhapDiaChiCanTim' | translate}}" id="address-input" class="form-control">
+             </div>
+       </form> 
+	</div>
+	<div  class="row" style="min-height: 300px">
+		<div class="col-md-5">
+			<div class="post-office-list">
+                  <p ng-if="list_postoffice.length == 0 && !loading" class="padder" style="margin-top:10px">{{'PO_khongtimthaybuucuc' | translate}}</p>
+                  <p ng-if="loading">{{'PO_dangtaidulieu' | translate}} </p>
+				          <div class="panel panel-info m-b-sm pointer fade-in-up"
+                      ng-repeat="item in list_postoffice"
+                      ng-animate="{enter: 'enter', leave: 'leave'}" class="fade-in-right ">
+                       <div class="pointer panel-body padder-tb" ng-click="goCenter(item)" style="padding-left:0px; padding-right:0px">
+	                      <div class="pointer  col-md-12">
+	                          <div class="pointer media" >
+	                              <div class=" pointer media-body" >
+                                  <div class="radio" style="padding-left: 5px;">
+                                      <label>
+                                        <input type="radio" ng-model="postoffice_select.id" name="check_post_office" ng-value="item.id" >
+                                        <a style="font-weight: bolder;padding-left: 5px;">{{item.name}} - (<span class="text-info">{{item.distance}}km</span>)</a>
+                                      <p>{{'PO_diachi' | translate}}: {{item.address}}</p>
+                                      <div class="row" style="margin-top: -10px;">
+                                        <div class="col-md-8">
+                                          <span>{{'PO_SDT' | translate}}: {{item.phone}}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                        <button  ng-click="seller_postoffice(item)" type="button" class="btn btn-success "><i class="fa fa-check"></i>
+                                            {{'OderCDo_ChonBuuCuc' | translate}}
+                                          </button>
+                                        </div>
+                                      </div>  
+                                      </label>
+                                    </div>
+
+                                 
+
+	                              </div>
+	                          </div>
+	                      </div>
+                      </div>
+                  </div>
+          	</div>
+		</div>
+		
+		<div class="col-md-7">
+			<div id="map" style="height: 400px;width:100%" >
+            </div>
+		</div>
+		
+    
+	</div>
+	<div  class="row" >
+    <div class="col-md-12" style="margin-top: 15px;">
+          <button style="min-width: 100px;" ng-click="get_postoffice()" type="button" class="btn btn-success "><i class="fa fa-check"></i>
+            {{'OderCDo_DongY' | translate}}
+          </button>
+      </div>
+  </div>
+</form>
+</div>
+		

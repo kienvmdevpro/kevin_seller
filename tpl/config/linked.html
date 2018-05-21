@@ -1,0 +1,160 @@
+<div ng-controller="ConfigLinkedCtrl">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n"> {{'SET_CauHinhLienKetTheThanhToan' | translate}}<!-- Cấu hình thanh toán --></h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white" tour-step order="14" content="{{'ACCOUNT_CauHinhPhiVaHVC' | translate}}" placement="top">
+        <form class="form-horizontal form-validation" name="alepay_config" ng-submit="save(user_info, 'alepay_config','')" role="form">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold" tour-step order="13" content="{{'ACCOUNT_LienKetTKAlepay' | translate}}" placement="top">{{'ACCOUNT_LienKetTaiKhoanThanhToanAlepay' | translate}}<!-- Liên kết tài khoản thanh toán chi phí  --></div>
+                <div  class="panel-body">
+                    <p>
+                        <strong>Shipchung</strong> là Cổng vận chuyển duy nhất được tổ chức thẻ Quốc tế cung cấp tính năng liên kết thẻ ngânh hàng để tự động nạp tiền vào tài khoản khi số dư rơi xuống dưới ngưỡng tối thiểu do bạn quy định.<br />
+                        Nhằm hỗ trợ khách hàng và đơn giản trong khâu thanh toán: <br />
+
+                        - Thanh toán chi phí vận chuyển tự động hàng tháng. <br />
+                        - Nạp tiền đơn giản với chỉ một click chuột ( One click topup). <br />
+                        - Miễn phí giao dịch hoàn toàn.
+                    </p>
+
+                    <div class="form-group">
+                        <table class="table table-striped m-b-none">
+                            <thead class="bg-info">
+                            <tr>
+                                <td>
+                                    Thẻ mặc định
+                                </td>
+                                <td>
+                                    Loại thẻ
+                                </td>
+                                <td>
+                                    Ngân hàng
+                                </td>
+                                <td>
+                                    Số thẻ
+                                </td>
+                                <td>
+                                    Ngày hết hạn
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-ng-repeat="item in list_linked" ng-if="item.delete == 2">
+                                <td>
+                                    <label class="i-switch bg-primary">
+                                        <input
+                                                type="checkbox"
+                                                ng-model="item.active"
+                                                ng-true-value="1"  ng-false-value="0"
+                                                ng-checked="1*item.active == 1"
+                                                ng-change="active_alepay(item, '{{item.active}}')"
+                                        >
+                                        <i></i>
+                                    </label>
+                                </td>
+                                <td>
+                                    {{item.paymentMethod}}
+                                </td>
+                                <td>
+                                    {{item.bankCode}}
+                                </td>
+                                <td>
+                                    {{item.cardNumber || ''}}
+                                </td>
+                                <td>
+                                    {{item.cardExpireMonth || ''}}/{{item.cardExpireYear}}
+                                </td>
+                                <td>
+                                    <a data-ng-click="remove(item)"><span class="text-info">Xóa</span></a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="30">
+                                    <a data-ng-click="save('','alepay_email')"><span class="text-info">Thêm thẻ</span></a>
+                                </td>
+                            </tr>
+                            <tr ng-if="!list_linked">
+                                <td colspan="30">
+                                    Bạn chưa liên kết thẻ Visa/Master, vui lòng liên kết <a href="javascript:;" data-ng-click="save('','alepay_email')"><span class="text-info">tại đây</span></a>
+                                </td>
+                            </tr>
+
+                            <tr ng-if="list_linked">
+                                <td colspan="30">&nbsp;</td>
+                            </tr>
+
+                            <tr ng-if="list_linked">
+                                <td colspan="30">
+                                    <strong>Tự động nạp tiền</strong>
+
+                                    <label class="i-switch bg-primary">
+                                        <input
+                                                type="checkbox"
+                                                ng-model="user_info.alepay_active"
+                                                ng-true-value="1"  ng-false-value="0"
+                                                ng-checked="user_info.alepay_active == 1"
+                                        >
+                                        <i></i>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr ng-if="list_linked">
+                                <td>
+                                    Nếu số dư ví Shipchung nhỏ hơn
+                                </td>
+                                <td colspan="30">
+                                    <input  class="form-control" placeholder="vnđ"
+                                            ng-model="user_info.alepay_payment_start"
+                                            fcsa-number="{ min: 0 }"
+                                            required
+                                            name="min"
+                                    >
+                                </td>
+                            </tr>
+                            <tr ng-if="list_linked">
+                                <td>
+                                    Nạp thêm số tiền
+                                </td>
+                                <td colspan="30">
+                                    <input  class="form-control" placeholder="vnđ"
+                                            ng-model="user_info.alepay_amount"
+                                            fcsa-number="{ min: 0 }"
+                                            name="amount"
+                                    >
+                                </td>
+                            </tr>
+                            <tr ng-if="list_linked">
+                                <td></td>
+                                <td colspan="30">
+                                    <button type="submit"
+                                            ng-disabled="alepay_config.$invalid || fsubmit"
+                                             class="btn btn-info">
+                                        {{'Btt_update' | translate}}<!-- Cập nhật -->
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!--/ Panel -->
+        </form>
+
+        <script id="ModalSecurity.html" type="text/ng-template">
+            <div ng-include="'tpl/config/modal.form.security.html'"></div>
+        </script>
+
+        <script type="text/ng-template" id="IFrameAlepay.html">
+            <div class="modal-body wrapper-xs" style="overflow-y: hidden;padding-bottom: 0px;">
+                <iframe src="{{url}}" class="w-full" style="height: 600px;"></iframe>
+            </div>
+        </script>
+
+    </div>
+    <!--/ Content-->
+</div>

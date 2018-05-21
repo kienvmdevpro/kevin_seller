@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-7 pull-left no-padder">
+                <h4 class="modal-title"><!-- Bạn muốn lưu kho đến ngày -->{{'Problem_BanMuonLuuKhoDenNgay' | translate}}</h4>
+            </div>
+            <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-body wrapper-md">
+    <div class="input-group">
+        <div class="form-group controls input-group">
+           <input type="text" style="width:420px;" class="form-control" placeholder="{{'Problem_ChonNgayLuuKho' | translate}}"
+                   datepicker-popup="dd-MM-yyyy"
+                   is-open="isOpen"
+                   datepicker-options="dateOptions"
+                   ng-required="true"
+                   close-text="Close"
+                   ng-model="time_store"
+                   ng-click="isOpen = true"
+                   min-date="minDate"
+                   max-date="maxDate"
+                   required
+                />
+        </div>
+        <div class="form-group controls input-group">
+              <textarea ng-model="note" style="width:530px;" class="bootbox-input bootbox-input-textarea form-control" placeholder="{{'OBG_GhiChuDonHang' | translate}}"></textarea>
+        </div>
+        <div class="form-group controls input-group">
+        	<input type="button" class="btn btn-success" value="Xác nhận" ng-click="save(time_store,note);" ng-disabled="!time_store">
+        </div>
+    </div>
+</div>

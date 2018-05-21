@@ -1,0 +1,88 @@
+<div ng-controller="PrintExchangeCtrl" class="wrapper-xs bg-white" ng-init="app.settings.headerFixed = false;app.settings.color = true">
+    <div class="hbox hbox-auto-xs hbox-auto-sm print_hvc" ng-repeat="item in data" style="height:410px">
+        <div class="row">
+            <div class="col-sm-12 col-xs-12 no-padder">
+                <div class="col-xs-3 col-sm-3 col-md-3 pull-left text-left no-padder">
+                    <img ng-if="courier[item.courier_id]" class="pull-left" width="120px" ng-src="img/brands/{{courier[item.courier_id]['prefix']}}.jpg" class="print-logo-hvc" alt="{{courier[item.courier_id].name}}"/> <br />
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 wrapper text-center no-padder">
+                 <h4 class="m-t-none ">Phiếu đơn hàng - {{service[item.service_id]}}</h4>
+                  <p class="text-center" height="40"><img src="data:image/png;base64,{{barcode[item.tracking_code]}}" /><br />
+                      <h4>{{item.tracking_code}}</h4>
+                  </p>
+              </div>
+                <div class="col-xs-3 col-sm-3 col-md-3 pull-right text-right no-padder">
+                    <img class="m-sm" class="text-right" ng-src="img/logo.png" alt="Ship Chung" width="120"/>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped bg-white no-padder m-n">
+            <tbody class="font-print">
+                <tr>
+                    <td width="50%"><strong>Thông tin người bán</strong></td>
+                    <td><strong>Thông tin sản phẩm</strong></td>
+                </tr>
+               <tr>
+                  <td>
+                      <p><strong>Họ tên :</strong>{{inventory[item.from_address_id] ? inventory[item.from_address_id].user_name : user[item.from_user_id]['fullname']}}</p>
+                      <p><strong>Số điện thoại :</strong> {{inventory[item.from_address_id] ? inventory[item.from_address_id].phone : user[item.from_user_id]['phone']}}</p>
+                      <p><strong>Địa chỉ :</strong> {{item.from_address}} {{ward[item.from_ward_id] || ' '}}, {{province[item.from_district_id] || ' '}}, {{city[item.from_city_id] || ' '}}</p>
+                  </td>
+                  <td style="position: relative;">
+                      <img ng-show="item.order_detail.money_collect > 0" class="logo_cod_hvc" src="img/CoD_Wartermark.svg">
+                      <p><strong>Sản phẩm :</strong> {{item.product_name || 'Sản phẩm'}}</p>
+                      <p><strong>Số lượng :</strong> {{item.total_quantity || '0' | vnNumber}}</p>
+                      <p><strong>Trọng lượng :</strong> {{item.total_weight || '0' | vnNumber}}gram</p>
+                      <p><strong>Giá :</strong> {{item.total_amount || '0' | vnNumber}}đ</p>
+                      <p><strong>Mô tả :</strong> {{item.order_item.description}}</p>
+                  </td>
+               </tr>
+                <tr>
+                    <td>
+                        <strong>Người nhận </strong>
+                    </td>
+                    <td>
+                        <strong>Thông tin người gửi, bưu tá, tiền thu hộ</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p><strong>Họ tên :</strong> {{item.to_name}}</p>
+                        <p><strong>Số điện thoại :</strong> {{item.to_phone}}</p>
+                        <p><strong>Địa chỉ :</strong> {{item.to_order_address.address}} {{ward[item.to_order_address.ward_id] || ' '}}, {{province[item.to_order_address.province_id] || ' '}}, {{city[item.to_order_address.city_id] || ' '}}</p>
+                    </td>
+                    <td>
+                        <p>
+                          <strong>Tiền thu hộ (Người nhận phải trả) : </strong>{{item.order_detail.money_collect || '0' | vnNumber}}đ <br/>
+                            <strong ng-if="item.checking == 1">CHO NGƯỜI NHẬN XEM (COI) HÀNG &nbsp;&nbsp;</strong>
+                            <strong ng-if="item.checking == 2">KHÔNG CHO NGƯỜI NHẬN XEM (COI) HÀNG &nbsp;&nbsp;</strong>
+                            <strong ng-if="item.fragile == 1">HÀNG DỄ VỠ, CHẤT LỎNG</strong>
+                        </p>
+                        <strong>Ghi chú : BƯU TÁ CẦN KÝ NHẬN HÀNG VÀ KIỂM TRA THÔNG TIN HÃNG VẬN CHUYỂN TRƯỚC KHI CHẤP NHẬN.</strong>
+                    </td>
+                </tr>
+            </tbody>
+        
+        </table>
+
+        <div class="col-lg-12 col-sm-12 font-print no-padder">
+            <div class="col-lg-3 col-sm-4 pull-left text-center">
+                <p><strong>CHỮ KÝ NGƯỜI GỬI</strong></p>
+            </div>
+            <div class="col-lg-1 col-sm-3 pull-left">
+
+            </div>
+            <div class="col-lg-3 col-sm-3 pull-left text-center">
+                <p><strong>BƯU TÁ KÝ NHẬN HÀNG</strong></p>
+            </div>
+            <div class="col-lg-3 col-sm-4 pull-right">
+                <p><strong>CHỮ KÝ NGƯỜI NHẬN</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="settings panel panel-default">
+        <button class="btn bg-orange btn_print no-shadow pos-abt hidden-print" onClick="window.print();"><i class="fa fa-print"></i> In đơn hàng</button>
+        <a class="btn bg-default btn_type no-shadow pos-abt print_type hidden-print" ui-sref="print({code:$stateParams.code})" ><i class="fa fa-gears"></i> In theo A4</a>
+    </div>
+</div>

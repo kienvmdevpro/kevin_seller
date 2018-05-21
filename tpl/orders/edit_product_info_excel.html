@@ -1,0 +1,288 @@
+<form name="AddStore" class="form-horizontal form-validation" ng-submit="save(item.boxme_inventory)" role="form">
+    <div class="modal-header">
+        <h4 class="modal-title">{{'OBG_3HangHoa' | translate}}</h4>
+    </div>
+    <div class="modal-body">
+        <div ng-if="!item.boxme_inventory" class="product-info">
+            <div class="form-group">
+                <label for="product_name" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TenHang' | translate}}
+                    <!-- Tên hàng -->
+                </label>
+                <div class="col-lg-9 col-md-8" tooltip="{{'OBG_BanNenNhapTenSpRoRang' | translate}}">
+                    <!-- <item-autocomplete name-product "SetNameProduct" code="Product.Id" price-model="Product.Price" weight-model="Product.Weight"
+                        name-model="Product.Name" required></item-autocomplete> -->
+
+                    <input type="text" ng-model="Product.Name" class="form-control" id="product_name" placeholder="Ví dụ: Tên sản phẩm" required>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="product_quantity" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_SoLuong' | translate}}
+                    <!-- Số lượng -->
+                </label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Quantity" formatnumber class="form-control" id="product_quantity" placeholder="{{'OBG_SoLuongSanPham' | translate}}"
+                        required ng-maxlength="3">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="product_amount" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TriGiaHang' | translate}}
+                    <!-- Trị giá hàng -->
+                </label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Price" formatnumber class="form-control" id="product_amount" placeholder="{{'OBG_NhapTriGiaHang' | translate}} ({{viewCurrency}})"
+                        required ng-minlength="5">
+                    <!-- <input type="text" ng-model="Product.Price_curernt_2" ng-if="ViewHomeCurrency !=viewCurrency" ng-change="Product.Price=convert_currency_to_home_currency(Product.Price_curernt_2)"
+                        class="form-control" id="product_amount" placeholder="{{'OBG_NhapTriGiaHang' | translate}} ({{viewCurrency}})"
+                        required ng-minlength="1">
+                    <span style="float:right" ng-if="ViewHomeCurrency !=viewCurrency">
+                        {{Product.Price || '0' | number:0}}{{ViewHomeCurrency}}
+                    </span> -->
+                </div>
+
+            </div>
+
+            <div class="form-group" style="margin-bottom:6px;">
+                <label for="product_weight" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_KhoiLuong' | translate}}
+                    <!-- Khối lượng -->
+                </label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Weight" formatnumber class="form-control" id="product_weight" placeholder="{{'OBG_NhapKhoiLuongTheoGram' | translate}}"
+                        required tooltip="{{'OBG_TrongTHNhapSaiKhoiLuong' | translate}}" tooltip-trigger="focus">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="product" class="col-lg-3 col-md-4 control-label text-left">&nbsp;</label>
+                <div class="col-lg-9 col-md-8">
+                    <div class="checkbox">
+                        <label class="i-checks padder-md padder-xs">
+                            <input type="checkbox" ng-model="box_size_check" />
+                            <i></i>
+                            <!-- Nhập thêm thể tích kiện hàng -->
+                            {{'OBG_NhapThemTheTich' | translate}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="box_size_check">
+                <label ng-show="keyLang!='en'" for="product_boxsize" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TheTich' | translate}}
+                    <!-- Thể tích  -->
+                    <i class="icon-question" aria-hidden="true" id="boxsize-popover"></i>
+                </label>
+                <label ng-show="keyLang=='en'" for="product_boxsize" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TheTich' | translate}}
+                    <!-- Thể tích  -->
+                    <i class="icon-question" aria-hidden="true" id="boxsize-popover1"></i>
+                </label>
+                <div class="col-lg-9 col-md-8">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="text" name="box_size_l" ng-model="Product.BoxSize.L" class="form-control" placeholder="{{'OBG_Dai' | translate}}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input type="text" name="box_size_w" ng-model="Product.BoxSize.W" class="form-control" placeholder="{{'OBG_Rong' | translate}}">
+                        </div>
+
+                        <div class="col-md-4">
+                            <input type="text" name="box_size_h" ng-model="Product.BoxSize.H" class="form-control" placeholder="{{'OBG_Cao' | translate}}">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <script>
+                    $(document).ready(function () {
+                        $('#boxsize-popover').popover({
+                            html: true,
+                            content: 'Bạn nên nhập thể tích hàng hoá sau đóng gói để tính phí vận chuyển chính xác hơn. <br/>- Phí vận chuyển sẽ được tính dựa trên giá khối lượng hàng hoá hoặc khối lượng quy đổi (<strong>dài x rộng x cao /6000 với chuyển phát nhanh hoặc dài x rộng x cao/3000 với chuyển phát tiết kiệm</strong>).<br/>- Nếu khối lượng nào lớn hơn thì Shipchung sẽ sử dụng làm khối lượng tính phí.<br/>- Trong trường hợp bạn nhập khối lượng không chính xác, hãng vận chuyển có thể cập nhật lại và bạn có thể phát sinh phí vượt cân.<br/>- <strong>Lưu ý</strong>: Nếu có phát sinh phí vượt cân thì tổng số tiền thu hộ vẫn giữ nguyên như lúc duyệt đơn hàng.',
+                            trigger: 'hover'
+                        })
+                        $('#boxsize-popover1').popover({
+                            html: true,
+                            content: 'You should be input volume dimension. it help us estimate your order shipping fee more exactly. We use dim volumetric weight & actual weight also.  According courier policy, If volumes greater than we would choose that volume. <br/>- If you type it is not correct, we will charge over weight fee later. Important: If you weight is not correct, we will update it later but we will not change the total CoD money amount that you approved before.',
+                            trigger: 'hover'
+                        })
+                    })
+                </script>
+            </div>
+
+            <div class="form-group">
+                <label for="product_code" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_MaDonHang' | translate}}
+                    <!-- Mã đơn hàng -->
+                </label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Code" class="form-control" id="product_code" placeholder="{{'OBG_MaDonHangCuaBan' | translate }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="order_note" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_GhiChuDonHang' | translate}}
+                    <!-- Ghi chú đơn hàng -->
+                </label>
+                <div class="col-lg-9 col-md-8">
+                    <input type="text" ng-model="Product.Description" class="form-control" id="product_note">
+                </div>
+            </div>
+            <div class="form-group" ng-if="Config.Type == 1">
+                <label for="product_collect" class="col-lg-3 col-md-4 control-label text-left">{{'OBG_TienThiHo' | translate}}
+                    <!-- Tiền thu hộ  -->
+                </label>
+                <div class="col-lg-9 col-md-8 ">
+                    <input ng-if="viewCurrency == ViewHomeCurrency" type="text" ng-model="Product.MoneyCollect" id="money_collect" formatnumber
+                        class="form-control" id="product_collect" placeholder="{{'OBG_TienThiHo' | translate}}" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }}"
+                        tooltip-trigger="focus">
+                    <input ng-if="viewCurrency != ViewHomeCurrency" ng-change="Product.MoneyCollect=convert_currency_to_home_currency(Product.MoneyCollect_curernt_2)"
+                        type="text" ng-model="Product.MoneyCollect_curernt_2" id="money_collect" class="form-control" id="product_collect"
+                        placeholder="{{'OBG_TienThiHo' | translate}}" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }}"
+                        tooltip-trigger="focus">
+                </div>
+            </div>
+        </div>
+        <div ng-if="item.boxme_inventory" class="product-info">
+            <div class="parcel">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <input type="text" ng-model="Product.Code" class="form-control" id="product_code" placeholder="{{'OBG_MaDonHangCuaBan' | translate}}">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                                <div class="row">
+                                </div>
+                            </div>
+                        <div class="col-md-5">
+                            <div class="row">
+                                <input type="text" placeholder="{{'OBG_GhiChuDonHang' | translate}}" ng-model="Product.Description" class="form-control" id="product_note">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-6 ">
+                        <div class="input-group m-b-sm select_bm_product">
+                            <ui-select ng-model="_boxme.selected_item" name="item.selected">
+                                <ui-select-match placeholder="{{'OBG_ChonSanPham' | translate}}">{{$select.selected.ProductName }}</ui-select-match>
+                                <ui-select-choices repeat="value in list_products | filter: $select.search track by $index ">
+                                    <span>
+                                        {{value.SellerBSIN}} - {{value.ProductName}}
+                                        <p class="text-right" style="font-weight: initial;">
+                                            <span class="pull-left ">
+                                                <convert-currency style="color:#993333" home-currency="value.PriceItem"></convert-currency>
+                                            </span>
+                                            {{'OBG_SoSanPhamTrongKho' | translate}}
+                                            <span class="text-info">{{value.AvailableItem}}</span>
+                                        </p>
+                                    </span>
+                                    <!--<p class="text-right" style="font-weight: initial;">{{'OBG_SoSanPhamTrongKho' | translate}}<span class="text-info">{{value.AvailableItem}}</span></p></span>
+                                        <span ng-if="viewCurrency != ViewHomeCurrency">
+                                            {{value.SellerBSIN}} - {{value.ProductName}}{{convert_currency(value.PriceItem)| usdNumber  | number:2}}{{viewCurrency}} 
+                                            <br/><p class="text-right" style="font-weight: initial;">{{'OBG_SoSanPhamTrongKho' | translate}}<span class="text-info">{{value.AvailableItem}}</span></p></span>-->
+                                </ui-select-choices>
+                            </ui-select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="button" ng-click="AddItem(_boxme.selected_item)" ng-disabled="!_boxme.selected_item ">
+                                    <i class="fa fa-plus"></i>{{'OBG_ThemSanPham' | translate}}
+                                    <!-- Thêm sản phẩm -->
+                                </button>
+                            </span>
+                        </div>
+
+                        <div class="alert alert-warning text-right" ng-if="_boxme.selected_item && _boxme.selected_item.AvailableItem == 0">
+                            {{'OBG_SanPhamKhongConTrongKho' | translate }}
+                            <!-- Sản phẩm này không còn trong kho -->
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                    </div>
+                </div>
+                <br/>
+
+                <table class="table">
+                    <tr>
+                        <th>#</th>
+                        <th>SKU</th>
+                        <th width="18%">
+                            {{'OBG_TenSanPham' | translate}}</th>
+                        <th width="12%" class="text-right">{{'OBG_GiaBan' | translate}}
+                        </th>
+                        <th width="15%" class="text-right">{{'OBG_SoLuong' | translate}}
+                        </th>
+                        <th width="15%" class="text-right">{{'OBG_KhoiLuong' | translate}} (gram)
+                            <a href="javascript:;">
+                                <i class="icon-question" aria-hidden="true" tooltip="{{'OBG_KhoiLuongSauDonGoi' | translate }}" tooltip-trigger="mouseenter"></i>
+                            </a>
+                        </th>
+                        <th width="18%" class="text-right">{{'OBG_TamTinh' | translate}}
+                        </th>
+                        <th width="" class="text-center"></th>
+                    </tr>
+                    <tr ng-repeat="item in _boxme.Items track by $index">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.SellerBSIN}}</td>
+                        <td>{{item.ProductName}}</td>
+                        <td class="text-right" ng-if="viewCurrency == ViewHomeCurrency">{{item.PriceItem | vnNumber}}{{viewCurrency}}</td>
+                        <td class="text-right" ng-if="viewCurrency != ViewHomeCurrency">{{convert_currency(item.PriceItem) | usdNumber | number:2}}{{viewCurrency}}</td>
+
+                        <td>
+                            <input type="number" minlength="1" min="1" class="form-control" name="item-{{$index}}" ng-model="item.Quantity" style="margin-left:10px; margin-right:10px"
+                                ng-change="_boxme.ItemChange()">
+                        </td>
+                        <td class="text-right">
+                            {{item.WeightPacked >= item.WeightItem ? item.WeightPacked : item.WeightItem }}
+                        </td>
+                        <td class="text-right" ng-if="viewCurrency == ViewHomeCurrency">{{item.PriceItem * (1 *item.Quantity) | vnNumber}}đ</td>
+                        <td class="text-right" ng-if="viewCurrency != ViewHomeCurrency">{{convert_currency(item.PriceItem) | usdNumber | number:2}}{{viewCurrency}}</td>
+                        <td>
+                            <a class="btn btn-xs btn-danger" ng-click="_boxme.remoteProductItem(item)">
+                                <i class="fa fa-minus"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2" class="text-right"></td>
+                        <td class="text-right" ng-if="viewCurrency == ViewHomeCurrency">{{_boxme.TotalItemAmount | vnNumber}}{{viewCurrency}}</td>
+                        <td class="text-right" ng-if="viewCurrency != ViewHomeCurrency">{{convert_currency(_boxme.TotalItemAmount) | usdNumber | number:2}}{{viewCurrency}}</td>
+                        <td class="text-right"></td>
+                        <td class="text-right">{{_boxme.TotalItemWeight}}(gram)</td>
+                        <td></td>
+                    </tr>
+                    <tr ng-if="Config.Type == 1">
+                        <td colspan="3"></td>
+                        <td colspan="2" class="text-right">
+                            <strong>{{'OBG_TienThiHo' | translate}}
+                                <!-- Tiền thu hộ (đ) -->
+                            </strong>
+                        </td>
+                        <td class="text-right">
+                            <input type="text" ng-if="viewCurrency == ViewHomeCurrency" ng-model="Product.MoneyCollect" id="money_collect" formatnumber
+                                class="form-control text-right" id="product_collect" placeholder="" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }"
+                                tooltip-trigger="focus">
+                            <input type="text" ng-if="viewCurrency != ViewHomeCurrency" ng-change="Product.MoneyCollect=convert_currency_to_home_currency(Product.MoneyCollect_curernt_2)"
+                                ng-model="Product.MoneyCollect_curernt_2" id="money_collect" class="form-control text-right"
+                                id="product_collect" placeholder="" required tooltip="{{'OBG_SCSeThuHoTheoSoTienBanNhap' | translate:{isShipchung : isShipchung} }"
+                                tooltip-trigger="focus" boxme-number-format>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="clearfix"></div>
+            <br/>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default ng-binding" ng-click="close()">{{'Btt_cancel' | translate}}</button>
+        <button type="submit" class="btn btn-info ng-binding">{{'Btt_save' | translate}}</button>
+    </div>
+</form>

@@ -1,0 +1,109 @@
+<style>
+    .wrap-profile{
+        min-height: 250px;
+        border:1px solid #f2f2f2;
+        border-radius: 2px;
+        text-align: center;
+    }
+    .wrap-profile:hover{
+        background:#f2f2f2;
+    }
+    .wrap-profile.add:hover{
+        cursor: pointer
+    }
+    .text-xsxs{
+        font-size: 10px;
+    }
+</style>
+<div ng-controller="ConfigChildCtrl" tour-step order="18" content="Quáº£n lĂ½ cĂ¡c tĂ i khoáº£n con cá»§a báº¡n" placement="top">
+    <!-- header -->
+    <div class="wrapper bg-light lter b-b">
+        <h3 class="font-thin m-n">{{'USER_TaiKhoanNhanVien' | translate}}<!-- Cấu hình tài khoản nhân viên --></h3>
+    </div>
+    <!-- / header -->
+    <!--Content-->
+    <div class="wrapper b-b bg-white" tour-step order="19" content="" placement="top">
+
+        <div class="row">
+            <div class="col-md-3 m-t-md" >
+                <div class="wrap-profile add"  ng-click="addUser(infoUser.id)">
+                    <p style="margin-top:80px">
+                        <i class="fa fa-plus fa-2x"></i>
+                        <h4>{{'USER_ThemNhanVien' | translate}}<!-- Thêm nhân viên --></h4>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-3 m-t-md" ng-repeat="user in childs">
+                <div class="wrap-profile " > 
+                    <img src="" ng-src="http://www.gravatar.com/avatar/c6bf012ac4ee306b5946954e8efeae4a?s=80&d=mm&r=g" alt="{{user.user.email}}" class="img-circle" style="margin-top:20px;">
+                    <hr />
+                    <span>{{user.user.fullname}}</span><br/>
+                    <a href="mailto:{{user.user.email}}"><span class="text-info text-xsxs">{{user.user.email}}</span></a>
+                    <br/>
+                    <span ng-if="user.role==1" class="label text-xs bg-info ">{{'USER_QuanLy' | translate}}</span>
+                    <span ng-if="user.role==2" class="label text-xs bg-info ">{{'VER_TruongNhom' | translate}}</span>
+                    <span ng-if="user.role==3" class="label text-xs bg-info ">{{'VER_NhanVien' | translate}}</span>
+                    <!-- Single button -->
+                        <!-- Single button -->
+                        <br/><br/>
+                        <div class="btn-group" dropdown >
+                          <button type="button" class="btn btn-xs btn-success dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+                            <span>{{'USER_QuanLy' | translate}}<!-- Quản lý --></span> <span class="caret"></span>
+                          </button>
+                          
+                          <ul class="dropdown-menu" role="menu">
+                            <li><a href="javascript:;" ng-click="addPrivilegeUser(user.user.id);"><!-- Set quyền -->{{'VER_SetQuyen' | translate}}</a></li>
+                            <li><a href="javascript:;" ng-click="delete(user.user.id);">{{'USER_XoaNhanVien' | translate}}<!-- Xóa nhân viên --></a></li>
+						 </ul>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <!-- <form name="" role="form" class="form-horizontal form-validation" ng-submit="save(childs)">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">Danh sách tài khoản</div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered b-t b-light">
+                        <thead>
+                            <tr>
+                                <th class="text-center v-middle">Email tài khoản Shipchung</th>
+                                <th class="text-center v-middle">Vai trò</th>
+                                <th class="text-center v-middle">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in childs">
+                                
+                                <td class="text-center v-middle" ng-if="user.view" ng-init="user.email = user.user.email">{{user.user.email}}</td>
+                                
+                                <td class="text-center v-middle" ng-if="user.view">
+                                    <span ng-repeat="role in roles | filter: {id: user.role}" >{{role.name}}</span>
+                                </td>
+                                
+                                <td class="text-center v-middle" ng-if="(!user.added||!user.updated)&& !user.view"><input type="text" ng-model="user.email"  class="form-control input-sm"/></td>
+        
+                                
+        
+                                <td class="text-center v-middle" ng-if="(!user.added||!user.updated)&& !user.view">
+                                    <select ng-model="user.role" ng-init="user.role = 1"
+                                            class="form-control input-sm"
+                                            ng-options="role.id as role.name for role in roles" readonly disabled
+                                            >
+                                    </select>
+                                </td>
+        
+                                <td class="text-center v-middle">
+                                    <button ng-if="user.updated || user.view" ng-click="convertLabelToInput(user)" class="btn btn-xs m-r-xs btn-success m-b-xs" type="button">Cập nhật</button>
+                                    <button ng-if="user.updated || user.view" ng-click="deleteUser($index)" class="btn btn-xs m-r-xs btn-default m-b-xs" type="button">Xóa</button>
+                                    <button ng-if="user.added" ng-click="addUser(user)" class="btn btn-xs btn-info" type="button">Thêm mới</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div> / panel
+            <button type="submit" class="btn btn-success">Cập nhật</button>
+        </form> -->
+    </div>
+    <!--/ Content-->
+</div>

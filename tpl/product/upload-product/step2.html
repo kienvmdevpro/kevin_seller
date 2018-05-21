@@ -1,0 +1,30 @@
+<div ng-controller="UploadProductStep2Controller">
+    <div class="wrapper-md bg-light b-b">
+        <h1 class="m-n font-thin h3">Cập nhật tình trạng tồn kho</h1>
+    </div>
+    <div class="hbox hbox-auto-xs hbox-auto-sm">
+        <div class="col wrapper-sm">
+            <div class="clearfix m-b">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Bước 2: Đăng cập nhật sản phẩm của quý khách</h4>
+                        <p>
+                            Once you've added your products to the template, please upload it. Keep in mind:
+                        </p>
+                        <ul>
+                            <li>Columns with yellow backgrounds are required fields</li>
+                            <li>SKUs must be unique for both standalone products and variants</li>
+                            <li>If you are not using Microsoft Excel, please 'export' the completed template to Excel (.xls) format before uploading it. Find out more.</li>
+                        </ul>
+                        <div class="col-lg-4">
+                            <input ui-jq="filestyle" type="file" ui-options="{buttonText: 'Chọn file'}" data-icon="false" data-classbutton="btn btn-default" data-classinput="form-control inline v-middle input-s" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+                        </div>
+                        <button class="btn btn-info" type="button"><i class="fa fa-upload"></i> Cập nhật ngay</button>
+                        <p class="m-t-lg">REMEMBER: SKUs are super important - every product (and variant) needs a unique SKU</p>
+                    </div>
+                </div> 
+                <!--/ Panel-->
+            </div>
+        </div>
+    </div>
+</div>

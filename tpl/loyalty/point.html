@@ -1,0 +1,28 @@
+<div class="tab-container">
+    <div class="streamline b-l b-info m-b padder-v">
+        <div class="sl-item b-primary b-l" ng-show="data['point'].length == 0">
+            <div class="m-l">
+                <div class="text-md font-thin">Lịch sử tích lũy điểm</div>
+                <div class="panel b-a bg-white m-t-xs">
+                    <div class="panel-body">
+                        <span>
+                            {{userInfo.identifier || 'Quý khách'}} chưa có lịch sử tích lũy điểm
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sl-item" data-ng-repeat="item in data['point']">
+            <div class="m-l">
+                <div class="text-md font-thin">Tích lũy điểm</div>
+                <div class="b-a bg-white m-t-xs m-b-xs">
+                    <div class="panel-body">
+                        Trong ngày <a href class="text-info">{{item.date}}</a> {{userInfo.identifier || 'quý khách'}} đã tích lũy được {{item.point | vnNumber}} điểm.
+                    </div>
+                </div>
+                <small class="block text-muted"><i class="fa fa-fw fa-clock-o"></i> {{item.time_create*1000 | date : "dd-MM-yyyy  HH:mm"}}</small>
+            </div>
+        </div>
+    </div>
+</div>

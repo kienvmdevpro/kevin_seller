@@ -1,0 +1,78 @@
+<div ng-controller="ConfigShippingCtrl">
+    <!-- header -->
+        <div class="wrapper bg-light lter b-b">
+            <h3 class="font-thin m-n"><!-- Cấu hình phí vận chuyển --></h3>
+        </div>
+    <!-- / header -->
+
+    <!--Content-->
+        <div class="wrapper b-b bg-white">
+            <form name="formAddEditShipping" ng-submit="save(fee_config,'fee')" role="form" class="form-horizontal form-validation">
+                <div class="panel panel-default">
+                    <div class="panel-heading font-bold">{{'SETSHIP_CauHinhTinhPVC' | translate}}<!-- Cấu hình phí vận chuyển --></div>
+                    <div class="alert alert-info m-b-none text-base">{{'SETSHIP_CauHinhNayDcApDung' | translate:{isShipchung : isShipchung} }}<!-- Cấu hình này được áp dụng mặc định khi tạo vận đơn trên hệ thống shipchung cũng như trên website tích hợp --></div>
+                    <div class="panel-body">
+                        <h4>{{'SETSHIP_TinhPhiVC' | translate}}<!-- Tính phí vận chuyển --></h4>
+                        <div class="form-group" ng-init="fee_config.shipping_fee=1;">
+                            <!--div class="col-sm-12 col-md-12 col-lg-12">
+                                <label class="i-checks i-checks-sm">
+                                    <input ng-model="fee_config.shipping_fee" type="radio" value="1"/>
+                                    <i></i>
+                                    Phí vận chuyển cố định toàn quốc áp dụng cho tất cả đơn hàng
+                                </label>
+                            </div>
+                            <div ng-init="fee_config.shipping_cost_value = 0" class="col-sm-4 col-md-4 col-lg-3 col-xs-9 input-group m-l-lg m-b-sm">
+                                <input ng-disabled="fee_config.shipping_fee != 1"
+                                       ng-model="fee_config.shipping_cost_value"
+                                       class="form-control"
+                                       fcsa-number="{ min: 0 }"
+                                       name="money_value"
+                                       placeholder="0"
+                                       required=""/>
+                            </div-->
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <label class="i-checks i-checks-sm">
+                                    <input ng-model="fee_config.shipping_fee" type="radio" value="2"/>
+                                    <i></i>
+                                    <!-- Nguời mua trả phí vận chuyển -->
+                                    {{'SETSHIP_NguoiMuaTraPVC' | translate}}
+                                </label>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <label class="i-checks i-checks-sm">
+                                    <input ng-model="fee_config.shipping_fee" type="radio" value="3" />
+                                    <i></i>
+                                   <!--  Miễn phí vận chuyển cho người mua (nhận) -->
+                                    {{'SETSHIP_MienPVCChoNguoiNhan' | translate}}
+                                </label>
+                            </div>
+                        </div>
+                        <h4>{{'SETSHIP_TinhPhiCOD' | translate}}<!-- Tính phí thu tiền (CoD) --></h4>
+                        <div class="form-group">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <label class="i-checks i-checks-sm">
+                                    <input ng-model="fee_config.cod_fee" type="radio" value="1"/>
+                                    <i></i>
+                                   {{'SETSHIP_NguoiMuaTraPhiCOD' | translate}} <!-- Người mua trả phí thu tiền (CoD) -->
+                                </label>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <label class="i-checks i-checks-sm">
+                                    <input ng-model="fee_config.cod_fee" type="radio" value="2"/>
+                                    <i></i>
+                                   {{'SETSHIP_MienPhiCoD' | translate}}<!--  Miễn phí thu tiền (CoD) cho người mua (nhận) -->
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button type="submit" ng-disabled="formAddEditShipping.money_value.$invalid && fee_config.shipping_fee == 1" class="btn btn-success m-t-md">{{'Btt_update' | translate}}<!-- Cập nhật --></button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--/ Panel-->
+            </form>
+        </div>
+    <!--/ Content-->
+</div>

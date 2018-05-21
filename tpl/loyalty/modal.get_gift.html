@@ -1,0 +1,59 @@
+<div class="panel no-border">
+    <div class="panel-heading wrapper b-b b-light">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-7 pull-left no-padder">
+                    <h4 class="m-t-none m-b-none">Đổi điểm tích lũy</h4>
+                </div>
+                <button type="button" class="pull-right close" ng-click="cancel()"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+    <ul class="list-group list-group-lg m-b-none">
+        <li class="list-group-item" ng-show="list_gift">
+            {{userInfo.identifier || 'Quý khách'}} {{userInfo.fullname}} có thể đổi điểm tích lũy thành 1 trong các món quà dưới đây. <br />
+            Xem hướng dẫn và quy định đổi thưởng tại <a class="text-info" href="https://www.shipchung.vn/huong-dan-doi-thuong-chuong-trinh-khach-hang-than-thiet/" target="_blank">đây</a>.
+        </li>
+
+        <li class="list-group-item" ng-show="list_gift.length == 0">
+            <label>
+                <strong>Chưa có phần thưởng phù hợp.</strong>
+            </label>
+        </li>
+        <li class="list-group-item" data-ng-repeat="item in list_gift">
+            <form role="form" class="form-validation" name="Frm{{$index}}" ng-init="item.phone_type = '';item.phone=userInfo.phone">
+                <div class="radio m-b-none">
+                    <label>
+                        <input type="radio" ng-model="data.gift_id" value="{{item.id}}" name="optionsRadios">
+                        <strong>{{item.name || ''}}</strong> <!--a href="{{item.link || '#'}}"><i class="fa fa-external-link text-info"></i></a-->
+                        <small class="text-muted clear text-ellipsis">Số điểm đổi thưởng tương ứng cần là {{item.point}} điểm.</small>
+                        <alert ng-show="item.result" type="success" close="item.result = ''">{{item.result}}</alert>
+                        <alert ng-show="item.error" type="warning" close="item.error = ''">{{item.error}}</alert>
+                    </label>
+                </div>
+                <div ng-show="data.gift_id == item.id" >
+                    <div ng-if="item.category_id == 2">
+                        <div class="col-md-5 m-b-xs">
+                            <input type="tel" ng-pattern="/^[0-1][1-9][\d]{6,13}$/" class="form-control text-sm" ng-model="item.phone" name="point" required placeholder="Số điện thoại"/>
+                        </div>
+                        <div class="clearfix">&nbsp;</div>
+                        <div class="col-md-5 m-b-xs">
+                            <select class="form-control" ng-model="item.phone_type" required>
+                                <option value="">Chọn nhà mạng</option>
+                                <option value="1">Viettel</option>
+                                <option value="2">VinaPhone</option>
+                                <option value="3">MobiPhone</option>
+                                <option value="4">VietnamMobile</option>
+                            </select>
+                        </div>
+                        <div class="clearfix">&nbsp;</div>
+                    </div>
+                    <div class="padder">
+                        <button type="button" ng-disabled="Frm{{$index}}.$invalid || item.disabled" class="btn btn-info r-3x" data-ng-click="save(item)" style="background-color: #4A90E2">Đổi điểm ngay</button>
+                    </div>
+                </div>
+            </form>
+        </li>
+
+    </ul>
+</div>
